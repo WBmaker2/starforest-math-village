@@ -10,9 +10,9 @@
     { id: "g5-avg", name: "기록 텃밭", x: 27, y: 32 }
   ];
   window.GRADE_FRIENDS = [
-    { name: "몽실", line: "전망대 1차시를 끝내 주면 씨앗을 줄게!", x: 40, y: 50 },
-    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 62, y: 48 },
-    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 50, y: 67 }
+    { name: "몽실", line: "어림 전망대 1차시를 끝내면 씨앗을 줄게!", x: 39, y: 36, img: "../assets/img/flow/parts/npc-mong.png" },
+    { name: "햇살이", line: "분수 과일농장과 텃밭에서 수확해 봐!", x: 60, y: 36, img: "../assets/img/flow/parts/npc-haetsal.png" },
+    { name: "반짝이", line: "거울 정원에서 대칭 모양을 찾아봐!", x: 39, y: 64, img: "../assets/img/flow/parts/npc-banjjak.png" }
   ];
   window.GRADE_PORTRAITS = {
     "g5-range": "../assets/img/flow/house-g5-range.jpg", "g5-fracmul": "../assets/img/flow/house-g5-fracmul.jpg",

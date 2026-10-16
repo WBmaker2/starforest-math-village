@@ -14,10 +14,23 @@
     } catch (e) {}
     return [];
   }
-  var FRIENDS = [
-    { name: "몽실", line: "10 모형 상자를 눌러 세어 봐!", x: 38, y: 44 },
-    { name: "반짝이", line: "규칙 산책로에서 규칙을 찾으면 별을 줘!", x: 62, y: 60 }
-  ];
+  var FRIEND_IMGS = {
+    "몽실": "../assets/img/flow/parts/npc-mong.png",
+    "햇살이": "../assets/img/flow/parts/npc-haetsal.png",
+    "반짝이": "../assets/img/flow/parts/npc-banjjak.png"
+  };
+  function FRIENDS() {
+    if (G === "2") return [
+      { name: "몽실", line: "길이 재기소에서 자 눈금을 읽어 봐!", x: 20, y: 42, img: FRIEND_IMGS["몽실"] },
+      { name: "햇살이", line: "시계 전망대에서 몇 시 몇 분인지 찾아봐!", x: 84, y: 44, img: FRIEND_IMGS["햇살이"] },
+      { name: "반짝이", line: "무늬 산책로에서 곱셈 규칙을 찾아봐!", x: 68, y: 76, img: FRIEND_IMGS["반짝이"] }
+    ];
+    return [
+      { name: "몽실", line: "숫자 화단에서 10 모형을 세어 봐!", x: 37, y: 36, img: FRIEND_IMGS["몽실"] },
+      { name: "햇살이", line: "시계탑 바늘을 보고 몇 시인지 읽어 봐!", x: 66, y: 24, img: FRIEND_IMGS["햇살이"] },
+      { name: "반짝이", line: "규칙 산책로에서 모양 규칙을 찾아봐!", x: 36, y: 74, img: FRIEND_IMGS["반짝이"] }
+    ];
+  }
   var pos = { x: 50, y: 50 };
   var cur = { house: 0, qi: 0, touch: 0 };
   function store() { return window.G3Store.load(); }
@@ -94,14 +107,16 @@
       b.setAttribute("aria-label", hs[i].name + " 들어가기");
       wrap.appendChild(b);
     }
-    for (var j = 0; j < FRIENDS.length; j++) {
+    var frs = FRIENDS();
+    for (var j = 0; j < frs.length; j++) {
       var f = document.createElement("button");
       f.className = "friend";
-      f.style.left = FRIENDS[j].x + "%";
-      f.style.top = FRIENDS[j].y + "%";
-      f.textContent = FRIENDS[j].name;
-      f.setAttribute("data-say", FRIENDS[j].line);
-      f.setAttribute("aria-label", FRIENDS[j].name + "의 말 듣기");
+      f.style.left = frs[j].x + "%";
+      f.style.top = frs[j].y + "%";
+      var fimg = frs[j].img ? "<img class='friend-img' src='" + frs[j].img + "' alt=''>" : "";
+      f.innerHTML = fimg + "<span class='friend-name'>" + frs[j].name + "</span>";
+      f.setAttribute("data-say", frs[j].line);
+      f.setAttribute("aria-label", frs[j].name + "의 말 듣기");
       wrap.appendChild(f);
     }
     renderProgress();

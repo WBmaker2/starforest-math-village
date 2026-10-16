@@ -10,9 +10,9 @@
     { id: "g6-cyl", name: "빙글 입체공방", x: 25, y: 27 }
   ];
   window.GRADE_FRIENDS = [
-    { name: "몽실", line: "나눔터 1차시를 끝내 주면 씨앗을 줄게!", x: 40, y: 48 },
-    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 63, y: 46 },
-    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 51, y: 64 }
+    { name: "몽실", line: "조각 나눔터 1차시를 끝내면 씨앗을 줄게!", x: 36, y: 37, img: "../assets/img/flow/parts/npc-mong.png" },
+    { name: "햇살이", line: "물감 배합소에서 비율로 색을 섞어 봐!", x: 64, y: 37, img: "../assets/img/flow/parts/npc-haetsal.png" },
+    { name: "반짝이", line: "빈터 2곳을 꾸미고 입체공방도 들러 봐!", x: 36, y: 64, img: "../assets/img/flow/parts/npc-banjjak.png" }
   ];
   window.GRADE_PORTRAITS = {
     "g6-fracdiv": "../assets/img/flow/house-g6-fracdiv.jpg", "g6-decdiv": "../assets/img/flow/house-g6-decdiv.jpg",

@@ -12,10 +12,15 @@
     return DEFAULT_PINS;
   }
   var PINS = DEFAULT_PINS;
+  var NPC_IMGS = {
+    "몽실": "../assets/img/flow/parts/npc-mong.png",
+    "햇살이": "../assets/img/flow/parts/npc-haetsal.png",
+    "반짝이": "../assets/img/flow/parts/npc-banjjak.png"
+  };
   var DEFAULT_FRIENDS = [
-    { name: "몽실", line: "방앗간 1차시를 끝내 주면 씨앗을 줄게!", x: 38, y: 30 },
-    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 62, y: 66 },
-    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 30, y: 62 }
+    { name: "몽실", line: "방앗간 1차시를 끝내 주면 씨앗을 줄게!", x: 36, y: 34, img: NPC_IMGS["몽실"] },
+    { name: "햇살이", line: "텃밭에서 작물을 거두면 카드를 준다!", x: 50, y: 30, img: NPC_IMGS["햇살이"] },
+    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 64, y: 46, img: NPC_IMGS["반짝이"] }
   ];
   function friends() {
     if (window.GRADE_FRIENDS && window.GRADE_FRIENDS.length) return window.GRADE_FRIENDS;
@@ -57,7 +62,8 @@
       f.className = "friend";
       f.style.left = FRIENDS[j].x + "%";
       f.style.top = FRIENDS[j].y + "%";
-      f.textContent = FRIENDS[j].name;
+      var fimg = FRIENDS[j].img ? "<img class='friend-img' src='" + FRIENDS[j].img + "' alt=''>" : "";
+      f.innerHTML = fimg + "<span class='friend-name'>" + FRIENDS[j].name + "</span>";
       f.setAttribute("data-say", FRIENDS[j].line);
       f.setAttribute("aria-label", FRIENDS[j].name + "의 말 듣기");
       wrap.appendChild(f);

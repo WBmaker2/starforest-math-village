@@ -10,9 +10,9 @@
     { id: "g4-poly", name: "모자이크 공방", x: 28, y: 32 }
   ];
   window.GRADE_FRIENDS = [
-    { name: "몽실", line: "빵나눔터 1차시를 끝내 주면 씨앗을 줄게!", x: 40, y: 50 },
-    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 64, y: 50 },
-    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 52, y: 68 }
+    { name: "몽실", line: "조각 빵나눔터 1차시를 끝내면 씨앗을 줄게!", x: 38, y: 39, img: "../assets/img/flow/parts/npc-mong.png" },
+    { name: "햇살이", line: "세모 지붕소에서 삼각형 이름을 찾아봐!", x: 63, y: 39, img: "../assets/img/flow/parts/npc-haetsal.png" },
+    { name: "반짝이", line: "꺾은길 전망대에서 기온 변화를 읽어 봐!", x: 38, y: 63, img: "../assets/img/flow/parts/npc-banjjak.png" }
   ];
   window.GRADE_PORTRAITS = {
     "g4-frac": "../assets/img/flow/house-g4-frac.jpg", "g4-tri": "../assets/img/flow/house-g4-tri.jpg",
