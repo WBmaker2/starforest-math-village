@@ -194,7 +194,7 @@
     html += "<div class='trial-svg'>" + item.svg + "</div>";
     html += "<p class='trial-q'>" + item.q + "</p><div class='trial-choices low-mode'>";
     for (var i = 0; i < item.choices.length; i++) {
-      html += "<button type='button' class='trial-choice gi-pulse' data-lowchoice='" + item.choices[i] + "'>" + item.choices[i] + "</button>";
+      html += "<button type='button' class='trial-choice btn-pulse' data-lowchoice='" + item.choices[i] + "'>" + item.choices[i] + "</button>";
     }
     html += "</div><p id='lowFb' class='trial-fb' aria-live='polite'></p>";
     box.innerHTML = html;
@@ -217,7 +217,7 @@
       }
       if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("ok");
       renderProgress();
-      if (fb) fb.innerHTML = "<b>정답! ★+10 · 씨앗 +1</b> " + item.exp + " <button type='button' class='trial-next gi-pulse' data-lownext='1'>" + (cur.qi + 1 < h.list.length ? "다음 문제 →" : "마을로 돌아가기") + "</button>";
+      if (fb) fb.innerHTML = "<b>정답! ★+10 · 씨앗 +1</b> " + item.exp + " <button type='button' class='trial-next btn-pulse' data-lownext='1'>" + (cur.qi + 1 < h.list.length ? "다음 문제 →" : "마을로 돌아가기") + "</button>";
     } else {
       if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("no");
       if (fb) fb.textContent = "그림을 다시 살펴볼까요? " + item.exp;

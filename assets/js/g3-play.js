@@ -108,7 +108,7 @@
         + "<p class='river-q'>" + q.cond + "</p><div class='rchoices'>";
       for (var j = 0; j < q.opts.length; j++) {
         var oimg = q.opts[j].img ? "<img class='rchoice-img' src='" + q.opts[j].img + "' alt='" + q.opts[j].name + "'>" : "";
-        rhtml += "<button type='button' class='rchoice gi-pulse' data-rpick='" + j + "'>" + oimg + "<b>" + q.opts[j].name + "</b><span>" + q.opts[j].spec + "</span></button>";
+        rhtml += "<button type='button' class='rchoice btn-pulse' data-rpick='" + j + "'>" + oimg + "<b>" + q.opts[j].name + "</b><span>" + q.opts[j].spec + "</span></button>";
       }
       rhtml += "</div><p id='riverFb' class='fb' aria-live='polite'></p></div>";
       rbox.innerHTML = rhtml;
@@ -118,7 +118,7 @@
       var fhtml = "<div class='river-card'><div class='trial-top'><span class='tag sun'>꽃 배합 화단 · 가능성 놀이</span><small>" + ((fIdx % FLOWER_QS.length) + 1) + "/" + FLOWER_QS.length + "</small></div>"
         + "<p class='river-q'>" + (fq.img ? "<img class='river-qimg' src='" + fq.img + "' alt='꽃다발'>" : "") + fq.cond + "</p><div class='rchoices'>";
       for (var fi = 0; fi < fq.opts.length; fi++) {
-        fhtml += "<button type='button' class='rchoice gi-pulse' data-fpick='" + fi + "'><b>" + fq.opts[fi].name + "</b><span>" + fq.opts[fi].sub + "</span></button>";
+        fhtml += "<button type='button' class='rchoice btn-pulse' data-fpick='" + fi + "'><b>" + fq.opts[fi].name + "</b><span>" + fq.opts[fi].sub + "</span></button>";
       }
       fhtml += "</div><p id='flowerFb' class='fb' aria-live='polite'></p></div>";
       fbox.innerHTML = fhtml;

@@ -54,7 +54,7 @@
     var compass = document.createElement("button");
     compass.id = "todoCompass";
     compass.type = "button";
-    compass.className = "todo-compass gi-pulse";
+    compass.className = "todo-compass btn-pulse";
     wrap.appendChild(compass);
     var tbar = document.createElement("div");
     tbar.id = "mapTimeBar";

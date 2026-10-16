@@ -31,7 +31,7 @@
         if (now >= p.readyAt) {
           html += "<div class='plot-head'><img class='crop-thumb' src='" + c.img + "' alt='" + c.name + "'><div><b>" + c.name + " 수확 준비 완료!</b><span>수확 보상: 별 +" + c.star + "</span></div></div>";
           html += "<div class='pbar'><i style='width:100%'></i></div>";
-          html += "<button class='go gi-pulse' data-harvest='" + i + "'>거두기</button>";
+          html += "<button class='go btn-pulse' data-harvest='" + i + "'>거두기</button>";
         } else {
           html += "<div class='plot-head'>" + SPROUT_SVG + "<img class='crop-thumb growing' src='" + c.img + "' alt='" + c.name + "'><div><b>" + c.name + " 자라는 중 (" + pct + "%)</b><span>약 " + left + "분 남음 · 별 +" + c.star + "</span></div></div>";
           html += "<div class='pbar'><i style='width:" + pct + "%'></i></div>";

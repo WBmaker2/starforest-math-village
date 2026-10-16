@@ -119,10 +119,10 @@
     var L = U.lessons;
     for (var i = 0; i < L.length; i++) {
       var done = d.done[L[i].id] ? " · 완료" : "";
-      html += "<button class='lesson gi-pulse' data-lesson='" + i + "'>" + L[i].title + done + "</button>";
+      html += "<button class='lesson btn-pulse' data-lesson='" + i + "'>" + L[i].title + done + "</button>";
     }
     html += "</div><p class='hint'>기본 차시는 문제 6개, 실생활 문장제 차시는 4개입니다. 처음 끝내는 차시마다 씨앗 2개를 받습니다.</p>";
-    html += "<button class='lesson gi-pulse' data-infinite='1'>🎲 숫자 바꿔 무한 연습하기 (6문제)</button>";
+    html += "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 무한 연습하기 (6문제)</button>";
     box.innerHTML = html;
   }
   function startLesson(i) {
@@ -153,7 +153,7 @@
     html += "<div class='qvis-wrap' data-qvis-wrap>" + vis + "</div>";
     html += "<p class='q'>" + item.q + "</p>";
     html += "<div class='ansrow'><input id='ans' inputmode='none' placeholder='키패드로 답 입력' aria-label='답 입력' readonly>";
-    html += "<button id='sendBtn' class='go gi-pulse'>확인</button></div>";
+    html += "<button id='sendBtn' class='go btn-pulse'>확인</button></div>";
     html += "<div id='padKeypad' class='keypad-grid' aria-label='숫자 키패드'></div>";
     html += "<div class='hint-row'><p class='hint'>기회는 3번입니다. 첫 성공 별 100%, 두 번째 60%, 세 번째 30%.</p>";
     if (steps.length) {
@@ -258,10 +258,10 @@
     }
     if (window.G3Confetti) window.G3Confetti.burst();
     if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("fanfare");
-    var againBtn = state.mode === "infinite" ? "<button class='lesson gi-pulse' data-infinite='1'>🎲 숫자 바꿔 한 번 더 연습</button>" : "";
+    var againBtn = state.mode === "infinite" ? "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 한 번 더 연습</button>" : "";
     document.getElementById("dlgBody").innerHTML = "<h3>" + state.customTitle + " 완료!</h3>"
       + "<p>첫 시도 성공 " + state.firstOk + "/" + state.total + "문제! " + bonusMsg + "</p>"
-      + "<div class='lessons'>" + againBtn + "<button class='lesson gi-pulse' data-close-dlg='1'>마을로 돌아가기</button></div>";
+      + "<div class='lessons'>" + againBtn + "<button class='lesson btn-pulse' data-close-dlg='1'>마을로 돌아가기</button></div>";
   }
   function finish(U, L) {
     var d = window.G3Store.load();
@@ -275,8 +275,8 @@
     if (window.G3Quests) window.G3Quests.poke();
     npcSay(U.greet);
     var recBtn = (d.wrong && d.wrong.length)
-      ? "<button class='lesson gi-pulse' data-open-wrong='1'>추천 갈래 · 오답 노트 교실 풀기 (" + d.wrong.length + "문항)</button>"
-      : "<button class='lesson gi-pulse' data-open-daily='1'>추천 갈래 · 심화 오늘의 도전 풀기</button>";
+      ? "<button class='lesson btn-pulse' data-open-wrong='1'>추천 갈래 · 오답 노트 교실 풀기 (" + d.wrong.length + "문항)</button>"
+      : "<button class='lesson btn-pulse' data-open-daily='1'>추천 갈래 · 심화 오늘의 도전 풀기</button>";
     document.getElementById("dlgBody").innerHTML = "<h3>차시를 마쳤습니다</h3>"
       + "<p>첫 성공 " + state.firstOk + "/" + state.total + ". " + (first ? "처음 끝낸 차시라 씨앗 2개를 받았다." : "복습을 마쳤다.") + "</p>"
       + "<div class='lessons'>" + recBtn + "<button class='lesson' data-back='1'>차시 목록으로</button></div>";

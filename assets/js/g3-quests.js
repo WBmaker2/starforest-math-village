@@ -44,7 +44,7 @@
       html += "<div class='quest'><b>" + q.title + "</b><span>" + q.giver + "의 부탁: " + q.desc + "</span>";
       html += "<span>보상: " + q.reward.text + "</span>";
       if (isDone) html += "<em>완료!</em>";
-      else if (can) html += "<button class='go gi-pulse' data-claim='" + q.id + "'>보상 받기</button>";
+      else if (can) html += "<button class='go btn-pulse' data-claim='" + q.id + "'>보상 받기</button>";
       else html += "<em>진행 중…</em>";
       html += "</div>";
     }

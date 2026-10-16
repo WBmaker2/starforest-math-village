@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>3학년 마을 · 수학 산책마을</title>
-<meta name="description" content="3학년 마을 산책과 곱셈 풀이, 텃밭과 꾸미기, 일지와 기록을 담은 클론 데모입니다.">
+<title>3학년 별숲 마을 · 별숲 수학마을</title>
+<meta name="description" content="3학년 별숲 마을 산책과 곱셈 풀이, 텃밭과 꾸미기, 일지와 기록을 담은 마을형 수학 페이지입니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
 <link rel="stylesheet" href="../assets/css/styles.css">
-<link rel="stylesheet" href="../assets/css/g3.css?v=15">
+<link rel="stylesheet" href="../assets/css/g3.css?v=17">
 <meta name="g3" content="2d"> 
 </head>
 <body>
 <a class="skip" href="#village">마을로 바로가기</a>
 <header class="bar"><div class="wrap bar-in">
-<a class="logo" href="../index.html">수학 산책마을</a>
-<nav aria-label="3학년"><a href="../index.html">홍보로 돌아가기</a><a href="#farm">텃밭</a><a href="#note">일지·기록</a></nav>
+<a class="logo" href="../index.html">별숲 수학마을</a>
+<nav aria-label="3학년"><a href="../index.html">마을 입구로</a><a href="#farm">텃밭</a><a href="#note">일지·기록</a></nav>
 <span class="purse"><span id="starCount">별 0</span><span id="seedTop">씨앗 0</span></span>
 </div></header>
 <main class="wrap">
 <section class="g3head">
-<p class="eyebrow">3학년 마을 · 클론 데모</p>
+<p class="eyebrow">3학년 별숲 마을</p>
 <h1>곱셈 방앗간이 열리는 마을</h1>
-<p class="lead">주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 텃밭·꾸미기·일지·지도는 이 마을만의 새로 지은 재미 요소입니다.</p>
+<p class="lead">주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 텃밭, 꾸미기, 일지, 지도는 별숲의 마을 생활 요소입니다.</p>
 </section>
 <nav id="zoneBar" class="zonebar" aria-label="구역 바로가기">
 <button type="button" data-zone="all" class="sel">전체 보기</button><button type="button" data-zone="avatar">👗 옷장·뽑기</button><button type="button" data-zone="walk">🗺️ 마을 산책</button><button type="button" data-zone="farm">🌱 텃밭·놀이</button><button type="button" data-zone="quest">🏡 꾸미기·부탁</button><button type="button" data-zone="note">🪪 도감·주민증</button>
@@ -42,8 +42,8 @@
 </div>
 <form id="avatarForm">
 <div class="av-toprow">
-  <label class="av-namelabel">이름<input id="avName" maxlength="8" placeholder="예: 산책이"></label>
-  <button class="play-btn gi-pulse av-submit" type="submit">마을로 나가기</button>
+  <label class="av-namelabel">이름<input id="avName" maxlength="8" placeholder="예: 별빛이"></label>
+  <button class="play-btn btn-pulse av-submit" type="submit">마을로 나가기</button>
 </div>
 <div id="pickTabs" role="tablist" aria-label="꾸미기 항목">
 <button type="button" data-ptab="hair" class="sel">머리</button><button type="button" data-ptab="face">표정</button><button type="button" data-ptab="top">상의</button><button type="button" data-ptab="bottom">하의</button><button type="button" data-ptab="shoe">신발</button><button type="button" data-ptab="hat">모자</button><button type="button" data-ptab="acc">장식</button>
@@ -61,7 +61,7 @@
 <h2>마을 산책</h2>
 <p class="hint">방향키 또는 아래 단추로 걷습니다. 집 앞에 서면 입장 단추가 뜹니다.</p>
 <div id="mapwrap"><img id="mapimg" src="../assets/img/flow/map-a.jpg" alt="파스텔 톤의 둥근 마을 지도"></div>
-<div class="hud"><span id="nearLabel">주민에게 다가가면 말이 뜹니다</span><button id="enterBtn" class="go gi-pulse" type="button" hidden>들어가기</button><button class="mini-act" type="button" data-open-daily="1">오늘의 도전</button><button class="mini-act" type="button" data-open-wrong="1">오답 교실</button></div>
+<div class="hud"><span id="nearLabel">주민에게 다가가면 말이 뜹니다</span><button id="enterBtn" class="go btn-pulse" type="button" hidden>들어가기</button><button class="mini-act" type="button" data-open-daily="1">오늘의 도전</button><button class="mini-act" type="button" data-open-wrong="1">오답 교실</button></div>
 <div class="pad dpad" aria-label="이동 조이스틱">
 <button data-move="up" class="d-up" aria-label="위로 이동">▲<small>위</small></button>
 <button data-move="left" class="d-left" aria-label="왼쪽으로 이동">◀<small>왼쪽</small></button>
@@ -113,23 +113,23 @@
 </div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <button id="historyBtn" type="button">업데이트 내역</button>
-<script src="../assets/js/g3-store.js?v=15"></script>
-<script src="../assets/js/g3-questions.js?v=15"></script>
-<script src="../assets/js/g3-visuals.js?v=15"></script>
-<script src="../assets/js/g3-pad.js?v=15"></script>
-<script src="../assets/js/g3-ui.js?v=15"></script>
-<script src="../assets/js/g3-history.js?v=15"></script>
-<script src="../assets/js/g3-avatar.js?v=15"></script>
-<script src="../assets/js/g3-farm.js?v=15"></script>
-<script src="../assets/js/g3-play.js?v=15"></script>
-<script src="../assets/js/g3-deco.js?v=15"></script>
-<script src="../assets/js/g3-journal.js?v=15"></script>
-<script src="../assets/js/g3-report.js?v=15"></script>
-<script src="../assets/js/g3-dialog.js?v=15"></script>
-<script src="../assets/js/g3-map.js?v=15"></script>
-<script src="../assets/js/g3-quests.js?v=15"></script>
-<script src="../assets/js/g3-collect.js?v=15"></script>
-<script src="../assets/js/g3-gacha.js?v=15"></script>
-<script src="../assets/js/g3-boot.js?v=15"></script>
+<script src="../assets/js/g3-store.js?v=17"></script>
+<script src="../assets/js/g3-questions.js?v=17"></script>
+<script src="../assets/js/g3-visuals.js?v=17"></script>
+<script src="../assets/js/g3-pad.js?v=17"></script>
+<script src="../assets/js/g3-ui.js?v=17"></script>
+<script src="../assets/js/g3-history.js?v=17"></script>
+<script src="../assets/js/g3-avatar.js?v=17"></script>
+<script src="../assets/js/g3-farm.js?v=17"></script>
+<script src="../assets/js/g3-play.js?v=17"></script>
+<script src="../assets/js/g3-deco.js?v=17"></script>
+<script src="../assets/js/g3-journal.js?v=17"></script>
+<script src="../assets/js/g3-report.js?v=17"></script>
+<script src="../assets/js/g3-dialog.js?v=17"></script>
+<script src="../assets/js/g3-map.js?v=17"></script>
+<script src="../assets/js/g3-quests.js?v=17"></script>
+<script src="../assets/js/g3-collect.js?v=17"></script>
+<script src="../assets/js/g3-gacha.js?v=17"></script>
+<script src="../assets/js/g3-boot.js?v=17"></script>
 </body>
 </html>

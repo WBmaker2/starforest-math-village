@@ -1,7 +1,7 @@
 (function () {
   var muted = false;
   var actx = null;
-  try { muted = localStorage.getItem("math-walk-g3-mute") === "1"; } catch (e) {}
+  try { muted = (localStorage.getItem("starforest-mute") || localStorage.getItem("math-walk-g3-mute")) === "1"; } catch (e) {}
   function sfx(kind) {
     if (muted) return;
     try {
@@ -41,7 +41,7 @@
     syncText();
     btn.addEventListener("click", function () {
       muted = !muted;
-      try { localStorage.setItem("math-walk-g3-mute", muted ? "1" : "0"); } catch (e) {}
+      try { localStorage.setItem("starforest-mute", muted ? "1" : "0"); } catch (e) {}
       syncText();
       if (!muted) sfx("ok");
     });

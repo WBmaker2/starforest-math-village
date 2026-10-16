@@ -1,5 +1,6 @@
 (function () {
-  var KEY = "math-walk-g3";
+  var KEY = "starforest-g3";
+  var LEGACY_KEY = "math-walk-g3";
   function blank() {
     return { avatar: null, stars: 0, seeds: 0, done: {}, wrong: [],
       farm: { plots: [null, null, null, null] },
@@ -11,7 +12,7 @@
   }
   function load() {
     try {
-      var raw = localStorage.getItem(KEY);
+      var raw = localStorage.getItem(KEY) || localStorage.getItem(LEGACY_KEY);
       if (!raw) return blank();
       var d = JSON.parse(raw);
       if (!d || typeof d !== "object") return blank();

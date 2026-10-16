@@ -69,9 +69,9 @@
         + "<div class='rec'><b>첫 성공률</b><span>" + acc + "% (" + ok + "/" + tot + ")</span></div>"
         + "<div class='rec'><b>수확</b><span>" + d3.harvests + "회</span></div>"
         + "<div class='rec'><b>오답 보관</b><span>" + d3.wrong.length + "개 "
-        + (d3.wrong.length ? "<button class='mini-act gi-pulse' data-open-wrong='1'>오답 교실 열기</button>" : "")
+        + (d3.wrong.length ? "<button class='mini-act btn-pulse' data-open-wrong='1'>오답 교실 열기</button>" : "")
         + "</span></div>"
-        + "<div class='rec'><b>마을 회관 놀이</b><span><button class='mini-act gi-pulse' data-open-daily='1'>오늘의 도전 (5문제)</button></span></div>";
+        + "<div class='rec'><b>마을 회관 놀이</b><span><button class='mini-act btn-pulse' data-open-daily='1'>오늘의 도전 (5문제)</button></span></div>";
     }
   }
   document.addEventListener("click", function (e) {

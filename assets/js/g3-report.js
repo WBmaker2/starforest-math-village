@@ -40,7 +40,7 @@
     if (!box) return;
     var d = window.G3Store.load();
     var a = d.avatar || {};
-    var nm = a.name ? (a.name + " 주민증") : "산책 마을 주민증";
+    var nm = a.name ? (a.name + " 주민증") : "별숲 마을 주민증";
     var doneCnt = Object.keys(d.done || {}).length;
     var cardsCnt = (d.cards || []).length;
     var setsCnt = (d.sets || []).length;
@@ -58,7 +58,7 @@
       + "<p>누적 별 <b>" + d.stars + "</b> · 완료 차시 <b>" + doneCnt + "/" + totalLessons + "</b></p>"
       + "<p>도감 카드 <b>" + cardsCnt + "/10</b> · 황금 세트 <b>" + setsCnt + "/3</b></p></div></div>"
       + chartSvg(d)
-      + "<button type='button' class='mini-act gi-pulse' data-print-idcard='1'>🖨️ 명예 주민증 인쇄 / PDF 저장</button>"
+      + "<button type='button' class='mini-act btn-pulse' data-print-idcard='1'>🖨️ 명예 주민증 인쇄 / PDF 저장</button>"
       + "</div>"
       + diplomaHtml(d, a, title)
       + "<div class='savebox'>"
@@ -66,7 +66,7 @@
       + "<p class='hint'>코드를 복사해 두면 다른 태블릿이나 PC에서도 내 아바타와 별·카드를 그대로 이어서 플레이할 수 있습니다.</p>"
       + "<textarea id='saveCodeInput' rows='3' placeholder='여기에 이어하기 코드가 표시되거나 붙여넣을 수 있습니다'></textarea>"
       + "<div class='prow'>"
-      + "<button type='button' class='go gi-pulse' data-save-export='1'>내 이어하기 코드 만들기·복사</button>"
+      + "<button type='button' class='go btn-pulse' data-save-export='1'>내 이어하기 코드 만들기·복사</button>"
       + "<button type='button' data-save-import='1'>코드 불러오기</button>"
       + "</div><p id='saveCodeMsg' class='fb' aria-live='polite'></p></div></div>";
     box.innerHTML = html;
@@ -91,14 +91,14 @@
       stamps += "<span class='stamp" + (m ? " on" : "") + "'>" + (m ? "🏅 " : "☆ ") + STAMP_NAMES[order[i]] + "</span>";
     }
     var grad = got >= order.length;
-    var nm = (a && a.name) || "산책 주민";
+    var nm = (a && a.name) || "별숲 주민";
     return "<div class='diploma' id='diplomaCard'>"
-      + "<p class='eyebrow'>수학 산책마을 · 3학년</p>"
+      + "<p class='eyebrow'>별숲 수학마을 · 3학년</p>"
       + "<h3>" + (grad ? "🎓 명예 졸업 상장" : "🎓 졸업 상장 도전 중") + "</h3>"
       + "<div class='stamp-board'>" + stamps + "</div>"
       + "<p><b>" + nm + "</b> 주민 (" + title + ") · 단원 마스터 " + got + "/" + order.length + "</p>"
       + "<p class='hint'>" + (grad ? "6개 단원을 모두 완주했습니다! 아래 단추로 상장을 인쇄해 보세요." : "6개 단원을 모두 마치면 명예 졸업 상장이 완성됩니다.") + "</p>"
-      + "<button type='button' class='mini-act gi-pulse' data-print-diploma='1'>🖨️ 졸업 상장 인쇄 / PDF 저장</button>"
+      + "<button type='button' class='mini-act btn-pulse' data-print-diploma='1'>🖨️ 졸업 상장 인쇄 / PDF 저장</button>"
       + "</div>";
   }
   function exportCode() {

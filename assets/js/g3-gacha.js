@@ -27,7 +27,7 @@
         html += "<span class='gpiece" + (got ? " got" : "") + "'><img src='../assets/img/flow/parts/" + s.pieces[k].v + ".png' alt='" + s.pieces[k].n + "'>" + s.pieces[k].n + (got ? " 보유" : " 미보유") + "</span>";
       }
       var doneAll = left === 0;
-      html += "</div><button class='go gi-pulse' data-gacha='" + s.id + "'" + (doneAll ? " disabled" : "") + ">" + (doneAll ? "컴플리트!" : ("뽑기 (별 " + s.cost + ")")) + "</button></div>";
+      html += "</div><button class='go btn-pulse' data-gacha='" + s.id + "'" + (doneAll ? " disabled" : "") + ">" + (doneAll ? "컴플리트!" : ("뽑기 (별 " + s.cost + ")")) + "</button></div>";
     }
     box.innerHTML = html;
   }
