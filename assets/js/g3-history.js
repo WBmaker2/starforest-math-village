@@ -1,5 +1,6 @@
 (function () {
   var ITEMS = [
+    { date: "2026-10-16", title: "마을 지도·집 그림 새 단장", desc: "4·5·6학년 마을 지도를 천문대·과수원·물감 아틀리에 컨셉으로 새로 그리고 집 버튼 위치를 맞췄습니다. 단원 집 그림 18종도 컨셉에 맞게 새로 그렸고, 업데이트 내역 창에 X 닫기 버튼을 달았습니다." },
     { date: "2026-10-16", title: "전 학년 마을 완성", desc: "새싹숲 1·2학년 분리 12곳·36문항과 4·5·6학년 별숲 3곳·각 72문항을 열었습니다. 아바타·별·씨앗은 공유하고 진도는 학년별로 저장되며 소수점 키패드를 지원합니다." },
     { date: "2026-10-16", title: "전 화면 일러스트 교체·추가", desc: "파스텔 치비 시트 5종(꾸미기 6종·놀이 8종·마을 4종·학습 3종·저학년 집 6종)을 새로 그려 꾸미기·도감·놀이·랜딩 액자에 적용하고 집 그림 잘림을 고쳤습니다." },
     { date: "2026-10-16", title: "조작 교구·저학년 마을·칠판모드·졸업상장 추가", desc: "문제 그림을 직접 눌러 배우는 양방향 수학 교구, 1·2학년 저학년 산책 마을(6개 집·18문항), 전자칠판 발표 모드, 6단원 스탬프 보드와 명예 졸업 상장을 추가했습니다." },
@@ -18,9 +19,10 @@
     if (d) return d;
     d = document.createElement("dialog");
     d.id = "historyDialog";
-    d.innerHTML = "<h3>업데이트 내역</h3><div id='historyList'></div><button id='closeHistory' type='button'>닫기</button>";
+    d.innerHTML = "<button id='closeHistoryX' class='dlg-x' type='button' aria-label='업데이트 내역 닫기'>✕</button><h3>업데이트 내역</h3><div id='historyList'></div><button id='closeHistory' type='button'>닫기</button>";
     document.body.appendChild(d);
     d.querySelector("#closeHistory").addEventListener("click", function () { d.close(); });
+    d.querySelector("#closeHistoryX").addEventListener("click", function () { d.close(); });
     return d;
   }
   function render() {

@@ -143,6 +143,8 @@
   });
   var closeHistory = document.getElementById("closeHistory");
   if (closeHistory) closeHistory.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
+  var closeHistoryX = document.getElementById("closeHistoryX");
+  if (closeHistoryX) closeHistoryX.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
   var teacherDialog = document.getElementById("teacherDialog");
   var VILLAGE_URLS = {
     1: "lower/index.html?grade=1", 2: "lower/index.html?grade=2",

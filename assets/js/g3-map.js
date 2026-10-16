@@ -1,22 +1,27 @@
 (function () {
   var DEFAULT_PINS = [
-    { id: "mul", name: "곱셈 방앗간", x: 50, y: 12 },
-    { id: "divi", name: "나눔 과일정거장", x: 80, y: 28 },
-    { id: "circ", name: "동그라미 시계소", x: 80, y: 72 },
-    { id: "frac", name: "조각 피자부엌", x: 50, y: 88 },
-    { id: "mea", name: "되와 무게 실험실", x: 20, y: 72 },
-    { id: "gra", name: "그림소식 우체통", x: 20, y: 28 }
+    { id: "mul", name: "곱셈 방앗간", x: 22, y: 15 },
+    { id: "divi", name: "나눔 과일정거장", x: 78, y: 15 },
+    { id: "circ", name: "동그라미 시계소", x: 14, y: 43 },
+    { id: "frac", name: "조각 피자부엌", x: 27, y: 65 },
+    { id: "mea", name: "되와 무게 실험실", x: 68, y: 68 },
+    { id: "gra", name: "그림소식 우체통", x: 88, y: 56 }
   ];
   function pins() {
     if (window.GRADE_PINS && window.GRADE_PINS.length) return window.GRADE_PINS;
     return DEFAULT_PINS;
   }
   var PINS = DEFAULT_PINS;
-  var FRIENDS = [
+  var DEFAULT_FRIENDS = [
     { name: "몽실", line: "방앗간 1차시를 끝내 주면 씨앗을 줄게!", x: 38, y: 30 },
     { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 62, y: 66 },
     { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 30, y: 62 }
   ];
+  function friends() {
+    if (window.GRADE_FRIENDS && window.GRADE_FRIENDS.length) return window.GRADE_FRIENDS;
+    return DEFAULT_FRIENDS;
+  }
+  var FRIENDS = DEFAULT_FRIENDS;
   var DECO_SPOTS = [
     { x: 42, y: 44 }, { x: 58, y: 44 }, { x: 42, y: 58 },
     { x: 58, y: 58 }, { x: 34, y: 48 }, { x: 66, y: 48 }
@@ -25,8 +30,10 @@
   var walkTimer = null;
   function store() { return window.G3Store.load(); }
   function refreshPins() { PINS = pins(); return PINS; }
+  function refreshFriends() { FRIENDS = friends(); return FRIENDS; }
   function build() {
     refreshPins();
+    refreshFriends();
     var wrap = document.getElementById("mapwrap");
     if (!wrap || wrap.dataset.built) return;
     wrap.dataset.built = "1";

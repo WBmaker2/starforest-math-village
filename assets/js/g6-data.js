@@ -2,17 +2,22 @@
   window.STARFOREST_GRADE = "g6";
   window.STARFOREST_GRADE_LABEL = "6학년";
   window.GRADE_PINS = [
-    { id: "g6-fracdiv", name: "조각 나눔터", x: 50, y: 12 },
-    { id: "g6-decdiv", name: "꼼꼼 배달소", x: 80, y: 28 },
-    { id: "g6-space", name: "차곡 건축창고", x: 80, y: 72 },
-    { id: "g6-ratio", name: "물감 배합소", x: 50, y: 88 },
-    { id: "g6-circle", name: "동그라미 화단", x: 20, y: 72 },
-    { id: "g6-cyl", name: "빙글 입체공방", x: 20, y: 28 }
+    { id: "g6-fracdiv", name: "조각 나눔터", x: 50, y: 11 },
+    { id: "g6-decdiv", name: "꼼꼼 배달소", x: 82, y: 27 },
+    { id: "g6-space", name: "차곡 건축창고", x: 79, y: 64 },
+    { id: "g6-ratio", name: "물감 배합소", x: 50, y: 81 },
+    { id: "g6-circle", name: "동그라미 화단", x: 23, y: 64 },
+    { id: "g6-cyl", name: "빙글 입체공방", x: 25, y: 27 }
+  ];
+  window.GRADE_FRIENDS = [
+    { name: "몽실", line: "나눔터 1차시를 끝내 주면 씨앗을 줄게!", x: 40, y: 48 },
+    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 63, y: 46 },
+    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 51, y: 64 }
   ];
   window.GRADE_PORTRAITS = {
-    "g6-fracdiv": "../assets/img/flow/house-frac.jpg", "g6-decdiv": "../assets/img/flow/house-mea.jpg",
-    "g6-space": "../assets/img/flow/house-divi.jpg", "g6-ratio": "../assets/img/flow/house-mul.jpg",
-    "g6-circle": "../assets/img/flow/house-circ.jpg", "g6-cyl": "../assets/img/flow/house-gra.jpg"
+    "g6-fracdiv": "../assets/img/flow/house-g6-fracdiv.jpg", "g6-decdiv": "../assets/img/flow/house-g6-decdiv.jpg",
+    "g6-space": "../assets/img/flow/house-g6-space.jpg", "g6-ratio": "../assets/img/flow/house-g6-ratio.jpg",
+    "g6-circle": "../assets/img/flow/house-g6-circle.jpg", "g6-cyl": "../assets/img/flow/house-g6-cyl.jpg"
   };
   window.GRADE_NPCS = {
     "g6-fracdiv": "npc-mole", "g6-decdiv": "npc-chick", "g6-space": "npc-bunny",

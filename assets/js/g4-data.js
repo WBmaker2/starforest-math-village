@@ -2,17 +2,22 @@
   window.STARFOREST_GRADE = "g4";
   window.STARFOREST_GRADE_LABEL = "4학년";
   window.GRADE_PINS = [
-    { id: "g4-frac", name: "조각 빵나눔터", x: 50, y: 12 },
-    { id: "g4-tri", name: "세모 지붕소", x: 80, y: 28 },
-    { id: "g4-deci", name: "리본 문구점", x: 80, y: 72 },
-    { id: "g4-quad", name: "네모 설계실", x: 50, y: 88 },
-    { id: "g4-line", name: "꺾은길 전망대", x: 20, y: 72 },
-    { id: "g4-poly", name: "모자이크 공방", x: 20, y: 28 }
+    { id: "g4-frac", name: "조각 빵나눔터", x: 50, y: 17 },
+    { id: "g4-tri", name: "세모 지붕소", x: 82, y: 31 },
+    { id: "g4-deci", name: "리본 문구점", x: 80, y: 61 },
+    { id: "g4-quad", name: "네모 설계실", x: 50, y: 77 },
+    { id: "g4-line", name: "꺾은길 전망대", x: 25, y: 62 },
+    { id: "g4-poly", name: "모자이크 공방", x: 28, y: 32 }
+  ];
+  window.GRADE_FRIENDS = [
+    { name: "몽실", line: "빵나눔터 1차시를 끝내 주면 씨앗을 줄게!", x: 40, y: 50 },
+    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 64, y: 50 },
+    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 52, y: 68 }
   ];
   window.GRADE_PORTRAITS = {
-    "g4-frac": "../assets/img/flow/house-frac.jpg", "g4-tri": "../assets/img/flow/house-circ.jpg",
-    "g4-deci": "../assets/img/flow/house-mea.jpg", "g4-quad": "../assets/img/flow/house-divi.jpg",
-    "g4-line": "../assets/img/flow/house-gra.jpg", "g4-poly": "../assets/img/flow/house-mul.jpg"
+    "g4-frac": "../assets/img/flow/house-g4-frac.jpg", "g4-tri": "../assets/img/flow/house-g4-tri.jpg",
+    "g4-deci": "../assets/img/flow/house-g4-deci.jpg", "g4-quad": "../assets/img/flow/house-g4-quad.jpg",
+    "g4-line": "../assets/img/flow/house-g4-line.jpg", "g4-poly": "../assets/img/flow/house-g4-poly.jpg"
   };
   window.GRADE_NPCS = {
     "g4-frac": "npc-mole", "g4-tri": "npc-bunny", "g4-deci": "npc-chick",

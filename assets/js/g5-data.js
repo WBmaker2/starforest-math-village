@@ -2,17 +2,22 @@
   window.STARFOREST_GRADE = "g5";
   window.STARFOREST_GRADE_LABEL = "5학년";
   window.GRADE_PINS = [
-    { id: "g5-range", name: "어림 전망대", x: 50, y: 12 },
-    { id: "g5-fracmul", name: "분수 과일농장", x: 80, y: 28 },
-    { id: "g5-symm", name: "거울 정원", x: 80, y: 72 },
-    { id: "g5-decimul", name: "소수 비닐하우스", x: 50, y: 88 },
-    { id: "g5-cuboid", name: "쌓기 창고", x: 20, y: 72 },
-    { id: "g5-avg", name: "기록 텃밭", x: 20, y: 28 }
+    { id: "g5-range", name: "어림 전망대", x: 50, y: 16 },
+    { id: "g5-fracmul", name: "분수 과일농장", x: 80, y: 31 },
+    { id: "g5-symm", name: "거울 정원", x: 79, y: 62 },
+    { id: "g5-decimul", name: "소수 비닐하우스", x: 50, y: 78 },
+    { id: "g5-cuboid", name: "쌓기 창고", x: 26, y: 62 },
+    { id: "g5-avg", name: "기록 텃밭", x: 27, y: 32 }
+  ];
+  window.GRADE_FRIENDS = [
+    { name: "몽실", line: "전망대 1차시를 끝내 주면 씨앗을 줄게!", x: 40, y: 50 },
+    { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 62, y: 48 },
+    { name: "반짝이", line: "빈터 2곳을 꾸미면 바람개비 카드를 줘!", x: 50, y: 67 }
   ];
   window.GRADE_PORTRAITS = {
-    "g5-range": "../assets/img/flow/house-gra.jpg", "g5-fracmul": "../assets/img/flow/house-frac.jpg",
-    "g5-symm": "../assets/img/flow/house-circ.jpg", "g5-decimul": "../assets/img/flow/house-mea.jpg",
-    "g5-cuboid": "../assets/img/flow/house-divi.jpg", "g5-avg": "../assets/img/flow/house-mul.jpg"
+    "g5-range": "../assets/img/flow/house-g5-range.jpg", "g5-fracmul": "../assets/img/flow/house-g5-fracmul.jpg",
+    "g5-symm": "../assets/img/flow/house-g5-symm.jpg", "g5-decimul": "../assets/img/flow/house-g5-decimul.jpg",
+    "g5-cuboid": "../assets/img/flow/house-g5-cuboid.jpg", "g5-avg": "../assets/img/flow/house-g5-avg.jpg"
   };
   window.GRADE_NPCS = {
     "g5-range": "npc-bunny", "g5-fracmul": "npc-mole", "g5-symm": "npc-chick",
