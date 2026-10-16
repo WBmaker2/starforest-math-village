@@ -74,7 +74,9 @@
   function build() {
     var wrap = document.getElementById("lowMapwrap");
     if (!wrap) return;
-    wrap.innerHTML = "<img id='lowMapimg' src='../assets/img/flow/map-b.jpg' alt='파스텔 톤의 저학년 마을 지도'>";
+    var mapSrc = G === "2" ? "../assets/img/flow/map-g2.jpg" : "../assets/img/flow/map-g1.jpg";
+    var mapAlt = G === "2" ? "2학년 새싹숲 마을 지도" : "1학년 새싹숲 마을 지도";
+    wrap.innerHTML = "<img id='lowMapimg' src='" + mapSrc + "' alt='" + mapAlt + "'>";
     wrap.dataset.built = "1";
     var token = document.createElement("div");
     token.id = "lowToken";

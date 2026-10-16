@@ -1,6 +1,6 @@
 (function () {
   var G1 = [
-    { id: "g1-num", name: "숫자 화단", x: 50, y: 10, npc: "화단지기 씨앗이", npcImg: "npc-mole", houseImg: "house-low-num",
+    { id: "g1-num", name: "숫자 화단", x: 50, y: 14, npc: "화단지기 씨앗이", npcImg: "npc-mole", houseImg: "house-low-num",
       list: [
         { q: "10개씩 3묶음과 낱개 4개는 모두 몇 개일까요?",
           svg: "<svg viewBox='0 0 300 90'><rect x='14' y='18' width='56' height='54' rx='10' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='42' y='50' text-anchor='middle' font-family='Jua' font-size='18'>10</text><rect x='80' y='18' width='56' height='54' rx='10' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='108' y='50' text-anchor='middle' font-family='Jua' font-size='18'>10</text><rect x='146' y='18' width='56' height='54' rx='10' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='174' y='50' text-anchor='middle' font-family='Jua' font-size='18'>10</text><circle cx='226' cy='34' r='9' fill='#EE7F62'/><circle cx='252' cy='34' r='9' fill='#EE7F62'/><circle cx='226' cy='58' r='9' fill='#EE7F62'/><circle cx='252' cy='58' r='9' fill='#EE7F62'/></svg>",
@@ -12,7 +12,7 @@
           svg: "<svg viewBox='0 0 300 90'><rect x='24' y='24' width='72' height='42' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='60' y='51' text-anchor='middle' font-family='Jua' font-size='17'>70</text><rect x='114' y='24' width='72' height='42' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='150' y='51' text-anchor='middle' font-family='Jua' font-size='17'>71</text><rect x='204' y='24' width='72' height='42' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='240' y='51' text-anchor='middle' font-family='Jua' font-size='17'>72</text></svg>",
           choices: ["69", "73", "75"], a: "73", exp: "하나씩 커지니까 다음은 73이에요!" }
       ] },
-    { id: "g1-add", name: "더하기 작업실", x: 82, y: 12, npc: "장난감 목수 뚝딱이", npcImg: "npc-chick", houseImg: "house-low-add",
+    { id: "g1-add", name: "더하기 작업실", x: 23, y: 30, npc: "장난감 목수 뚝딱이", npcImg: "npc-chick", houseImg: "house-low-add",
       list: [
         { q: "사과 3개와 배 4개를 합치면 모두 몇 개일까요?",
           svg: "<svg viewBox='0 0 300 90'><circle cx='60' cy='45' r='13' fill='#EE7F62'/><circle cx='100' cy='45' r='13' fill='#EE7F62'/><circle cx='140' cy='45' r='13' fill='#EE7F62'/><text x='180' y='54' font-size='22' font-family='Jua'>+</text><circle cx='215' cy='45' r='13' fill='#F5B23A'/><circle cx='255' cy='45' r='13' fill='#F5B23A'/></svg>",
@@ -24,7 +24,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='50' cy='45' r='11' fill='#6FBAD2'/><circle cx='86' cy='45' r='11' fill='#6FBAD2'/><circle cx='122' cy='45' r='11' fill='#6FBAD2'/><circle cx='158' cy='45' r='11' fill='#6FBAD2'/><circle cx='194' cy='45' r='11' fill='#E6DFC9'/><circle cx='230' cy='45' r='11' fill='#E6DFC9'/></svg>",
           choices: ["4", "5", "6"], a: "5", exp: "9에서 4를 덜면 5가 남아요!" }
       ] },
-    { id: "g1-shape", name: "모양·시계 아틀리에", x: 84, y: 44, npc: "그림 화가 팔레트", npcImg: "npc-bunny", houseImg: "house-low-clock",
+    { id: "g1-shape", name: "모양·시계 아틀리에", x: 80, y: 30, npc: "그림 화가 팔레트", npcImg: "npc-bunny", houseImg: "house-low-clock",
       list: [
         { q: "긴바늘이 12, 짧은바늘이 4를 가리킵니다. 몇 시일까요?",
           svg: "<svg viewBox='0 0 300 90'><circle cx='150' cy='45' r='36' fill='#FFFDF6' stroke='#F08FB0' stroke-width='3'/><line x1='150' y1='45' x2='150' y2='18' stroke='#3E3428' stroke-width='2.5' stroke-linecap='round'/><line x1='150' y1='45' x2='170' y2='56' stroke='#EE7F62' stroke-width='3.5' stroke-linecap='round'/><circle cx='150' cy='45' r='3' fill='#3E3428'/></svg>",
@@ -36,7 +36,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='150' cy='45' r='36' fill='#FFFDF6' stroke='#F08FB0' stroke-width='3'/><line x1='150' y1='45' x2='150' y2='18' stroke='#3E3428' stroke-width='2.5' stroke-linecap='round'/><line x1='150' y1='45' x2='126' y2='45' stroke='#EE7F62' stroke-width='3.5' stroke-linecap='round'/><circle cx='150' cy='45' r='3' fill='#3E3428'/></svg>",
           choices: ["9시", "12시", "6시"], a: "9시", exp: "짧은바늘이 9를 가리키면 9시예요!" }
       ] },
-    { id: "g1-fruit", name: "열매 모으기", x: 50, y: 74, npc: "다람쥐 아줌마 토실이", npcImg: "npc-chick", houseImg: "house-low-add",
+    { id: "g1-fruit", name: "열매 모으기", x: 79, y: 59, npc: "다람쥐 아줌마 토실이", npcImg: "npc-chick", houseImg: "house-low-add",
       list: [
         { q: "바구니에 밤이 5개, 도토리가 3개 있습니다. 모두 몇 개일까요?",
           svg: "<svg viewBox='0 0 300 90'><ellipse cx='80' cy='50' rx='40' ry='24' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='80' y='56' text-anchor='middle' font-family='Jua' font-size='18'>🌰×5</text><ellipse cx='210' cy='50' rx='40' ry='24' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='210' y='56' text-anchor='middle' font-family='Jua' font-size='18'>🍂×3</text></svg>",
@@ -48,7 +48,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='50' cy='45' r='11' fill='#EE7F62'/><circle cx='86' cy='45' r='11' fill='#EE7F62'/><circle cx='122' cy='45' r='11' fill='#EE7F62'/><circle cx='158' cy='45' r='11' fill='#E6DFC9'/><circle cx='194' cy='45' r='11' fill='#E6DFC9'/><circle cx='230' cy='45' r='11' fill='#E6DFC9'/></svg>",
           choices: ["6개", "7개", "8개"], a: "7개", exp: "10 - 3 = 7개예요!" }
       ] },
-    { id: "g1-rule", name: "규칙 산책로", x: 18, y: 66, npc: "산책 안내원 나뭇잎", npcImg: "npc-bunny", houseImg: "house-low-deck",
+    { id: "g1-rule", name: "규칙 산책로", x: 24, y: 59, npc: "산책 안내원 나뭇잎", npcImg: "npc-bunny", houseImg: "house-low-deck",
       list: [
         { q: "○ △ ○ △ 다음에 올 모양은 무엇일까요?",
           svg: "<svg viewBox='0 0 300 90'><circle cx='60' cy='45' r='20' fill='#F5B23A'/><polygon points='130,25 110,65 150,65' fill='#6FBAD2'/><circle cx='190' cy='45' r='20' fill='#F5B23A'/><polygon points='260,25 240,65 280,65' fill='#6FBAD2'/></svg>",
@@ -60,7 +60,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='60' cy='45' r='20' fill='#EE7F62'/><circle cx='130' cy='45' r='20' fill='#6FBAD2'/><circle cx='200' cy='45' r='20' fill='#EE7F62'/><circle cx='260' cy='45' r='20' fill='#E6DFC9' stroke='#9A8568' stroke-width='2' stroke-dasharray='5 4'/></svg>",
           choices: ["빨강", "파랑", "노랑"], a: "파랑", exp: "빨강과 파랑이 번갈아 나오니 다음은 파랑이에요!" }
       ] },
-    { id: "g1-group", name: "모둠 천막", x: 19, y: 12, npc: "모둠 반장 별님이", npcImg: "npc-mole", houseImg: "house-low-place",
+    { id: "g1-group", name: "모둠 천막", x: 50, y: 75, npc: "모둠 반장 별님이", npcImg: "npc-mole", houseImg: "house-low-place",
       list: [
         { q: "10을 4와 몇으로 가를 수 있을까요? (4 + ? = 10)",
           svg: "<svg viewBox='0 0 300 90'><rect x='40' y='22' width='100' height='46' rx='10' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='90' y='51' text-anchor='middle' font-family='Jua' font-size='18'>4</text><text x='155' y='52' font-size='20' font-family='Jua'>+</text><rect x='175' y='22' width='100' height='46' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='225' y='51' text-anchor='middle' font-family='Jua' font-size='18'>?</text></svg>",
@@ -86,7 +86,7 @@
           svg: "<svg viewBox='0 0 300 90'><rect x='28' y='22' width='56' height='46' rx='8' fill='#EDE6FA' stroke='#9C86E0' stroke-width='2'/><text x='56' y='50' text-anchor='middle' font-family='Jua' font-size='16'>2</text><rect x='92' y='22' width='56' height='46' rx='8' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='120' y='50' text-anchor='middle' font-family='Jua' font-size='16'>3</text><rect x='156' y='22' width='56' height='46' rx='8' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='184' y='50' text-anchor='middle' font-family='Jua' font-size='16'>4</text><rect x='220' y='22' width='56' height='46' rx='8' fill='#FBE3D8' stroke='#EE7F62' stroke-width='2'/><text x='248' y='50' text-anchor='middle' font-family='Jua' font-size='16'>5</text></svg>",
           choices: ["천의 자리", "백의 자리", "십의 자리"], a: "백의 자리", exp: "2345에서 3은 백의 자리예요!" }
       ] },
-    { id: "g2-song", name: "곱셈 노래방", x: 82, y: 12, npc: "노래 선생님 도레미", npcImg: "npc-chick", houseImg: "house-low-song",
+    { id: "g2-song", name: "곱셈 노래방", x: 72, y: 18, npc: "노래 선생님 도레미", npcImg: "npc-chick", houseImg: "house-low-song",
       list: [
         { q: "한 접시에 사과가 4개씩 3접시 있습니다. 모두 몇 개일까요? (4 × 3)",
           svg: "<svg viewBox='0 0 300 90'><ellipse cx='65' cy='50' rx='36' ry='22' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='65' y='56' text-anchor='middle' font-family='Jua' font-size='18'>🍎×4</text><ellipse cx='150' cy='50' rx='36' ry='22' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='150' y='56' text-anchor='middle' font-family='Jua' font-size='18'>🍎×4</text><ellipse cx='235' cy='50' rx='36' ry='22' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='235' y='56' text-anchor='middle' font-family='Jua' font-size='18'>🍎×4</text></svg>",
@@ -98,7 +98,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='80' cy='45' r='14' fill='#F5B23A'/><circle cx='130' cy='45' r='14' fill='#F5B23A'/><circle cx='180' cy='45' r='14' fill='#F5B23A'/><text x='228' y='52' font-size='16' font-family='Jua'>× 3?</text></svg>",
           choices: ["6", "9", "12"], a: "9", exp: "3씩 3묶음은 9예요!" }
       ] },
-    { id: "g2-length", name: "길이 재기소", x: 84, y: 44, npc: "자 장인 쭉쭉이", npcImg: "npc-bunny", houseImg: "house-low-deck",
+    { id: "g2-length", name: "길이 재기소", x: 31, y: 18, npc: "자 장인 쭉쭉이", npcImg: "npc-bunny", houseImg: "house-low-deck",
       list: [
         { q: "연필 길이가 자 눈금 0부터 12까지입니다. 몇 cm일까요?",
           svg: "<svg viewBox='0 0 300 90'><rect x='20' y='30' width='260' height='26' rx='6' fill='#FFFDF6' stroke='#9A8568' stroke-width='2'/><line x1='40' y1='30' x2='40' y2='44' stroke='#3E3428' stroke-width='2'/><line x1='200' y1='30' x2='200' y2='44' stroke='#3E3428' stroke-width='2'/><text x='40' y='72' text-anchor='middle' font-size='12' font-family='Jua'>0</text><text x='200' y='72' text-anchor='middle' font-size='12' font-family='Jua'>12</text><text x='120' y='50' text-anchor='middle' font-family='Jua' font-size='16'>✏️ 연필</text></svg>",
@@ -110,7 +110,7 @@
           svg: "<svg viewBox='0 0 300 90'><rect x='30' y='30' width='120' height='30' rx='8' fill='#FBE3D8' stroke='#EE7F62' stroke-width='2'/><text x='90' y='50' text-anchor='middle' font-family='Jua'>30cm</text><rect x='160' y='30' width='110' height='30' rx='8' fill='#FDEBCB' stroke='#F2992E' stroke-width='2'/><text x='215' y='50' text-anchor='middle' font-family='Jua'>25cm</text></svg>",
           choices: ["50cm", "55cm", "65cm"], a: "55cm", exp: "30 + 25 = 55cm예요!" }
       ] },
-    { id: "g2-time", name: "시계 전망대", x: 50, y: 74, npc: "전망대지기 똑딱이", npcImg: "npc-chick", houseImg: "house-low-clock",
+    { id: "g2-time", name: "시계 전망대", x: 70, y: 53, npc: "전망대지기 똑딱이", npcImg: "npc-chick", houseImg: "house-low-clock",
       list: [
         { q: "짧은바늘이 3과 4 사이, 긴바늘이 6을 가리킵니다. 몇 시 몇 분일까요?",
           svg: "<svg viewBox='0 0 300 90'><circle cx='150' cy='45' r='36' fill='#FFFDF6' stroke='#4E9BB8' stroke-width='3'/><line x1='150' y1='45' x2='150' y2='75' stroke='#3E3428' stroke-width='2.5' stroke-linecap='round'/><line x1='150' y1='45' x2='168' y2='52' stroke='#EE7F62' stroke-width='3.5' stroke-linecap='round'/><circle cx='150' cy='45' r='3' fill='#3E3428'/></svg>",
@@ -122,7 +122,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='150' cy='45' r='36' fill='#FFFDF6' stroke='#4E9BB8' stroke-width='3'/><line x1='150' y1='45' x2='150' y2='18' stroke='#3E3428' stroke-width='2.5' stroke-linecap='round'/><line x1='150' y1='45' x2='126' y2='45' stroke='#EE7F62' stroke-width='3.5' stroke-linecap='round'/><circle cx='150' cy='45' r='3' fill='#3E3428'/></svg>",
           choices: ["9시", "12시", "6시"], a: "9시", exp: "짧은바늘이 9를 가리키면 9시예요!" }
       ] },
-    { id: "g2-table", name: "관찰 데크", x: 18, y: 66, npc: "쌍안경 탐험가 룰루", npcImg: "npc-bunny", houseImg: "house-low-deck",
+    { id: "g2-table", name: "관찰 데크", x: 31, y: 54, npc: "쌍안경 탐험가 룰루", npcImg: "npc-bunny", houseImg: "house-low-deck",
       list: [
         { q: "사과 5개, 바나나 3개입니다. 표에서 사과는 몇 개일까요?",
           svg: "<svg viewBox='0 0 300 90'><rect x='40' y='18' width='110' height='54' rx='8' fill='#FFFDF6' stroke='#9A8568' stroke-width='2'/><text x='95' y='42' text-anchor='middle' font-family='Jua'>🍎 사과 5</text><text x='95' y='62' text-anchor='middle' font-family='Jua'>🍌 바나나 3</text><rect x='170' y='18' width='90' height='54' rx='8' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='215' y='50' text-anchor='middle' font-family='Jua'>○×5?</text></svg>",
@@ -134,7 +134,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='60' cy='45' r='12' fill='#F5B23A'/><circle cx='100' cy='45' r='12' fill='#F5B23A'/><circle cx='140' cy='45' r='12' fill='#F5B23A'/><circle cx='180' cy='45' r='12' fill='#E6DFC9' stroke='#9A8568' stroke-dasharray='4 3'/><text x='230' y='52' font-size='14' font-family='Jua'>○=1명</text></svg>",
           choices: ["5명", "7명", "10명"], a: "7명", exp: "○ 1개가 1명이면 7개는 7명이에요!" }
       ] },
-    { id: "g2-pattern", name: "무늬 산책로", x: 19, y: 12, npc: "무늬 화가 줄무늬", npcImg: "npc-mole", houseImg: "house-low-deck",
+    { id: "g2-pattern", name: "무늬 산책로", x: 50, y: 68, npc: "무늬 화가 줄무늬", npcImg: "npc-mole", houseImg: "house-low-deck",
       list: [
         { q: "2, 4, 6 다음에 올 수는 몇일까요?",
           svg: "<svg viewBox='0 0 300 90'><rect x='24' y='24' width='60' height='42' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='54' y='51' text-anchor='middle' font-family='Jua' font-size='17'>2</text><rect x='100' y='24' width='60' height='42' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='130' y='51' text-anchor='middle' font-family='Jua' font-size='17'>4</text><rect x='176' y='24' width='60' height='42' rx='10' fill='#E3F3DC' stroke='#4FA85E' stroke-width='2'/><text x='206' y='51' text-anchor='middle' font-family='Jua' font-size='17'>6</text></svg>",
