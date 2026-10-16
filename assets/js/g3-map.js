@@ -1,5 +1,5 @@
 (function () {
-  var PINS = [
+  var DEFAULT_PINS = [
     { id: "mul", name: "곱셈 방앗간", x: 50, y: 12 },
     { id: "divi", name: "나눔 과일정거장", x: 80, y: 28 },
     { id: "circ", name: "동그라미 시계소", x: 80, y: 72 },
@@ -7,6 +7,11 @@
     { id: "mea", name: "되와 무게 실험실", x: 20, y: 72 },
     { id: "gra", name: "그림소식 우체통", x: 20, y: 28 }
   ];
+  function pins() {
+    if (window.GRADE_PINS && window.GRADE_PINS.length) return window.GRADE_PINS;
+    return DEFAULT_PINS;
+  }
+  var PINS = DEFAULT_PINS;
   var FRIENDS = [
     { name: "몽실", line: "방앗간 1차시를 끝내 주면 씨앗을 줄게!", x: 38, y: 30 },
     { name: "햇살이", line: "텃밭에서 무언가 거두면 카드를 준다!", x: 62, y: 66 },
@@ -19,7 +24,9 @@
   var pos = { x: 50, y: 50 };
   var walkTimer = null;
   function store() { return window.G3Store.load(); }
+  function refreshPins() { PINS = pins(); return PINS; }
   function build() {
+    refreshPins();
     var wrap = document.getElementById("mapwrap");
     if (!wrap || wrap.dataset.built) return;
     wrap.dataset.built = "1";
@@ -121,6 +128,7 @@
     }
   }
   function nextTodoTask() {
+    refreshPins();
     var d = store();
     if (!d.avatar || !d.avatar.name) return { text: "나만의 주민 이름 짓기", act: "scroll:avatar" };
     var now = Date.now();
@@ -223,6 +231,7 @@
     checkNear();
   }
   function checkNear() {
+    refreshPins();
     var best = null, bd = 12;
     for (var i = 0; i < PINS.length; i++) {
       var d = Math.hypot(pos.x - PINS[i].x, pos.y - PINS[i].y);

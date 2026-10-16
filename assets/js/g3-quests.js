@@ -1,5 +1,9 @@
 (function () {
-  var QUESTS = [
+  function QUESTS() {
+    if (window.GRADE_QUESTS && window.GRADE_QUESTS.length) return window.GRADE_QUESTS;
+    return BASE_QUESTS;
+  }
+  var BASE_QUESTS = [
     { id: "q-mul1", giver: "몽실", title: "방앗간 첫 도움", desc: "곱셈 방앗간 1차시를 끝내 주세요.",
       check: function (d) { return !!d.done["mul-1"]; },
       reward: { card: "mong", seeds: 2, text: "몽실 카드와 씨앗 2개" } },
@@ -36,9 +40,10 @@
     if (!box) return;
     var d = window.G3Store.load();
     var done = doneIds();
+    var list = QUESTS();
     var html = "";
-    for (var i = 0; i < QUESTS.length; i++) {
-      var q = QUESTS[i];
+    for (var i = 0; i < list.length; i++) {
+      var q = list[i];
       var isDone = done.indexOf(q.id) >= 0;
       var can = !isDone && q.check(d);
       html += "<div class='quest'><b>" + q.title + "</b><span>" + q.giver + "의 부탁: " + q.desc + "</span>";
@@ -52,7 +57,8 @@
   }
   function claim(id) {
     var q = null;
-    for (var i = 0; i < QUESTS.length; i++) if (QUESTS[i].id === id) q = QUESTS[i];
+    var list = QUESTS();
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) q = list[i];
     if (!q) return;
     var d = window.G3Store.load();
     var done = doneIds();

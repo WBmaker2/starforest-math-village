@@ -1,8 +1,32 @@
 (function () {
-  var UNIT_ORDER = [
+  var BASE_ORDER = [
     ["mul", "곱셈"], ["divi", "나눗셈"], ["circ", "원"],
     ["frac", "분수"], ["mea", "들이·무게"], ["gra", "그림그래프"]
   ];
+  function UNIT_ORDER() {
+    if (window.GRADE_UNIT_ORDER && window.GRADE_UNIT_ORDER.length) return window.GRADE_UNIT_ORDER;
+    try {
+      var u = window.G3Units || {};
+      var keys = Object.keys(u);
+      if (keys.length && !(keys.length === 6 && u.mul)) {
+        var out = [];
+        for (var i = 0; i < keys.length; i++) {
+          var nm = (u[keys[i]].name || keys[i]).replace(/.*·\s*/, "").slice(0, 6);
+          out.push([keys[i], nm || keys[i]]);
+        }
+        return out;
+      }
+    } catch (e) {}
+    return BASE_ORDER;
+  }
+  function gradeLabel() {
+    try {
+      if (window.STARFOREST_GRADE_LABEL) return window.STARFOREST_GRADE_LABEL;
+      var g = (window.G3Store && window.G3Store.grade) ? window.G3Store.grade() : "g3";
+      var map = { g1: "1학년", g2: "2학년", g3: "3학년", g4: "4학년", g5: "5학년", g6: "6학년" };
+      return map[g] || "3학년";
+    } catch (e) { return "3학년"; }
+  }
   function toast(m) { if (window.G3UI) window.G3UI.toast(m); }
   function encodeSave(d) {
     try { return btoa(unescape(encodeURIComponent(JSON.stringify(d)))); } catch (e) { return ""; }
@@ -11,16 +35,18 @@
     try { return JSON.parse(decodeURIComponent(escape(atob(str.trim())))); } catch (e) { return null; }
   }
   function rankTitle(doneCnt, cardsCnt) {
-    if (doneCnt >= 14 || cardsCnt >= 8) return "3학년 수학 보안관";
+    var gl = gradeLabel();
+    if (doneCnt >= 14 || cardsCnt >= 8) return gl + " 수학 보안관";
     if (doneCnt >= 7 || cardsCnt >= 4) return "멋진 마을 탐험가";
-    if (doneCnt >= 1) return "부지런한 방앗간 친구";
+    if (doneCnt >= 1) return "부지런한 마을 친구";
     return "새싹 산책 주민";
   }
   function chartSvg(d) {
     var units = window.G3Units || {};
+    var order = UNIT_ORDER();
     var out = "<svg class='unit-chart' viewBox='0 0 300 132' role='img' aria-label='단원별 학습 달성도'>";
-    for (var i = 0; i < UNIT_ORDER.length; i++) {
-      var id = UNIT_ORDER[i][0], label = UNIT_ORDER[i][1];
+    for (var i = 0; i < order.length; i++) {
+      var id = order[i][0], label = order[i][1];
       var ls = (units[id] && units[id].lessons) || [];
       var tot = ls.length || 1, done = 0;
       for (var j = 0; j < ls.length; j++) if (d.done && d.done[ls[j].id]) done++;
@@ -75,7 +101,14 @@
       window.G3Avatar.mountRig(avBox, a);
     }
   }
-  var STAMP_NAMES = { mul: "곱셈", divi: "나눗셈", circ: "원", frac: "분수", mea: "측정", gra: "그래프" };
+  var STAMP_FALLBACK = { mul: "곱셈", divi: "나눗셈", circ: "원", frac: "분수", mea: "측정", gra: "그래프" };
+  function STAMP_NAMES() {
+    var order = UNIT_ORDER();
+    var out = {};
+    for (var i = 0; i < order.length; i++) out[order[i][0]] = order[i][1];
+    for (var k in STAMP_FALLBACK) if (!out[k]) out[k] = STAMP_FALLBACK[k];
+    return out;
+  }
   function unitMaster(d, hid) {
     var ls = ((window.G3Units || {})[hid] && window.G3Units[hid].lessons) || [];
     if (!ls.length) return false;
@@ -83,21 +116,22 @@
     return true;
   }
   function diplomaHtml(d, a, title) {
-    var order = ["mul", "divi", "circ", "frac", "mea", "gra"];
+    var order = UNIT_ORDER().map(function (r) { return r[0]; });
+    var names = STAMP_NAMES();
     var got = 0, stamps = "";
     for (var i = 0; i < order.length; i++) {
       var m = unitMaster(d, order[i]);
       if (m) got++;
-      stamps += "<span class='stamp" + (m ? " on" : "") + "'>" + (m ? "🏅 " : "☆ ") + STAMP_NAMES[order[i]] + "</span>";
+      stamps += "<span class='stamp" + (m ? " on" : "") + "'>" + (m ? "🏅 " : "☆ ") + (names[order[i]] || order[i]) + "</span>";
     }
     var grad = got >= order.length;
     var nm = (a && a.name) || "별숲 주민";
     return "<div class='diploma' id='diplomaCard'>"
-      + "<p class='eyebrow'>별숲 수학마을 · 3학년</p>"
+      + "<p class='eyebrow'>별숲 수학마을 · " + gradeLabel() + "</p>"
       + "<h3>" + (grad ? "🎓 명예 졸업 상장" : "🎓 졸업 상장 도전 중") + "</h3>"
       + "<div class='stamp-board'>" + stamps + "</div>"
       + "<p><b>" + nm + "</b> 주민 (" + title + ") · 단원 마스터 " + got + "/" + order.length + "</p>"
-      + "<p class='hint'>" + (grad ? "6개 단원을 모두 완주했습니다! 아래 단추로 상장을 인쇄해 보세요." : "6개 단원을 모두 마치면 명예 졸업 상장이 완성됩니다.") + "</p>"
+      + "<p class='hint'>" + (grad ? order.length + "개 단원을 모두 완주했습니다! 아래 단추로 상장을 인쇄해 보세요." : order.length + "개 단원을 모두 마치면 명예 졸업 상장이 완성됩니다.") + "</p>"
       + "<button type='button' class='mini-act btn-pulse' data-print-diploma='1'>🖨️ 졸업 상장 인쇄 / PDF 저장</button>"
       + "</div>";
   }

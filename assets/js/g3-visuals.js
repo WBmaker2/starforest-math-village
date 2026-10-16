@@ -162,31 +162,78 @@
   function msgHtml(text) {
     return "<p class='manip-msg' data-manip-msg>" + text + "</p>";
   }
+  function X(name) {
+    return function () {
+      var E = window.GVisualsExtra;
+      if (E && E[name]) return E[name].apply(E, arguments);
+      return '';
+    };
+  }
+  var shapeSvg = X('shapeSvg'), shapeRow = X('shapeRow'), deciSvg = X('deciSvg'), deciDyn = X('deciDyn');
+  var lineSvg = X('lineSvg'), lineDyn = X('lineDyn'), rangeSvg = X('rangeSvg'), cuboidSvg = X('cuboidSvg');
+  var avgSvg = X('avgSvg'), avgDyn = X('avgDyn'), ratioSvg = X('ratioSvg'), ratioDyn = X('ratioDyn');
+  var spaceSvg = X('spaceSvg'), cylSvg = X('cylSvg');
+  var VISUAL_MAP = {
+    "g4-frac": "frac", "g5-fracmul": "frac", "g6-fracdiv": "frac",
+    "g4-tri": "tri", "g4-quad": "quad", "g4-poly": "poly",
+    "g4-deci": "deci", "g5-decimul": "deci", "g6-decdiv": "deci",
+    "g4-line": "line", "g5-range": "range", "g5-cuboid": "cuboid",
+    "g5-avg": "avg", "g6-ratio": "ratio", "g6-space": "space",
+    "g6-cyl": "cyl", "g6-circle": "circ", "g5-symm": "gra"
+  };
   function render(house, lid, item) {
     var q = (item && item.q) || "";
+    var kind = VISUAL_MAP[house] || house;
     var inner = "", after = "";
-    if (house === "mul") {
+    if (kind === "tri" || kind === "quad" || kind === "poly") {
+      return "<div class='q-vis' aria-hidden='true'><svg viewBox='0 0 320 110'>" + shapeSvg(kind) + "</svg></div>" + shapeRow(kind)
+        + msgHtml("도형의 변과 각을 눌러 세어 보세요!");
+    } else if (kind === "deci") {
+      return "<div class='q-vis' aria-hidden='true'>" + deciSvg(q) + "</div>"
+        + msgHtml("수직선 단추를 눌러 소수의 크기를 직접 옮겨 보세요!");
+    } else if (kind === "line") {
+      var ln = lineSvg(q);
+      return "<div class='q-vis' aria-hidden='true'>" + ln.svg + "</div>"
+        + msgHtml("화요일 기온 단추를 눌러 꺾은선의 기울기와 차이 " + (Math.abs(ln.b - ln.a)) + "°C를 확인해요!");
+    } else if (kind === "range") {
+      return rangeSvg();
+    } else if (kind === "cuboid") {
+      return cuboidSvg();
+    } else if (kind === "avg") {
+      return avgSvg(q);
+    } else if (kind === "ratio") {
+      var rt = ratioSvg(q);
+      return "<div class='q-vis' aria-hidden='true'>" + rt.svg + "</div>"
+        + msgHtml("스푼 단추를 눌러 비 " + rt.a + " : " + rt.b + "를 직접 만들어 보세요!");
+    } else if (kind === "space") {
+      return spaceSvg();
+    } else if (kind === "cyl") {
+      return cylSvg();
+    } else if (kind === "mul") {
       var p = parseMul(q);
       inner = mulSvg(q);
       after = msgHtml("묶음 상자를 눌러 보세요! (0/" + p.b + "묶음 선택됨)");
-    } else if (house === "divi") {
+    } else if (kind === "divi") {
       var d = parseDivi(q);
       inner = diviSvg(q);
       after = msgHtml("바구니를 눌러 나누어 보세요! (0/" + d.b + "곳 나눔됨)");
-    } else if (house === "circ") {
+    } else if (kind === "circ") {
       var c = circSvg(lid, q);
-      if (lid === "circ-2") {
+      if (String(lid || "").indexOf("circ-2") >= 0 || String(lid || "").indexOf("space") >= 0) {
+        inner = (typeof c === "string") ? c : "";
+        after = "";
+      } else if (typeof c === "string" && c.indexOf("data-circ-svg") < 0) {
         inner = c;
         after = "";
       } else {
         return "<div class='q-vis' aria-hidden='true'>" + c + "</div>"
           + msgHtml("단추를 눌러 원의 크기를 바꾸면 반지름과 지름이 어떻게 변할까요?");
       }
-    } else if (house === "frac") {
+    } else if (kind === "frac") {
       var f = fracSvg(q);
       inner = f.svg;
       after = msgHtml("색칠된 조각: " + Math.min(f.num, f.den) + "/" + f.den + " · 칸을 눌러 색칠하거나 비워 보세요!");
-    } else if (house === "mea") {
+    } else if (kind === "mea") {
       var m = meaSvg(lid, q);
       inner = m.svg;
       after = m.row + msgHtml("단추를 눌러 직접 채워 보고, 1L = 1000mL · 1kg = 1000g을 확인해 보세요!");
@@ -203,7 +250,89 @@
   function mount(root, house, lid, item) {
     if (!root) return;
     var q = (item && item.q) || "";
-    if (house === "mul") {
+    var kind = VISUAL_MAP[house] || house;
+    if (kind === "tri" || kind === "quad" || kind === "poly") {
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-shape]") : null;
+        if (!t || !root.contains(t)) return;
+        var act = t.getAttribute("data-shape");
+        if (act === "v") setMsg(root, kind === "tri" ? "변은 3개, 꼭짓점도 3개예요!" : (kind === "quad" ? "변은 4개, 꼭짓점도 4개예요!" : "정오각형은 변 5개, 꼭짓점 5개예요!"));
+        else if (act === "a") setMsg(root, "각의 수도 변의 수와 같아요. 한 바퀴 돌며 세어 보세요!");
+        else setMsg(root, "표시된 변처럼 길이가 같은 변을 찾아보세요. 이등변·정삼각형의 힌트예요!");
+      });
+    } else if (kind === "deci") {
+      var m0 = (q || "").match(/(\d+\.\d+)/);
+      var dv = m0 ? parseFloat(m0[1]) : 0.8;
+      if (!(dv >= 0 && dv <= 2)) dv = 0.8;
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-deci]") : null;
+        if (!t || !root.contains(t)) return;
+        dv = Math.round((dv + parseFloat(t.getAttribute("data-deci"))) * 10) / 10;
+        dv = Math.max(0, Math.min(2, dv));
+        var box = root.querySelector("[data-deci-svg]");
+        if (box) box.innerHTML = "<svg viewBox='0 0 320 110'>" + deciDyn(dv) + "</svg>";
+        var val = root.querySelector("[data-deci-val]");
+        if (val) val.textContent = "현재 " + dv.toFixed(1);
+        setMsg(root, "현재 " + dv.toFixed(1) + "! 0.1씩 움직이며 크기를 비교해 보세요.");
+      });
+    } else if (kind === "line") {
+      var nums = (q || "").match(/(\d+)[^0-9]+(\d+)/);
+      var la = nums ? parseInt(nums[1], 10) : 14, lb = nums ? parseInt(nums[2], 10) : 19;
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-line]") : null;
+        if (!t || !root.contains(t)) return;
+        lb = Math.max(0, Math.min(30, lb + parseInt(t.getAttribute("data-line"), 10)));
+        var box = root.querySelector("[data-line-svg]");
+        var built = lineDyn(la, lb);
+        if (box) box.innerHTML = "<svg viewBox='0 0 320 110'>" + built.svg + "</svg>";
+        var val = root.querySelector("[data-line-val]");
+        if (val) val.textContent = "월 " + la + "°C · 화 " + lb + "°C";
+        setMsg(root, "차이는 " + built.diff + "°C! 꺾은선이 가파를수록 변화가 커요.");
+      });
+    } else if (kind === "range") {
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-range]") : null;
+        if (!t || !root.contains(t)) return;
+        var act = t.getAttribute("data-range");
+        setMsg(root, act === "in" ? "300은 '이상'에 포함돼요! (300 ≤ 수)" : "400은 '미만'이라 포함되지 않아요! (수 < 400)");
+      });
+    } else if (kind === "cuboid") {
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-cuboid]") : null;
+        if (!t || !root.contains(t)) return;
+        var act = t.getAttribute("data-cuboid");
+        setMsg(root, act === "face" ? "면은 6개! (위·아래·앞·뒤·왼쪽·오른쪽)" : (act === "edge" ? "모서리는 12개! (한 꼭짓점에 3개씩)" : "꼭짓점은 8개!"));
+      });
+    } else if (kind === "ratio") {
+      var mm = (q || "").match(/(\d+)\s*:\s*(\d+)/);
+      var ra = mm ? parseInt(mm[1], 10) : 2, rb = mm ? parseInt(mm[2], 10) : 3;
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-ratio]") : null;
+        if (!t || !root.contains(t)) return;
+        var act = t.getAttribute("data-ratio");
+        if (act === "a") ra = Math.min(12, ra + 1);
+        else rb = Math.min(12, rb + 1);
+        var box = root.querySelector("[data-ratio-svg]");
+        if (box) box.innerHTML = "<svg viewBox='0 0 320 110'>" + ratioDyn(ra, rb) + "</svg>";
+        var val = root.querySelector("[data-ratio-val]");
+        if (val) val.textContent = ra + " : " + rb;
+        setMsg(root, "현재 비 " + ra + " : " + rb + "! 전항·후항에 같은 수를 곱해도 비는 같아요.");
+      });
+    } else if (kind === "space") {
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-space]") : null;
+        if (!t || !root.contains(t)) return;
+        var act = t.getAttribute("data-space");
+        setMsg(root, act === "top" ? "위에서 보면 3개가 보여요!" : (act === "front" ? "앞에서 보면 2층이 보여요!" : "옆에서 봐도 2층이 보여요! 쌓기나무는 모두 3개예요."));
+      });
+    } else if (kind === "cyl") {
+      root.addEventListener("click", function (e) {
+        var t = e.target.closest ? e.target.closest("[data-cyl]") : null;
+        if (!t || !root.contains(t)) return;
+        var act = t.getAttribute("data-cyl");
+        setMsg(root, act === "roll" ? "직사각형을 돌리면 원기둥, 삼각형을 돌리면 원뿔, 반원을 돌리면 구가 돼요!" : "원기둥은 둥근 면 1개+평평한 원 2개, 원뿔은 원 1개, 구는 둥근 면 1개예요!");
+      });
+    } else if (kind === "mul") {
       var p = parseMul(q);
       var per = p.tens + p.ones;
       var sel = [];
@@ -219,7 +348,7 @@
         for (var k = 0; k < sel.length; k++) if (sel[k]) n++;
         setMsg(root, "선택한 묶음: " + n + "/" + p.b + "묶음" + (n ? " = " + (per * n) : "") + (n === p.b ? " · 전부 세었어요!" : ""));
       });
-    } else if (house === "divi") {
+    } else if (kind === "divi") {
       var d = parseDivi(q);
       var done = [];
       for (var j = 0; j < d.b; j++) done.push(false);
@@ -236,7 +365,7 @@
         for (var k = 0; k < done.length; k++) if (done[k]) n++;
         setMsg(root, "나눈 바구니: " + n + "/" + d.b + "곳" + (n === d.b ? " · 똑같이 나누었어요!" : ""));
       });
-    } else if (house === "circ" && lid !== "circ-2") {
+    } else if (kind === "circ" && String(lid || "").indexOf("circ-2") < 0 && String(lid || "").indexOf("space") < 0) {
       var numM = q.match(/(\d+)\s*cm/);
       var num = numM ? parseInt(numM[1], 10) : 6;
       var r = q.indexOf("반지름이") >= 0 ? num : Math.max(2, Math.round(num / 2));
@@ -251,7 +380,7 @@
         if (val) val.textContent = "반지름 " + r + "cm ↔ 지름 " + (r * 2) + "cm";
         setMsg(root, "반지름 " + r + "cm일 때 지름은 " + (r * 2) + "cm! 지름은 항상 반지름의 2배예요.");
       });
-    } else if (house === "frac") {
+    } else if (kind === "frac") {
       var fm = q.match(/(\d+)\/(\d+)/);
       var den = fm ? Math.min(8, parseInt(fm[2], 10)) : 4;
       var filled = [];
@@ -268,7 +397,7 @@
         for (var k = 0; k < filled.length; k++) if (filled[k]) n++;
         setMsg(root, "색칠된 조각: " + n + "/" + den + (n === 0 ? " · 전부 비웠어요" : "") + (n === den ? " · 전부 색칠했어요!" : ""));
       });
-    } else if (house === "mea") {
+    } else if (kind === "mea") {
       var isVol = (q || "").indexOf("mL") >= 0 || lid === "mea-1";
       var val = 500;
       var cap = 2000;
@@ -287,7 +416,7 @@
         }
         setMsg(root, isVol ? ("현재 " + val + "mL" + (val >= 1000 ? " = " + (val / 1000) + "L!" : "")) : ("현재 " + val + "g" + (val >= 1000 ? " = " + (val / 1000) + "kg!" : "")));
       });
-    } else if (house === "gra") {
+    } else if (kind === "gra") {
       var big = 2, small = 3;
       root.addEventListener("click", function (e) {
         var t = e.target.closest ? e.target.closest("[data-gra]") : null;

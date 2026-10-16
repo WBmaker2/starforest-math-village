@@ -4,11 +4,11 @@
     var box = document.getElementById(boxId);
     var inp = document.getElementById(inputId);
     if (!box || !inp) return;
-    var keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "back", "clear"];
+    var keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "back", "clear"];
     var html = "";
     for (var i = 0; i < keys.length; i++) {
       var k = keys[i];
-      var label = k === "back" ? "← 지우기" : (k === "clear" ? "C 모두지우기" : k);
+      var label = k === "back" ? "← 지우기" : (k === "clear" ? "C 모두지우기" : (k === "." ? ". 소수점" : k));
       var cls = k === "back" || k === "clear" ? "keypad-key keypad-fn" : "keypad-key";
       html += "<button type='button' class='" + cls + "' data-key='" + k + "'>" + label + "</button>";
     }
@@ -17,10 +17,11 @@
       var t = e.target.closest ? e.target.closest("[data-key]") : null;
       if (!t) return;
       var k2 = t.getAttribute("data-key");
-      var cur = (inp.value || "").replace(/[^0-9]/g, "");
+      var cur = (inp.value || "").replace(/[^0-9.]/g, "");
       if (k2 === "back") cur = cur.slice(0, -1);
       else if (k2 === "clear") cur = "";
-      else if (cur.length < 5) cur += k2;
+      else if (k2 === ".") { if (cur.indexOf(".") < 0 && cur.length < 6) cur += "."; }
+      else if (cur.replace(".", "").length < 6) cur += k2;
       inp.value = cur;
       inp.focus();
     });
@@ -163,12 +164,67 @@
     }
     return out;
   }
+  function genDeciAdd() {
+    var out = [];
+    for (var i = 0; i < 6; i++) {
+      var a = rnd(1, 9) / 10, b = rnd(1, 9) / 10;
+      var ans = Math.round((a + b) * 10) / 10;
+      out.push({ q: a.toFixed(1) + " + " + b.toFixed(1) + " = ?", a: String(ans),
+        steps: ["소수점을 맞추어 계산", a.toFixed(1) + " + " + b.toFixed(1) + " = " + ans] });
+    }
+    return out;
+  }
+  function genLineDiff() {
+    var out = [];
+    for (var i = 0; i < 6; i++) {
+      var a = rnd(10, 20), b = a + rnd(2, 9);
+      out.push({ q: "월요일 " + a + "°C, 화요일 " + b + "°C일 때 오른 기온은 몇 °C?", a: String(b - a),
+        steps: [b + " - " + a + " = " + (b - a) + "°C"] });
+    }
+    return out;
+  }
+  function genAvg() {
+    var out = [];
+    for (var i = 0; i < 6; i++) {
+      var a = rnd(4, 10), b = rnd(4, 10), c = 24 - a - b;
+      if (c < 2 || c > 12) { c = rnd(4, 10); }
+      var sum = a + b + c;
+      var avg = Math.round(sum / 3);
+      if (sum % 3 !== 0) { a = 6; b = 8; c = 10; sum = 24; avg = 8; }
+      out.push({ q: a + "개, " + b + "개, " + c + "개의 평균은 몇 개?", a: String(avg),
+        steps: ["합 " + sum + " ÷ 3", "평균 " + avg + "개"] });
+    }
+    return out;
+  }
+  function genRatio() {
+    var out = [];
+    for (var i = 0; i < 6; i++) {
+      var a = rnd(2, 4), b = rnd(3, 5), k = rnd(2, 4);
+      out.push({ q: a + " : " + b + " = " + (a * k) + " : ?  (? 구하기)", a: String(b * k),
+        steps: ["전항이 " + k + "배", "후항도 " + b + " × " + k + " = " + (b * k)] });
+    }
+    return out;
+  }
+  function genCircle() {
+    var out = [];
+    for (var i = 0; i < 6; i++) {
+      var r = rnd(4, 10);
+      if (i % 2 === 0) out.push({ q: "반지름 " + r + "cm인 원의 지름은 몇 cm?", a: String(r * 2), steps: [r + " × 2 = " + (r * 2) + "cm"] });
+      else out.push({ q: "지름 " + (r * 2) + "cm인 원의 원주는 몇 cm? (원주율 3.14)", a: String(Math.round(r * 2 * 3.14 * 10) / 10).replace(/\.0$/, ""), steps: ["원주 = 지름 × 3.14", (r * 2) + " × 3.14"] });
+    }
+    return out;
+  }
   function generateSet(houseId) {
-    if (houseId === "divi") return genDivi();
-    if (houseId === "circ") return genCirc();
-    if (houseId === "frac") return genFrac();
+    if (houseId === "divi" || houseId === "g6-fracdiv") return genDivi();
+    if (houseId === "circ" || houseId === "g6-circle") return genCirc();
+    if (houseId === "frac" || houseId === "g4-frac" || houseId === "g5-fracmul") return genFrac();
     if (houseId === "mea") return genMea();
-    if (houseId === "gra") return genGra();
+    if (houseId === "gra" || houseId === "g5-symm") return genGra();
+    if (houseId === "g4-deci" || houseId === "g5-decimul" || houseId === "g6-decdiv") return genDeciAdd();
+    if (houseId === "g4-line") return genLineDiff();
+    if (houseId === "g5-avg" || houseId === "g4-tri" || houseId === "g4-quad" || houseId === "g4-poly" || houseId === "g5-cuboid" || houseId === "g6-space" || houseId === "g6-cyl") return genAvg();
+    if (houseId === "g5-range") return genLineDiff();
+    if (houseId === "g6-ratio") return genRatio();
     return genMul();
   }
   window.G3Pad = { mountKeypad: mountKeypad, mountCanvas: mountCanvas, generateSet: generateSet };

@@ -1,8 +1,20 @@
 (function () {
-  var HOUSES = [
+  var FALLBACK_HOUSES = [
     ["mul", "곱셈 방앗간"], ["divi", "나눔 과일정거장"], ["circ", "동그라미 시계소"],
     ["frac", "조각 피자부엌"], ["mea", "되와 무게 실험실"], ["gra", "그림소식 우체통"]
   ];
+  function HOUSES() {
+    try {
+      var u = window.G3Units || {};
+      var keys = Object.keys(u);
+      if (keys.length) {
+        var out = [];
+        for (var i = 0; i < keys.length; i++) out.push([keys[i], u[keys[i]].name || keys[i]]);
+        return out;
+      }
+    } catch (e) {}
+    return FALLBACK_HOUSES;
+  }
   function log(kind, text) {
     var d = window.G3Store.load();
     d.journal.unshift({ kind: kind, text: text, at: Date.now() });
@@ -21,7 +33,8 @@
     render();
   }
   function houseName(id) {
-    for (var i = 0; i < HOUSES.length; i++) if (HOUSES[i][0] === id) return HOUSES[i][1];
+    var hs = HOUSES();
+    for (var i = 0; i < hs.length; i++) if (hs[i][0] === id) return hs[i][1];
     return "단원 집";
   }
   function render() {
@@ -43,8 +56,9 @@
     if (m) {
       var d2 = window.G3Store.load();
       var mh = "";
-      for (var k = 0; k < HOUSES.length; k++) {
-        var id = HOUSES[k][0];
+      var hs = HOUSES();
+      for (var k = 0; k < hs.length; k++) {
+        var id = hs[k][0];
         var u = window.G3Units && window.G3Units[id];
         var totalL = u && u.lessons ? u.lessons.length : 0;
         var doneL = 0;
@@ -54,7 +68,7 @@
           }
         }
         var st = doneL > 0 ? (doneL >= totalL ? "완료 (" + doneL + "/" + totalL + ")" : "학습 중 (" + doneL + "/" + totalL + ")") : (d2.visits[id] ? "방문" : "미방문");
-        mh += "<button class='mapcell' data-enter='" + id + "'><b>" + HOUSES[k][1] + "</b><span>" + st + "</span></button>";
+        mh += "<button class='mapcell' data-enter='" + id + "'><b>" + hs[k][1] + "</b><span>" + st + "</span></button>";
       }
       m.innerHTML = mh;
     }

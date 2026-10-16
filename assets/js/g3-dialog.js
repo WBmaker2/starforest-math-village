@@ -1,14 +1,33 @@
 (function () {
   var state = { mode: "unit", house: "mul", lesson: 0, qi: 0, tries: 0, firstOk: 0, total: 0, customList: null, customTitle: "" };
-  var PORTRAIT = {
+  var PORTRAIT_BASE = {
     mul: "../assets/img/flow/house-mul.jpg", divi: "../assets/img/flow/house-divi.jpg",
     circ: "../assets/img/flow/house-circ.jpg", frac: "../assets/img/flow/house-frac.jpg",
     mea: "../assets/img/flow/house-mea.jpg", gra: "../assets/img/flow/house-gra.jpg"
   };
-  var NPC_IMG = { mul: "npc-mole", divi: "npc-chick", circ: "npc-bunny", frac: "npc-mole", mea: "npc-chick", gra: "npc-bunny" };
+  var NPC_BASE = { mul: "npc-mole", divi: "npc-chick", circ: "npc-bunny", frac: "npc-mole", mea: "npc-chick", gra: "npc-bunny" };
+  function PORTRAIT() { return window.GRADE_PORTRAITS || PORTRAIT_BASE; }
+  function NPC_IMG() { return window.GRADE_NPCS || NPC_BASE; }
+  function portraitFor(id) {
+    var p = PORTRAIT();
+    if (p[id]) return p[id];
+    var base = PORTRAIT_BASE;
+    var keys = Object.keys(base);
+    return base[keys[id.length % keys.length]];
+  }
+  function npcFor(id) {
+    var n = NPC_IMG();
+    if (n[id]) return n[id];
+    var keys = ["npc-mole", "npc-chick", "npc-bunny"];
+    return keys[id.length % keys.length];
+  }
   function curUnit() {
     var u = window.G3Units && window.G3Units[state.house];
-    return u || (window.G3Units ? window.G3Units.mul : { name: "곱셈 방앗간", greet: "어서 오렴!", lessons: window.G3Mul.lessons });
+    if (u) return u;
+    try {
+      for (var k in (window.G3Units || {})) return window.G3Units[k];
+    } catch (e) {}
+    return { name: "단원 집", greet: "어서 오렴!", lessons: [] };
   }
   function findQuestion(qText) {
     var units = window.G3Units || {};
@@ -42,10 +61,17 @@
     if (ni) ni.src = "../assets/img/flow/" + (npcKey || "npc-mole") + ".jpg";
     syncDlgAvatar();
   }
+  function firstHouse() {
+    try {
+      var u = window.G3Units || {};
+      for (var k in u) return k;
+    } catch (e) {}
+    return "mul";
+  }
   function open(houseId) {
     state.mode = "unit";
-    state.house = (window.G3Units && window.G3Units[houseId]) ? houseId : "mul";
-    showModal(NPC_IMG[state.house]);
+    state.house = (window.G3Units && window.G3Units[houseId]) ? houseId : firstHouse();
+    showModal(npcFor(state.house));
     renderLessons();
   }
   function openWrong() {
@@ -115,7 +141,7 @@
     npcSay(U.greet);
     var box = document.getElementById("dlgBody");
     var d = window.G3Store.load();
-    var html = "<img class='houseimg' src='" + (PORTRAIT[state.house] || PORTRAIT.mul) + "' alt='" + U.name + " 그림'><h3>" + U.name + " · 차시 목록</h3><div class='lessons'>";
+    var html = "<img class='houseimg' src='" + portraitFor(state.house) + "' alt='" + U.name + " 그림'><h3>" + U.name + " · 차시 목록</h3><div class='lessons'>";
     var L = U.lessons;
     for (var i = 0; i < L.length; i++) {
       var done = d.done[L[i].id] ? " · 완료" : "";
@@ -193,13 +219,25 @@
     document.getElementById("ans").addEventListener("keydown", function (e) { if (e.key === "Enter") check(); });
     document.getElementById("ans").focus();
   }
+  function normAns(s) {
+    s = String(s == null ? "" : s).trim().replace(/[^0-9.]/g, "");
+    if (!s) return "";
+    if (s.indexOf(".") >= 0) {
+      var parts = s.split(".");
+      var head = parts[0].replace(/^0+(?=\d)/, "") || "0";
+      var tail = (parts.slice(1).join("")).replace(/0+$/, "");
+      return tail ? (head + "." + tail) : head;
+    }
+    return s.replace(/^0+(?=\d)/, "");
+  }
   function check() {
     var cur = activeItem();
     var item = cur.item;
-    var v = document.getElementById("ans").value.replace(/[^0-9]/g, "");
+    var raw = document.getElementById("ans").value;
+    var v = normAns(raw);
     var fb = document.getElementById("fb");
     if (!v) { fb.textContent = "숫자를 입력해 주세요."; return; }
-    if (v === item.a) {
+    if (v === normAns(item.a)) {
       var rate = state.tries === 0 ? 1 : (state.tries === 1 ? 0.6 : 0.3);
       if (state.tries === 0) state.firstOk++;
       var gain = Math.round(10 * rate);

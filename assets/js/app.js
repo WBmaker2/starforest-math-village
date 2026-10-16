@@ -62,13 +62,17 @@
     }
     if (enter) {
       enter.style.display = "inline-flex";
-      if (n === 1 || n === 2) {
-        enter.href = "lower/index.html";
-        enter.textContent = "1·2학년 새싹숲 입장하기 (산책·큰 단추)";
-      } else {
-        enter.href = "grade3/index.html";
-        enter.textContent = n === 3 ? "3학년 마을 입장하기 (전체 산책·6단원)" : "3학년 별숲 마을(전체 산책·아바타)도 둘러보기";
-      }
+      var ENTERS = {
+        1: ["lower/index.html?grade=1", "1학년 새싹숲 입장하기 (6곳·큰 단추)"],
+        2: ["lower/index.html?grade=2", "2학년 새싹숲 입장하기 (6곳·큰 단추)"],
+        3: ["grade3/index.html", "3학년 마을 입장하기 (방앗간 마을·6단원)"],
+        4: ["grade4/index.html", "4학년 마을 입장하기 (전망대 마을·6단원)"],
+        5: ["grade5/index.html", "5학년 마을 입장하기 (농장 마을·6단원)"],
+        6: ["grade6/index.html", "6학년 마을 입장하기 (배합소 마을·6단원)"]
+      };
+      var cfg = ENTERS[n] || ENTERS[3];
+      enter.href = cfg[0];
+      enter.textContent = cfg[1];
     }
     if (gradeDialog && gradeDialog.showModal) gradeDialog.showModal();
     else toast(n + "학년 마을 안내입니다.");
@@ -140,15 +144,19 @@
   var closeHistory = document.getElementById("closeHistory");
   if (closeHistory) closeHistory.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
   var teacherDialog = document.getElementById("teacherDialog");
+  var VILLAGE_URLS = {
+    1: "lower/index.html?grade=1", 2: "lower/index.html?grade=2",
+    3: "grade3/index.html", 4: "grade4/index.html",
+    5: "grade5/index.html", 6: "grade6/index.html"
+  };
   function renderTeacherBox() {
     var links = document.getElementById("teacherLinks");
     if (links) {
       var html = "";
       for (var g = 1; g <= 6; g++) {
         html += "<div class='tbox-row'><b>" + g + "학년</b><span class='mail'>" + demoUrl(g) + "</span><button type='button' class='copy' data-copy-grade='" + g + "'>복사</button></div>";
+        html += "<div class='tbox-row'><b>" + g + "학년 마을</b><span class='mail'>" + VILLAGE_URLS[g] + "</span><button type='button' class='copy' data-copy-village='" + g + "'>복사</button></div>";
       }
-      html += "<div class='tbox-row'><b>1·2학년 마을</b><span class='mail'>lower/index.html</span><button type='button' class='copy' data-copy-low='1'>복사</button></div>";
-      html += "<div class='tbox-row'><b>3학년 전체마을</b><span class='mail'>grade3/index.html</span><button type='button' class='copy' data-copy-g3='1'>복사</button></div>";
       links.innerHTML = html;
     }
   }
@@ -161,15 +169,14 @@
   var closeTeacher = document.getElementById("closeTeacher");
   if (closeTeacher) closeTeacher.addEventListener("click", function () { if (teacherDialog) teacherDialog.close(); });
   document.addEventListener("click", function (ev2) {
-    var cg = ev2.target.closest ? ev2.target.closest("[data-copy-grade],[data-copy-g3],[data-copy-low]") : null;
+    var cg = ev2.target.closest ? ev2.target.closest("[data-copy-grade],[data-copy-village]") : null;
     if (!cg) return;
     if (cg.hasAttribute("data-copy-grade")) {
       var n = parseInt(cg.getAttribute("data-copy-grade"), 10);
       copyText(demoUrl(n), n + "학년 주소를 복사했습니다.");
-    } else if (cg.hasAttribute("data-copy-low")) {
-      copyText("lower/index.html", "1·2학년 마을 주소를 복사했습니다.");
     } else {
-      copyText("grade3/index.html", "3학년 전체마을 주소를 복사했습니다.");
+      var m = parseInt(cg.getAttribute("data-copy-village"), 10);
+      copyText(VILLAGE_URLS[m] || ("grade" + m + "/index.html"), m + "학년 마을 주소를 복사했습니다.");
     }
   });
   function checkHashGrade() {
