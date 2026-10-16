@@ -17,6 +17,12 @@
 - `index.html`, `assets/css/styles.css`, `assets/js/grades.js`, `assets/js/history.js`, `assets/js/app.js`
 - 학년 마을: `grade3/index.html`, `lower/index.html`, `assets/js/g3-*.js`, `assets/css/g3.css`
 
+## 공개 주소 (배포)
+
+https://wbmaker2.github.io/starforest-math-village/
+
+위 주소로 바로 열 수 있습니다. 학년별 주소 뒤에 `#grade-1`부터 `#grade-6`을 붙이면 해당 학년 체험이 바로 실행됩니다.
+
 ## 로컬 확인
 
 python3 -m http.server 8000 --directory . 실행 후 http://localhost:8000 열기.
