@@ -278,6 +278,10 @@
     var held = { up: false, down: false, left: false, right: false };
     var KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right", w: "up", s: "down", a: "left", d: "right", W: "up", S: "down", A: "left", D: "right" };
     window.addEventListener("keydown", function (e) {
+      var tag = (e.target && e.target.tagName) || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (e.target && e.target.isContentEditable)) return;
+      var ov = document.getElementById("dlg");
+      if (ov && ov.classList.contains("show")) return;
       var dir = KEYMAP[e.key];
       if (!dir) return;
       e.preventDefault();

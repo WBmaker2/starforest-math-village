@@ -189,40 +189,15 @@
 <div class="rise"><span class="num">자동</span><h3>고칠 때마다 확인</h3><p>채점, 보상, 저장 같은 기본 동작은 빌드마다 점검합니다.</p></div>
 <div class="rise"><span class="num">1</span><h3>학년마다 입구 하나</h3><p>설치 없이 주소 하나로 엽니다. 태블릿과 PC 브라우저에서 씁니다.</p></div>
 </div>
-<div class="row2 teacher-tools"><button class="pad-btn btn-pulse" id="openTeacherBox" type="button">선생님 교실 도구함 열기</button><small>학년 주소 복사 · 저장된 교실 의견 모아보기</small></div>
+<div class="row2 teacher-tools"><button class="pad-btn btn-pulse" id="openTeacherBox" type="button">선생님 교실 도구함 열기</button><small>학년 주소 복사</small></div>
 <div class="closing">
 <p class="eyebrow">1~6학년 2학기</p>
 <h2>매일 들르고 싶은 마을의 조건을 담은 별숲</h2>
-<p class="lead">학급에서 직접 써 보며 다듬고 있습니다. 써 보시고 의견을 주시면 다음 버전에 반영하겠습니다.</p>
+<p class="lead">위 학년 버튼을 눌러 바로 체험해 보세요.</p>
 <div class="mini" id="miniGrades"></div>
 </div>
 </section>
 </main>
-<section id="contact" class="wrap contact" aria-label="의견 보내기">
-<div>
-<span class="tag sun">의견 남기기</span>
-<h3>써 보신 뒤 느낀 점을 적어 주세요</h3>
-<p>좋았던 점, 불편한 점, 바라는 기능을 아래 의견함에 적어 주세요. 개인정보는 적지 말아 주세요.</p>
-<form id="demoForm">
-<label>학년 선택
-<select id="demoGrade" aria-label="학년 선택">
-<option>1학년</option><option>2학년</option><option>3학년</option><option>4학년</option><option>5학년</option><option>6학년</option>
-</select>
-</label>
-<label>의견
-<textarea id="demoText" rows="3" placeholder="예: 학년 카드가 한눈에 들어옵니다"></textarea>
-</label>
-<button class="pad-btn btn-pulse" type="submit">교실 의견 저장</button>
-</form>
-<p class="form-note" id="formNote" aria-live="polite"></p>
-</div>
-<div>
-<span class="tag">문의 안내</span>
-<h3>학급 적용을 고민 중이시라면</h3>
-<p>아래 의견함에 남겨 주신 내용은 이 브라우저의 교실 도구함에서 모아볼 수 있습니다.</p>
-<div class="row2"><span class="mail">별숲 수학마을 교실 의견함</span><button class="copy" id="copyMail" type="button">안내 복사</button></div>
-</div>
-</section>
 <footer class="site-foot">
 <div class="wrap">
 <div class="cols">
@@ -245,7 +220,7 @@
 <li>위 학년 카드에서 원하는 학년을 찾습니다.</li>
 <li>마을 열기를 눌러 학년 마을 안내를 확인합니다.</li>
 <li>링크 복사를 눌러 교실용 주소를 알림장에 붙입니다.</li>
-<li>의견함에 느낀 점을 저장해 봅니다.</li>
+<li>학년 마을 열기를 눌러 수업을 시작합니다.</li>
 </ol>
 <button id="closeGuide" type="button">닫기</button>
 </dialog>
@@ -256,11 +231,9 @@
 </dialog>
 <dialog id="teacherDialog" aria-label="선생님 교실 도구함">
 <h3>선생님 교실 도구함</h3>
-<p class="lead">학년별 바로가기 주소를 복사해 알림장에 붙이고, 이 브라우저에 저장된 교실 의견을 모아볼 수 있습니다.</p>
+<p class="lead">학년별 바로가기 주소를 복사해 알림장에 붙이세요.</p>
 <div id="teacherLinks" class="tbox-links"></div>
-<h3>저장된 교실 의견 모아보기</h3>
-<div id="teacherFeedback" class="tbox-fb"></div>
-<div class="row2"><button id="clearFeedback" type="button">의견 모두 비우기</button><button id="closeTeacher" type="button">닫기</button></div>
+<div class="row2"><button id="closeTeacher" type="button">닫기</button></div>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/js/grades.js?v=17"></script>

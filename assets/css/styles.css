@@ -141,17 +141,10 @@ section.wrap { padding-block: 44px; }
 .closing h2 { font-size: clamp(28px, 4vw, 44px); }
 .mini { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
 .mini button { font-family: var(--display); font-size: 16px; border: none; border-radius: 12px; padding: 10px 16px; background: var(--g, var(--leaf)); color: #fff; cursor: pointer; }
-.contact { display: grid; gap: 18px; grid-template-columns: 1fr; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 26px 22px; margin-bottom: 30px; }
-@media (min-width: 900px) { .contact { grid-template-columns: 1fr 1fr; } }
-.contact h3 { font-size: 24px; margin: 10px 0 8px; }
-#demoForm { display: grid; gap: 10px; margin-top: 14px; }
-#demoForm label { display: grid; gap: 6px; font-size: 15px; }
-#demoForm select, #demoForm textarea { font: inherit; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); }
 .pad-btn { font-family: var(--display); font-size: 18px; padding: 12px 20px; border-radius: 14px; background: var(--leaf); color: #fff; border: none; cursor: pointer; }
 .row2 { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
 .mail { font-family: monospace; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
 .copy { font-family: var(--display); padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); cursor: pointer; }
-.form-note { font-size: 14px; color: var(--leaf-deep); min-height: 22px; }
 .site-foot { border-top: 1px solid var(--line); padding-block: 26px 60px; color: var(--ink-soft); }
 .site-foot .cols { display: grid; gap: 18px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .site-foot .cols { grid-template-columns: 1.2fr 1fr 1fr; } }
@@ -182,8 +175,6 @@ dialog button { font-family: var(--display); margin-top: 12px; padding: 10px 18p
 .tbox-row b { font-family: var(--display); font-weight: 400; min-width: 96px; }
 .tbox-row .mail { flex: 1; font-size: 12px; overflow-wrap: anywhere; }
 .tbox-row .copy { margin-top: 0; }
-.tbox-fb { display: grid; gap: 8px; max-height: 260px; overflow: auto; margin: 10px 0; }
-.tbox-fbitem { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--paper); font-size: 14px; }
 #historyList { display: grid; gap: 10px; font-size: 15px; }
 #historyList div { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--paper); }
 #toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: #fff; font-family: var(--display); padding: 10px 18px; border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 60; }

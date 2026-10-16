@@ -1,5 +1,4 @@
 (function () {
-  var FEEDBACK_KEY = "starforest-feedback";
   function toast(msg) {
     var t = document.getElementById("toast");
     if (!t) return;
@@ -140,18 +139,6 @@
   });
   var closeHistory = document.getElementById("closeHistory");
   if (closeHistory) closeHistory.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
-  function readFeedback() {
-    try {
-      var arr = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]");
-      if (arr.length) return arr;
-      var legacy = JSON.parse(localStorage.getItem("math-walk-demo-feedback") || "[]");
-      return legacy;
-    } catch (e) { return []; }
-  }
-  var copyMail = document.getElementById("copyMail");
-  if (copyMail) copyMail.addEventListener("click", function () {
-    copyText("별숲 수학마을 교실 의견함에 의견을 남겨 주세요.", "안내 문구를 복사했습니다.");
-  });
   var teacherDialog = document.getElementById("teacherDialog");
   function renderTeacherBox() {
     var links = document.getElementById("teacherLinks");
@@ -164,20 +151,6 @@
       html += "<div class='tbox-row'><b>3학년 전체마을</b><span class='mail'>grade3/index.html</span><button type='button' class='copy' data-copy-g3='1'>복사</button></div>";
       links.innerHTML = html;
     }
-    var fbBox = document.getElementById("teacherFeedback");
-    if (fbBox) {
-      var arr = readFeedback();
-      if (!arr.length) fbBox.innerHTML = "<p class='form-note'>아직 저장된 의견이 없습니다. 아래 의견함에 남기면 여기에서 모아볼 수 있습니다.</p>";
-      else {
-        var fh = "";
-        for (var i = arr.length - 1; i >= 0; i--) {
-          var at = "";
-          try { var dt = new Date(arr[i].at); at = (dt.getMonth() + 1) + "/" + dt.getDate() + " " + dt.getHours() + ":" + String(dt.getMinutes()).padStart(2, "0"); } catch (e2) {}
-          fh += "<div class='tbox-fbitem'><b>[" + (arr[i].grade || "") + "]</b> " + (arr[i].text || "") + " <small>" + at + "</small></div>";
-        }
-        fbBox.innerHTML = fh;
-      }
-    }
   }
   var openTeacherBox = document.getElementById("openTeacherBox");
   if (openTeacherBox) openTeacherBox.addEventListener("click", function () {
@@ -187,12 +160,6 @@
   });
   var closeTeacher = document.getElementById("closeTeacher");
   if (closeTeacher) closeTeacher.addEventListener("click", function () { if (teacherDialog) teacherDialog.close(); });
-  var clearFeedback = document.getElementById("clearFeedback");
-  if (clearFeedback) clearFeedback.addEventListener("click", function () {
-    try { localStorage.removeItem(FEEDBACK_KEY); localStorage.removeItem("math-walk-demo-feedback"); } catch (e) {}
-    renderTeacherBox();
-    toast("저장된 의견을 모두 비웠습니다.");
-  });
   document.addEventListener("click", function (ev2) {
     var cg = ev2.target.closest ? ev2.target.closest("[data-copy-grade],[data-copy-g3],[data-copy-low]") : null;
     if (!cg) return;
@@ -204,24 +171,6 @@
     } else {
       copyText("grade3/index.html", "3학년 전체마을 주소를 복사했습니다.");
     }
-  });
-  var form = document.getElementById("demoForm");
-  if (form) form.addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var g = document.getElementById("demoGrade");
-    var tx = document.getElementById("demoText");
-    var note = document.getElementById("formNote");
-    var gv = g ? g.value : "";
-    var tv = tx ? tx.value.trim() : "";
-    if (!tv) { if (note) note.textContent = "의견을 한 줄 이상 적어 주세요."; return; }
-    try {
-      var arr = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]");
-      arr.push({ grade: gv, text: tv, at: new Date().toISOString() });
-      localStorage.setItem(FEEDBACK_KEY, JSON.stringify(arr));
-    } catch (e) {}
-    if (note) note.textContent = gv + " 의견이 이 브라우저에 저장되었습니다. 고맙습니다.";
-    if (tx) tx.value = "";
-    toast("교실 의견이 저장되었습니다.");
   });
   function checkHashGrade() {
     try {
