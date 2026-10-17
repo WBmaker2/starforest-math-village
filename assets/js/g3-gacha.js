@@ -3,7 +3,15 @@
     { id: "gold", name: "황금 세트", cost: 30, pieces: [
       { v: "set-gold-hat", n: "황금 모자", slot: "hat" },
       { v: "set-gold-cape", n: "황금 망토", slot: "top" },
-      { v: "set-gold-boots", n: "황금 부츠", slot: "shoe" } ] }
+      { v: "set-gold-boots", n: "황금 부츠", slot: "shoe" } ] },
+    { id: "wizard", name: "별빛 마법사 세트", cost: 40, pieces: [
+      { v: "set-wiz-hat", n: "별마법사 모자", slot: "hat" },
+      { v: "set-wiz-robe", n: "별마법사 로브", slot: "top" },
+      { v: "glass-wizard", n: "마법 외알안경", slot: "acc" } ] },
+    { id: "astro", name: "우주 탐험가 세트", cost: 40, pieces: [
+      { v: "set-astro-helm", n: "우주 헬멧", slot: "hat" },
+      { v: "set-astro-suit", n: "우주복", slot: "top" },
+      { v: "set-fairy-wings", n: "요정 날개", slot: "acc" } ] }
   ];
   function owned() {
     var d = window.G3Store.load();

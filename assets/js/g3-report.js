@@ -77,12 +77,25 @@
     } catch (e) {}
     if (!totalLessons) totalLessons = 13;
     var title = rankTitle(doneCnt, cardsCnt);
+    var pet = d.pet || {};
+    var myTitle = "";
+    if (window.G3Pet && window.G3Pet.TITLES && pet.title) {
+      for (var ti = 0; ti < window.G3Pet.TITLES.length; ti++) {
+        if (window.G3Pet.TITLES[ti].id === pet.title) myTitle = window.G3Pet.TITLES[ti].name;
+      }
+    }
+    var bossN = 0;
+    if (pet.bosses) for (var bk in pet.bosses) bossN++;
+    var star3 = 0;
+    if (d.stars2) for (var sk in d.stars2) if (d.stars2[sk] >= 3) star3++;
     var html = "<div class='rep-grid'>"
       + "<div class='idcard'>"
       + "<div class='id-head'><div id='idCardAvatar' class='id-av'></div>"
-      + "<div class='id-meta'><span class='tag sun'>" + title + "</span><h3>" + nm + "</h3>"
+      + "<div class='id-meta'><span class='tag sun'>" + title + "</span>"
+      + (myTitle ? "<span class='tag'>🏅 " + myTitle + "</span>" : "")
+      + "<h3>" + nm + "</h3>"
       + "<p>누적 별 <b>" + d.stars + "</b> · 완료 차시 <b>" + doneCnt + "/" + totalLessons + "</b></p>"
-      + "<p>도감 카드 <b>" + cardsCnt + "/10</b> · 황금 세트 <b>" + setsCnt + "/3</b></p></div></div>"
+      + "<p>도감 카드 <b>" + cardsCnt + "/10</b> · 뽑기 세트 <b>" + setsCnt + "/9</b> · 수호자 격파 <b>" + bossN + "</b> · 최고 콤보 <b>" + (pet.bestCombo || 0) + "</b> · 도전왕 <b>" + star3 + "</b></p></div></div>"
       + chartSvg(d)
       + "<button type='button' class='mini-act btn-pulse' data-print-idcard='1'>🖨️ 명예 주민증 인쇄 / PDF 저장</button>"
       + "</div>"
@@ -133,7 +146,96 @@
       + "<p><b>" + nm + "</b> 주민 (" + title + ") · 단원 마스터 " + got + "/" + order.length + "</p>"
       + "<p class='hint'>" + (grad ? order.length + "개 단원을 모두 완주했습니다! 아래 단추로 상장을 인쇄해 보세요." : order.length + "개 단원을 모두 마치면 명예 졸업 상장이 완성됩니다.") + "</p>"
       + "<button type='button' class='mini-act btn-pulse' data-print-diploma='1'>🖨️ 졸업 상장 인쇄 / PDF 저장</button>"
+      + "</div>"
+      + wrongTopHtml(d)
+      + newsHtml(d, a);
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function newsHtml(d, a) {
+    var games = [];
+    try { games = (window.G3Relay && window.G3Relay.history) ? window.G3Relay.history() : []; } catch (e) {}
+    var pals = d.pals || [];
+    var pet = d.pet || {};
+    var titles = (pet.titles || []).join("·") || "아직 없음";
+    var doneCnt = Object.keys(d.done || {}).length;
+    var dateStr = "";
+    try {
+      var t = new Date();
+      dateStr = t.getFullYear() + "년 " + (t.getMonth() + 1) + "월 " + t.getDate() + "일";
+    } catch (e) {}
+    var ghtml = "";
+    if (games.length) {
+      for (var i = 0; i < games.length; i++) {
+        var g = games[i];
+        var gd = "";
+        try { gd = new Date(g.at).getMonth() + 1 + "/" + new Date(g.at).getDate(); } catch (e) {}
+        ghtml += "<li>" + esc(gd) + " " + esc(g.houseName || "릴레이") + " · " + esc((g.scores || []).join(" : ")) + "</li>";
+      }
+    } else {
+      ghtml = "<li>아직 열린 릴레이가 없어요. 마을 놀이에서 릴레이를 열어 보세요!</li>";
+    }
+    var palsTxt = pals.length ? pals.map(function (p) { return p.name; }).join("·") : "아직 없음";
+    var rankTop = [];
+    try { rankTop = (window.G3Friend && window.G3Friend.rankTop) ? window.G3Friend.rankTop() : []; } catch (e) {}
+    if (rankTop.length) palsTxt += " (🏆 " + rankTop.join("·") + ")";
+    return "<div class='diploma' id='newsCard'>"
+      + "<p class='eyebrow'>우리 반 별숲 신문 · " + esc(dateStr) + "</p>"
+      + "<h3>📰 이번 주 우리 반 별숲 소식</h3>"
+      + "<p><b>" + esc((a && a.name) || "별숲 주민") + "</b> · 완료 차시 " + doneCnt + " · 최고 콤보 " + (pet.bestCombo || 0) + " · 연속 출석 " + (pet.streak || 0) + "일</p>"
+      + "<p>🏅 모은 칭호: " + esc(titles) + "</p>"
+      + "<p>👫 놀러 온 친구: " + esc(palsTxt) + "</p>"
+      + "<div class='stamp-board' style='display:block;text-align:left'><b>🏁 최근 릴레이</b><ul>" + ghtml + "</ul></div>"
+      + "<p class='hint'>이 칠판 기기의 기록으로 만듭니다.</p>"
+      + "<button type='button' class='mini-act btn-pulse' data-print-news='1'>🖨️ 별숲 신문 인쇄 / PDF 저장</button>"
       + "</div>";
+  }
+  function houseNameOf(id) {
+    try {
+      var u = window.G3Units || {};
+      if (u[id]) return u[id].name || id;
+      if (window.LowData) {
+        var all = (window.LowData.g1 || []).concat(window.LowData.g2 || []);
+        for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i].name;
+      }
+    } catch (e) {}
+    return id;
+  }
+  function wrongTopHtml(d) {
+    var cnt = {};
+    var wrong = d.wrong || [];
+    for (var i = 0; i < wrong.length; i++) {
+      var hid = "기타";
+      try {
+        if (wrong[i].lesson) {
+          var U = window.G3Units || {};
+          for (var h in U) {
+            var ls = (U[h] && U[h].lessons) || [];
+            for (var j = 0; j < ls.length; j++) if (ls[j].id === wrong[i].lesson) hid = h;
+          }
+        }
+      } catch (e) {}
+      cnt[hid] = (cnt[hid] || 0) + 1;
+    }
+    var low = d.lowWrong || [];
+    for (var k = 0; k < low.length; k++) {
+      var lh = (low[k] && low[k].house) || "새싹";
+      cnt[lh] = (cnt[lh] || 0) + 1;
+    }
+    var keys = Object.keys(cnt);
+    if (!keys.length) return "";
+    keys.sort(function (a, b) { return cnt[b] - cnt[a]; });
+    var html = "<div class='pal-sec'><b>😵‍💫 이번 주 헷갈림 TOP 3 (이 기기 기준)</b><ol class='rank-list'>";
+    for (var t = 0; t < Math.min(3, keys.length); t++) {
+      html += "<li><b>" + esc(houseNameOf(keys[t])) + "</b><span>틀린 문제 " + cnt[keys[t]] + "개</span>";
+      if (window.G3Relay) html += " <button type='button' class='mini-act btn-pulse' data-relay-preset='" + esc(keys[t]) + "'>릴레이로 출제</button>";
+      html += "</li>";
+    }
+    html += "</ol></div>";
+    return html;
   }
   function exportCode() {
     var d = window.G3Store.load();
@@ -184,9 +286,20 @@
     window.addEventListener("afterprint", function () {
       document.body.classList.remove("print-idcard");
       document.body.classList.remove("print-diploma");
+      document.body.classList.remove("print-news");
     });
   } catch (e) {}
   document.addEventListener("click", function (e) {
+    var rp = e.target.closest ? e.target.closest("[data-relay-preset]") : null;
+    if (rp) {
+      if (window.G3Relay && window.G3Relay.preset) window.G3Relay.preset(rp.getAttribute("data-relay-preset"));
+      var rb = document.getElementById("relayBox");
+      if (rb && rb.scrollIntoView) rb.scrollIntoView({ behavior: "smooth" });
+      if (window.G3UI) window.G3UI.toast("릴레이 단원을 골랐어요!");
+      return;
+    }
+    var nw = e.target.closest ? e.target.closest("[data-print-news]") : null;
+    if (nw) { doPrint("print-news"); return; }
     var pd = e.target.closest ? e.target.closest("[data-print-diploma]") : null;
     if (pd) { doPrint("print-diploma"); return; }
     var p = e.target.closest ? e.target.closest("[data-print-idcard]") : null;

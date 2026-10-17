@@ -185,6 +185,7 @@
       var d = window.G3Store.load();
       d.stars += 8;
       window.G3Store.save(d);
+      if (window.G3Pet) window.G3Pet.mark("play");
       if (window.G3Journal) window.G3Journal.log("채집", opt.name + "(" + opt.spec + ") 채집 성공, 별 +8");
       if (window.G3UI) { window.G3UI.stars(); if (window.G3UI.sfx) window.G3UI.sfx("ok"); }
       if (fb) fb.textContent = "정답! " + opt.name + "(" + opt.spec + ")를 잡아 별 +8개를 받았습니다!";
@@ -198,6 +199,7 @@
     var d = window.G3Store.load();
     d.stars += 8;
     window.G3Store.save(d);
+    if (window.G3Pet) window.G3Pet.mark("play");
     if (window.G3Journal) window.G3Journal.log("놀이", label + " 성공, 별 +8");
     if (window.G3UI) { window.G3UI.stars(); if (window.G3UI.sfx) window.G3UI.sfx("ok"); }
     toast(label + " 성공! 별 +8개를 받았습니다!");

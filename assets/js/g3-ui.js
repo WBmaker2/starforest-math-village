@@ -27,6 +27,67 @@
       }
     } catch (e) {}
   }
+  var bgmTimer = null, bgmMode = null;
+  var DAY_NOTES = [523.25, 587.33, 659.25, 783.99, 880.0];
+  var NIGHT_NOTES = [392.0, 440.0, 523.25, 587.33, 659.25];
+  function tone(freq, at, dur, vol, type) {
+    try {
+      var osc = actx.createOscillator();
+      var gain = actx.createGain();
+      osc.type = type || "sine";
+      osc.frequency.setValueAtTime(freq, at);
+      gain.gain.setValueAtTime(vol || 0.05, at);
+      gain.gain.exponentialRampToValueAtTime(0.001, at + (dur || 0.4));
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.start(at);
+      osc.stop(at + (dur || 0.4) + 0.05);
+    } catch (e) {}
+  }
+  function ensureCtx() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return false;
+      if (!actx) actx = new Ctx();
+      if (actx.state === "suspended") actx.resume();
+      return true;
+    } catch (e) { return false; }
+  }
+  function comboN(n) {
+    if (muted || n < 2) return;
+    if (!ensureCtx()) return;
+    try {
+      var scale = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5, 1174.7, 1318.5];
+      var f = scale[Math.min(scale.length - 1, n - 2)];
+      tone(f, actx.currentTime, 0.35, 0.09, "triangle");
+    } catch (e) {}
+  }
+  function bgm(mode) {
+    if (mode) bgmMode = mode;
+    if (muted) { stopBgm(); return; }
+    if (!ensureCtx()) return;
+    if (bgmTimer || !bgmMode) return;
+    var step = 0;
+    function loop() {
+      if (muted || !bgmMode) { bgmTimer = null; return; }
+      try {
+        var notes = bgmMode === "night" ? NIGHT_NOTES : DAY_NOTES;
+        var f = notes[step % notes.length];
+        var now = actx.currentTime;
+        tone(f, now, 0.9, 0.028, "sine");
+        tone(f * 2, now, 0.5, 0.012, "sine");
+        step++;
+      } catch (e) {}
+      bgmTimer = setTimeout(loop, bgmMode === "sunset" ? 900 : 700);
+    }
+    loop();
+  }
+  function stopBgm() {
+    if (bgmTimer) { clearTimeout(bgmTimer); bgmTimer = null; }
+  }
+  document.addEventListener("pointerdown", function initAudio() {
+    if (ensureCtx() && bgmMode && !muted && !bgmTimer) bgm();
+  }, { once: false });
   function initSfxBtn() {
     var purse = document.querySelector(".purse");
     if (!purse || document.getElementById("sfxBtn")) return;
@@ -42,8 +103,10 @@
     btn.addEventListener("click", function () {
       muted = !muted;
       try { localStorage.setItem("starforest-mute", muted ? "1" : "0"); } catch (e) {}
+      try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e2) {}
       syncText();
-      if (!muted) sfx("ok");
+      if (muted) stopBgm();
+      else { sfx("ok"); if (bgmMode) bgm(); }
     });
     purse.appendChild(btn);
   }
@@ -71,6 +134,31 @@
     });
     purse.appendChild(btn);
   }
+  function speak(text) {
+    var msg = String(text == null ? "" : text).slice(0, 200);
+    if (!msg) return;
+    try {
+      var synth = window.speechSynthesis;
+      if (!synth) { toast("이 기기는 읽어주기를 지원하지 않아요."); return; }
+      if (muted) { toast("소리가 꺼져 있어요. 🔊 소리 켬을 눌러 주세요."); return; }
+      synth.cancel();
+      var u = new SpeechSynthesisUtterance(msg);
+      u.lang = "ko-KR";
+      u.rate = 0.95;
+      var vs = synth.getVoices ? synth.getVoices() : [];
+      for (var i = 0; i < vs.length; i++) {
+        if (vs[i] && vs[i].lang && vs[i].lang.indexOf("ko") === 0) { u.voice = vs[i]; break; }
+      }
+      synth.speak(u);
+    } catch (e) {
+      toast("읽어주기를 시작하지 못했어요.");
+    }
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("[data-say-text]") : null;
+    if (!t) return;
+    speak(t.getAttribute("data-say-text"));
+  });
   function toast(m) {
     var t = document.getElementById("toast");
     if (!t) return;
@@ -123,5 +211,5 @@
       });
     }
   }
-  window.G3UI = { toast: toast, stars: stars, tabs: tabs, sfx: sfx };
+  window.G3UI = { toast: toast, stars: stars, tabs: tabs, sfx: sfx, speak: speak, bgm: bgm, stopBgm: stopBgm, comboN: comboN };
 })();

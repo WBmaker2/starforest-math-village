@@ -150,6 +150,7 @@
     "g6-cyl": "cyl", "g6-circle": "circ", "g5-symm": "gra"
   };
   function msgHtml2(text) { return "<p class='manip-msg' data-manip-msg>" + text + "</p>"; }
+  function msgHtml(text) { return msgHtml2(text); }
   window.GVisualsExtra = {
     map: VISUAL_MAP, msg: msgHtml2,
     shapeSvg: shapeSvg, shapeRow: shapeRow, deciSvg: deciSvg, deciDyn: deciDyn,

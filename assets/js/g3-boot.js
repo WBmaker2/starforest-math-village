@@ -12,6 +12,11 @@
     window.G3Quests.render();
     if (window.G3Gacha) window.G3Gacha.render();
     window.G3Collect.render();
+    if (window.G3Pet) window.G3Pet.render();
+    if (window.G3Friend) window.G3Friend.render();
+    if (window.G3Relay) window.G3Relay.render();
+    if (window.G3Sheet) window.G3Sheet.render();
+    if (window.G3Slots) window.G3Slots.render();
     var d = window.G3Store.load();
     if (!d.avatar) document.getElementById("avatar").scrollIntoView();
   }

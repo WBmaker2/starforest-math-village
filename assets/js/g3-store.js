@@ -1,6 +1,25 @@
 (function () {
   var KEY = "starforest-g3";
   var LEGACY_KEY = "math-walk-g3";
+  var SLOT_CUR = "starforest-slot-cur";
+  function slot() {
+    try {
+      var n = parseInt(localStorage.getItem(SLOT_CUR) || "1", 10);
+      if (n >= 1 && n <= 4) return n;
+    } catch (e) {}
+    return 1;
+  }
+  function keyFor(n) {
+    return n === 1 ? KEY : ("starforest-slot-" + n);
+  }
+  function slotName(n) {
+    try {
+      var raw = localStorage.getItem(keyFor(n)) || (n === 1 ? localStorage.getItem(LEGACY_KEY) : null);
+      if (!raw) return "";
+      var d = JSON.parse(raw);
+      return (d && d.avatar && d.avatar.name) || "";
+    } catch (e) { return ""; }
+  }
   function currentGrade() {
     try {
       if (window.STARFOREST_GRADE) return window.STARFOREST_GRADE;
@@ -21,7 +40,7 @@
     return "g3";
   }
   function blankGrade() {
-    return { done: {}, wrong: [], visits: {}, quests: { done: [] }, lowDone: {}, journal: [] };
+    return { done: {}, wrong: [], visits: {}, quests: { done: [] }, lowDone: {}, journal: [], stars2: {}, recent: [], adaptLevel: 2 };
   }
   function blank() {
     return { avatar: null, stars: 0, seeds: 0, done: {}, wrong: [],
@@ -44,6 +63,9 @@
       if (!g.quests || !g.quests.done) g.quests = { done: [] };
       if (!g.lowDone) g.lowDone = {};
       if (!g.journal) g.journal = [];
+      if (!g.stars2) g.stars2 = {};
+      if (!g.recent) g.recent = [];
+      if (!g.adaptLevel) g.adaptLevel = 2;
       d.grades[ids[i]] = g;
     }
     // 구 저장 데이터(g3 단일 구조)를 g3 칸으로 옮기기 (하위 호환)
@@ -75,12 +97,15 @@
     d.visits = gd.visits || {};
     d.quests = gd.quests || { done: [] };
     d.lowDone = gd.lowDone || {};
+    d.stars2 = gd.stars2 || {};
+    d.recent = gd.recent || [];
+    d.adaptLevel = gd.adaptLevel || 2;
     d._grade = g;
     return d;
   }
   function load() {
     try {
-      var raw = localStorage.getItem(KEY) || localStorage.getItem(LEGACY_KEY);
+      var raw = localStorage.getItem(keyFor(slot())) || (slot() === 1 ? localStorage.getItem(LEGACY_KEY) : null);
       var d;
       if (!raw) d = blank();
       else {
@@ -111,9 +136,12 @@
       d.grades[g].visits = d.visits || {};
       d.grades[g].quests = d.quests || { done: [] };
       d.grades[g].lowDone = d.lowDone || {};
+      d.grades[g].stars2 = d.stars2 || {};
+      d.grades[g].recent = (d.recent || []).slice(-20);
+      d.grades[g].adaptLevel = d.adaptLevel || 2;
       var copy = {};
       for (var k in d) {
-        if (k === "_grade" || k === "done" || k === "wrong" || k === "visits" || k === "quests" || k === "lowDone") continue;
+        if (k === "_grade" || k === "done" || k === "wrong" || k === "visits" || k === "quests" || k === "lowDone" || k === "stars2" || k === "recent" || k === "adaptLevel") continue;
         copy[k] = d[k];
       }
       copy.grades = d.grades;
@@ -126,8 +154,17 @@
         copy.visits = (d.grades.g3 && d.grades.g3.visits) || {};
         copy.quests = (d.grades.g3 && d.grades.g3.quests) || { done: [] };
       }
-      localStorage.setItem(KEY, JSON.stringify(copy));
+      localStorage.setItem(keyFor(slot()), JSON.stringify(copy));
     } catch (e) {}
   }
-  window.G3Store = { load: load, save: save, grade: currentGrade };
+  function switchSlot(n) {
+    try {
+      n = parseInt(n, 10);
+      if (!(n >= 1 && n <= 4)) return false;
+      localStorage.setItem(SLOT_CUR, String(n));
+      return true;
+    } catch (e) { return false; }
+  }
+  window.G3Store = { load: load, save: save, grade: currentGrade,
+    slot: slot, slotName: slotName, switchSlot: switchSlot };
 })();

@@ -148,4 +148,186 @@
       ] }
   ];
   window.LowData = { g1: G1, g2: G2 };
+  function rnd(n, m) { return n + Math.floor(Math.random() * (m - n + 1)); }
+  var LOW_LEVEL = 2;
+  function RL2(lo, hi) {
+    lo = Math.max(0, lo); hi = Math.max(lo, hi);
+    if (LOW_LEVEL <= 1) {
+      var h1 = lo + Math.ceil((hi - lo) * 0.5);
+      return rnd(lo, h1);
+    }
+    if (LOW_LEVEL >= 3) {
+      var l3 = lo + Math.floor((hi - lo) * 0.3);
+      var h3 = hi + Math.ceil((hi - lo) * 0.3);
+      return rnd(l3, h3);
+    }
+    return rnd(lo, hi);
+  }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function numSvg(text) {
+    return "<svg viewBox='0 0 300 90'><rect x='60' y='18' width='180' height='54' rx='12' fill='#FFF0CC' stroke='#F5B23A' stroke-width='2'/><text x='150' y='52' text-anchor='middle' font-family='Jua' font-size='18'>" + text + "</text></svg>";
+  }
+  function mk(q, a, exp, svg, distract) {
+    return { q: q, a: a, exp: exp, svg: svg, choices: shuffle([a].concat(distract).slice(0, 3)) };
+  }
+  var LOWGEN = {
+    "g1-num": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var k = RL2(2, 5), n = RL2(1, 9);
+        var ans = String(k * 10 + n);
+        out.push(mk("10개씩 " + k + "묶음과 낱개 " + n + "개는 모두 몇 개일까요?", ans,
+          "10이 " + k + "묶음이면 " + (k * 10) + ", 낱개 " + n + "개를 더하면 " + ans + "예요!",
+          numSvg("10 × " + k + " + " + n), [String(k * 10 + n + 1), String(k * 10 + n - 1), String(k * 10 + n + 10)]));
+      }
+      return out;
+    },
+    "g1-add": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var a = RL2(2, 9), b = RL2(2, 9);
+        if (i % 2 === 0) out.push(mk(a + " + " + b + "는 얼마일까요?", String(a + b), a + " + " + b + " = " + (a + b) + "이에요!",
+          numSvg(a + " + " + b), [String(a + b + 1), String(a + b - 1), String(a + b + 2)]));
+        else {
+          var t = RL2(6, 14), m = RL2(1, 5);
+          out.push(mk(t + " - " + m + "는 얼마일까요?", String(t - m), t + "에서 " + m + "을 덜면 " + (t - m) + "가 남아요!",
+            numSvg(t + " - " + m), [String(t - m + 1), String(t - m - 1), String(t - m + 2)]));
+        }
+      }
+      return out;
+    },
+    "g1-shape": function () {
+      var out = [];
+      var hours = [3, 4, 6, 9];
+      for (var i = 0; i < 3; i++) {
+        var h = hours[rnd(0, hours.length - 1)];
+        out.push(mk("긴바늘이 12, 짧은바늘이 " + h + "를 가리킵니다. 몇 시일까요?", h + "시",
+          "짧은바늘이 가리키는 숫자를 읽으면 " + h + "시예요!", numSvg("🕐 " + h + "시"),
+          hours.filter(function (x) { return x !== h; }).map(function (x) { return x + "시"; })));
+      }
+      return out;
+    },
+    "g1-fruit": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var a = RL2(2, 7), b = RL2(2, 7);
+        out.push(mk("밤이 " + a + "개, 도토리가 " + b + "개 있습니다. 모두 몇 개일까요?", String(a + b) + "개",
+          a + " + " + b + " = " + (a + b) + "개예요!", numSvg(a + " + " + b), [String(a + b + 1) + "개", String(a + b - 1) + "개", String(a + b + 2) + "개"]));
+      }
+      return out;
+    },
+    "g1-rule": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var s = RL2(1, 9);
+        out.push(mk(s + ", " + (s + 2) + ", " + (s + 4) + " 다음에 올 수는 몇일까요?", String(s + 6),
+          "2씩 커지니까 다음은 " + (s + 6) + "이에요!", numSvg(s + " → " + (s + 2) + " → " + (s + 4) + " → ?"),
+          [String(s + 5), String(s + 7), String(s + 4)]));
+      }
+      return out;
+    },
+    "g1-group": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var a = RL2(3, 8);
+        out.push(mk("10을 " + a + "와 몇으로 가를 수 있을까요? (" + a + " + ? = 10)", String(10 - a),
+          a + " + " + (10 - a) + " = 10이에요!", numSvg(a + " + ? = 10"), [String(10 - a + 1), String(10 - a - 1), String(9 - a + 2)]));
+      }
+      return out;
+    },
+    "g2-place": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var k = RL2(2, 5);
+        if (i % 2 === 0) out.push(mk("100 모형이 " + k + "개이면 얼마일까요?", String(k * 100),
+          "100이 " + k + "개이면 " + (k * 100) + "이에요!", numSvg("100 × " + k), [String(k * 100 + 100), String(k * 100 - 100), String(k * 10)]));
+        else out.push(mk("1000 모형이 " + k + "개이면 얼마일까요?", String(k * 1000),
+          "1000이 " + k + "개이면 " + (k * 1000) + "이에요!", numSvg("1000 × " + k), [String(k * 1000 + 1000), String(k * 100), String(k * 1000 - 1000)]));
+      }
+      return out;
+    },
+    "g2-song": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var a = RL2(2, 9), b = RL2(2, 5);
+        out.push(mk(a + " × " + b + "는 얼마일까요?", String(a * b), a + "가 " + b + "묶음이면 " + (a * b) + "예요!",
+          numSvg(a + " × " + b), [String(a * b + a), String(a * b - a), String(a * b + 1)]));
+      }
+      return out;
+    },
+    "g2-length": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        if (i % 2 === 0) {
+          var L = RL2(5, 20);
+          out.push(mk("연필 길이가 자 눈금 0부터 " + L + "까지입니다. 몇 cm일까요?", L + "cm",
+            "0부터 " + L + "까지이면 " + L + "cm예요!", numSvg("0 → " + L + "cm"), [(L + 1) + "cm", (L - 1) + "cm", (L + 2) + "cm"]));
+        } else {
+          var a = RL2(10, 40), b = RL2(10, 40);
+          out.push(mk("리본 " + a + "cm와 " + b + "cm를 이으면 모두 몇 cm일까요?", String(a + b) + "cm",
+            a + " + " + b + " = " + (a + b) + "cm예요!", numSvg(a + " + " + b + "cm"), [(a + b + 5) + "cm", (a + b - 5) + "cm", (a + b + 10) + "cm"]));
+        }
+      }
+      return out;
+    },
+    "g2-time": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        if (i % 2 === 0) out.push(mk("2시부터 3시까지는 몇 시간일까요?", "1시간", "2시에서 3시까지는 1시간이에요!",
+          numSvg("2시 → 3시"), ["30분", "2시간", "3시간"]));
+        else {
+          var h = RL2(1, 11);
+          out.push(mk("긴바늘이 12, 짧은바늘이 " + h + "를 가리킵니다. 몇 시일까요?", h + "시",
+            "짧은바늘이 " + h + "를 가리키면 " + h + "시예요!", numSvg(h + "시"), [(h % 12 + 1) + "시", ((h + 10) % 12 + 1) + "시", "12시"]));
+        }
+      }
+      return out;
+    },
+    "g2-table": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var a = RL2(2, 8), b = RL2(2, 8);
+        out.push(mk("빨간 구슬 " + a + "개, 파란 구슬 " + b + "개입니다. 모두 몇 개일까요?", String(a + b) + "개",
+          a + " + " + b + " = " + (a + b) + "개예요!", numSvg(a + " + " + b), [String(a + b + 1) + "개", String(a + b - 1) + "개", String(a + b + 2) + "개"]));
+      }
+      return out;
+    },
+    "g2-pattern": function () {
+      var out = [];
+      for (var i = 0; i < 3; i++) {
+        var s = RL2(1, 9), d = (i % 2 === 0) ? 2 : 5;
+        out.push(mk(s + ", " + (s + d) + ", " + (s + d * 2) + " 다음에 올 수는 몇일까요?", String(s + d * 3),
+          d + "씩 커지니까 다음은 " + (s + d * 3) + "이에요!", numSvg(s + " → " + (s + d) + " → " + (s + d * 2) + " → ?"),
+          [String(s + d * 3 + 1), String(s + d * 3 - 1), String(s + d * 3 + d)]));
+      }
+      return out;
+    }
+  };
+  function lowInfinite(grade, houseId, level) {
+    var keep = LOW_LEVEL;
+    if (level) LOW_LEVEL = (level < 1) ? 1 : ((level > 3) ? 3 : level);
+    var out;
+    var fn = LOWGEN[houseId];
+    if (fn) out = fn();
+    else {
+      var g = (grade === "2") ? G2 : G1;
+      out = null;
+      for (var i = 0; i < g.length; i++) if (g[i].id === houseId && LOWGEN[g[i].id]) out = LOWGEN[g[i].id]();
+      if (!out) {
+        var a = RL2(2, 9), b = RL2(2, 9);
+        out = [mk(a + " + " + b + "는 얼마일까요?", String(a + b), a + " + " + b + " = " + (a + b) + "예요!",
+          numSvg(a + " + " + b), [String(a + b + 1), String(a + b - 1), String(a + b + 2)])];
+      }
+    }
+    LOW_LEVEL = keep;
+    return out;
+  }
+  window.LowPad = { generate: lowInfinite };
 })();

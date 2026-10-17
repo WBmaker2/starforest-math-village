@@ -312,8 +312,83 @@ body.board-mode .dlgbox { max-width: 760px; }
   body.print-diploma main.wrap { width: 100%; padding: 0; }
   body.print-diploma #note { border: none; box-shadow: none; }
   body.print-diploma #reportPane, body.print-diploma #reportBox, body.print-diploma .rep-grid, body.print-diploma .diploma { display: block !important; }
+  body.print-diploma #reportBox #newsCard { display: none !important; }
   body.print-diploma .diploma { border: 3px double #333; break-inside: avoid; }
+  body.print-news header.bar, body.print-news .g3head, body.print-news #avatar, body.print-news #gachaSec, body.print-news #village, body.print-news #farm, body.print-news #playSec, body.print-news #deco, body.print-news #quests, body.print-news #collect, body.print-news #historyBtn, body.print-news #toast, body.print-news #dlg { display: none !important; }
+  body.print-news #note .tabs, body.print-news #note #journalPane, body.print-news #note #mapPane, body.print-news #note #recordPane, body.print-news #note .savebox, body.print-news #note .idcard { display: none !important; }
+  body.print-news main.wrap { width: 100%; padding: 0; }
+  body.print-news #note { border: none; box-shadow: none; }
+  body.print-news #reportPane, body.print-news #reportBox, body.print-news .rep-grid, body.print-news #newsCard { display: block !important; }
+  body.print-news #reportBox .idcard, body.print-news #reportBox .diploma#diplomaCard, body.print-news #reportBox .savebox { display: none !important; }
+  body.print-news #newsCard { border: 3px double #333; break-inside: avoid; }
 }
+#sheetPrint { display: none; }
+.sheet-prev ol { margin: 8px 0 8px 20px; display: grid; gap: 6px; }
+.sheet-choices { color: var(--ink-soft); }
+.sheet-answer-line { display: inline-block; min-width: 160px; border-bottom: 1px solid var(--line); }
+@media print {
+  body.print-sheet header.bar, body.print-sheet main.wrap, body.print-sheet #historyBtn, body.print-sheet #toast, body.print-sheet #dlg, body.print-sheet #pwaBanner { display: none !important; }
+  body.print-sheet #sheetPrint { display: block !important; }
+  body.print-sheet #sheetPrint .sheet-page { break-after: page; }
+  body.print-sheet #sheetPrint .sheet-page:last-child { break-after: auto; }
+  body.print-sheet #sheetPrint h2 { font-size: 20px; margin-bottom: 6px; }
+  body.print-sheet #sheetPrint ol { margin-left: 22px; display: grid; gap: 10px; font-size: 15px; }
+  body.print-sheet #sheetPrint .sheet-choices { font-size: 14px; }
+}
+body.low-big .trial-q { font-size: 26px; }
+body.low-big .trial-choice { font-size: 22px; padding: 16px 10px; }
+.pet-card { display: flex; gap: 14px; align-items: center; background: linear-gradient(180deg, #FFFBEF, #FFFDF6); border: 2px solid #F5B23A; border-radius: 16px; padding: 12px 14px; margin-top: 12px; }
+.pet-face { width: 84px; height: 84px; display: grid; place-items: center; background: #fff; border-radius: 14px; border: 1.5px solid var(--line); overflow: hidden; }
+.pet-img-lg { width: 72px; height: 72px; object-fit: contain; }
+.pet-emoji { font-size: 44px; }
+.pet-img { width: 30px; height: 30px; object-fit: contain; vertical-align: middle; }
+.pet-meta { display: grid; gap: 4px; font-size: 14px; }
+.pet-meta b { font-family: var(--display); font-size: 17px; }
+.chest-card, .title-card { margin-top: 12px; border: 2px dashed var(--line); border-radius: 16px; padding: 12px 14px; background: var(--paper); display: grid; gap: 8px; }
+.chest-card ul { margin: 0; padding-left: 18px; }
+.combo-bar { font-family: var(--display); font-size: 16px; text-align: center; background: #FFF3D6; border: 2px solid #F5B23A; border-radius: 12px; padding: 6px 10px; margin-bottom: 8px; }
+.combo-bar.fever { background: linear-gradient(90deg, #FFE9A8, #FFD166, #FFE9A8); border-color: #C98A2B; }
+.boss-bar { display: flex; gap: 8px; align-items: center; background: #FDECEC; border: 2px solid #E4695E; border-radius: 12px; padding: 8px 12px; margin-bottom: 8px; font-family: var(--display); }
+.boss-mini { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; background: #fff; }
+.boss-btn { border-color: #E4695E !important; background: #FFF1EF !important; }
+.pet-follow { position: absolute; width: 34px; height: 34px; margin: -108px 0 0 26px; z-index: 5; pointer-events: none; display: grid; place-items: center; filter: drop-shadow(0 2px 3px rgba(0,0,0,.3)); animation: petbob 1.2s ease-in-out infinite; }
+.pet-follow img { width: 30px; height: 30px; object-fit: contain; }
+.pet-follow span { font-size: 24px; line-height: 1; }
+@keyframes petbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.rare-btn { border-color: #9C86E0 !important; background: #F3EEFF !important; }
+.crop-emoji { font-size: 30px; }
+.pal-sec { margin-top: 12px; border: 2px solid var(--line); border-radius: 16px; padding: 12px 14px; background: var(--card); display: grid; gap: 8px; }
+.pal-sec input { font-family: var(--display); font-size: 15px; padding: 8px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; min-width: 220px; }
+.pal-list { display: grid; gap: 8px; }
+.pal-card { display: flex; gap: 10px; align-items: center; background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px; padding: 8px 10px; }
+.pal-av { position: relative; width: 56px; height: 70px; background: #fff; border-radius: 12px; border: 1.5px solid var(--line); overflow: hidden; flex: none; }
+.pal-av .av-rig { transform: scale(.28); transform-origin: top left; }
+.pal-meta { display: grid; gap: 2px; font-size: 13px; }
+.pal-meta b { font-family: var(--display); font-size: 15px; }
+.pal-marker { position: absolute; z-index: 4; transform: translate(-50%, -90%); background: rgba(255,253,246,.95); border: 1.5px solid var(--leaf); border-radius: 12px; padding: 2px 6px 4px; cursor: pointer; display: grid; justify-items: center; }
+.pal-face { position: relative; display: block; width: 40px; height: 50px; overflow: hidden; }
+.pal-face .av-rig { transform: scale(.2); transform-origin: top left; }
+.pal-marker em { font-style: normal; font-family: var(--display); font-size: 11px; white-space: nowrap; }
+.relay-sec { margin-top: 12px; border: 2px solid #4E9BB8; border-radius: 16px; padding: 12px 14px; background: linear-gradient(180deg, #F2FAFD, #FFFDF6); display: grid; gap: 8px; }
+.relay-sec b { font-family: var(--display); font-size: 17px; }
+.relay-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-family: var(--display); font-size: 15px; }
+.relay-row span:first-child { min-width: 90px; color: var(--ink-soft); }
+.relay-row button { font-family: var(--display); font-size: 14px; padding: 7px 13px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; }
+.relay-row button.sel { border-color: #4E9BB8; background: #E3F2F9; }
+.relay-row select { font-family: var(--display); font-size: 15px; padding: 7px 10px; border-radius: 12px; border: 1.5px solid var(--line); }
+.relay-score { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.rteam { font-family: var(--display); font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--paper); }
+.rteam.now { border-color: #F5B23A; background: #FFF3D6; }
+.relay-turn { display: flex; gap: 10px; align-items: center; justify-content: space-between; font-family: var(--display); font-size: 16px; }
+.relay-timer { background: #E3F2F9; border-radius: 999px; padding: 4px 12px; font-size: 15px; }
+.relay-timer.urgent { background: #FDECEC; border: 2px solid #E4695E; }
+.rank-list { margin: 6px 0 0 20px; display: grid; gap: 4px; }
+.rank-list li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.rank-list li span:last-child { color: var(--ink-soft); font-size: 13px; }
+.card2.legend { border-color: #C98A2B; background: linear-gradient(180deg, #FFFBEF, #FFFDF6); }
+#pwaBanner { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 90; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--card); border: 2px solid var(--leaf); border-radius: 16px; padding: 10px 14px; box-shadow: var(--shadow); font-family: var(--display); }
+#pwaBanner span { color: var(--ink-soft); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .pet-follow { animation: none; } }
 .q-vis [data-mul], .q-vis [data-div], .q-vis [data-frac] { cursor: pointer; }
 .manip-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
 .manip-row button { font-family: var(--display); font-size: 14px; padding: 8px 14px; border-radius: 12px; border: 2px solid var(--sky); background: var(--card); cursor: pointer; }

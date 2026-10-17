@@ -7,8 +7,11 @@
 <meta name="description" content="1·2학년 어린이가 큰 그림과 큰 단추로 걷고 푸는 저학년 산책 마을입니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1F6E5C">
+<link rel="apple-touch-icon" href="../assets/img/icon-192.png">
 <link rel="stylesheet" href="../assets/css/styles.css">
-<link rel="stylesheet" href="../assets/css/g3.css?v=18">
+<link rel="stylesheet" href="../assets/css/g3.css?v=29">
 <meta name="starforest-grade" content="g1">
 </head>
 <body>
@@ -48,6 +51,14 @@
 <p class="hint" id="lowProgText">아직 푼 문제가 없습니다. 집에 들어가 큰 단추를 눌러 보세요!</p>
 <div id="lowProgGrid" class="mapgrid"></div>
 </section>
+<section id="lowPlay" class="card">
+<h2>새싹 놀이터 · 짝꿍 펫과 보물상자</h2>
+<p class="hint">문제를 풀면 별사탕으로 짝꿍 펫을 키우고, 매일 보물상자를 열 수 있어요. 별과 씨앗은 전 학년 마을과 함께 쌓입니다.</p>
+<div id="petBoxLow"></div>
+<div id="chestBoxLow"></div>
+<p><a class="mini-act" href="../grade3/index.html#avatar">3학년 마을 옷장에서 주민 꾸미기</a>
+<a class="mini-act" href="../grade3/index.html#farm">3학년 마을 텃밭에서 작물 심기</a></p>
+</section>
 </main>
 <div id="dlg" aria-label="저학년 집 대화"><div class="dlgbox">
 <button id="dlgClose">닫기</button>
@@ -56,10 +67,16 @@
 <div id="dlgBody"></div>
 </div></div>
 <div id="toast" role="status" aria-live="polite"></div>
-<script src="../assets/js/g3-store.js?v=18"></script>
-<script src="../assets/js/g3-avatar.js?v=18"></script>
-<script src="../assets/js/g3-ui.js?v=18"></script>
-<script src="../assets/js/low-data.js?v=18"></script>
-<script src="../assets/js/low-app.js?v=18"></script>
+<script src="../assets/js/g3-store.js?v=29"></script>
+<script src="../assets/js/g3-tune.js?v=29"></script>
+<script src="../assets/js/g3-avatar.js?v=29"></script>
+<script src="../assets/js/g3-ui.js?v=29"></script>
+<script src="../assets/js/g3-pet.js?v=29"></script>
+<script src="../assets/js/g3-friend.js?v=29"></script>
+<script src="../assets/js/low-data.js?v=29"></script>
+<script src="../assets/js/g3-sheet.js?v=29"></script>
+<script src="../assets/js/g3-slots.js?v=29"></script>
+<script src="../assets/js/low-app.js?v=30"></script>
+<script src="../assets/js/pwa.js"></script>
 </body>
 </html>

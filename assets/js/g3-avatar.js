@@ -44,7 +44,9 @@
     "hat-cap": { top: "4px", width: "88px", height: "58px" },
     "hat-straw": { top: "2px", width: "104px", height: "58px" },
     "hat-safari": { top: "2px", width: "100px", height: "58px" },
-    "set-gold-hat": { top: "4px", width: "82px", height: "62px" }
+    "set-gold-hat": { top: "4px", width: "82px", height: "62px" },
+    "set-wiz-hat": { top: "-6px", width: "90px", height: "68px" },
+    "set-astro-helm": { top: "-4px", width: "94px", height: "66px" }
   };
   var TOP_STYLE = {
     "top-stripe": { top: "111px", width: "94px", height: "62px", zIndex: "3" },
@@ -53,7 +55,9 @@
     "top-hoodie": { top: "106px", width: "100px", height: "68px", zIndex: "4" },
     "top-vest": { top: "109px", width: "82px", height: "64px", zIndex: "4" },
     "top-chef": { top: "108px", width: "98px", height: "66px", zIndex: "4" },
-    "set-gold-cape": { top: "105px", width: "112px", height: "76px", zIndex: "4" }
+    "set-gold-cape": { top: "105px", width: "112px", height: "76px", zIndex: "4" },
+    "set-wiz-robe": { top: "106px", width: "102px", height: "70px", zIndex: "4" },
+    "set-astro-suit": { top: "107px", width: "100px", height: "68px", zIndex: "4" }
   };
   var BOT_STYLE = {
     "bot-jeans": { top: "156px", width: "68px", height: "52px", zIndex: "3" },
@@ -90,7 +94,7 @@
     var hs = HAT_STYLE[a.hat] || { top: "0px", width: "92px", height: "60px" };
     var sp = "../assets/img/flow/parts/" + a.shoe + ".png";
     var singleShoe = a.shoe === "set-gold-boots" ? " single-pair" : "";
-    var isPngAcc = a.acc && a.acc.indexOf("glass-") === 0;
+    var isPngAcc = isPngPart(a.acc);
     var hatHtml = a.hat !== "none"
       ? "<img class='av-hat-img' src='../assets/img/flow/parts/" + a.hat + ".png' alt='' style='top:" + hs.top + ";width:" + hs.width + ";height:" + hs.height + ";display:block'>"
       : "<img class='av-hat-img' alt='' style='display:none'>";
@@ -148,7 +152,7 @@
     }
     var ai = document.getElementById("accImg");
     if (ai) {
-      var isPng = a.acc && a.acc.indexOf("glass-") === 0;
+      var isPng = isPngPart(a.acc);
       ai.style.display = isPng ? "block" : "none";
       if (isPng) ai.src = "../assets/img/flow/parts/" + a.acc + ".png";
     }
@@ -186,13 +190,16 @@
     if (id === "crown") return "<svg viewBox='76 14 48 34'>" + accSvg("crown") + "</svg>";
     return "";
   }
+  function isPngPart(v) {
+    return !!v && (v.indexOf("glass-") === 0 || v === "set-fairy-wings");
+  }
   function thumb(cat, it) {
-    var pic = "";
+      var pic = "";
     if (it.v === "none") pic = accThumb("none");
     else if (cat === "face") pic = faceThumb(it.v);
-    else if (cat === "acc" && !it.img) pic = accThumb(it.v);
-    else if (it.img === false) pic = accThumb(it.v);
-    else pic = "<img src='" + IMG + it.v + ".png' alt='" + it.n + "'>";
+    else if (cat === "acc" && !it.img && !isPngPart(it.v)) pic = accThumb(it.v);
+    else if (it.img === false && !isPngPart(it.v)) pic = accThumb(it.v);
+    else pic = "<img src='" + IMG + it.v + ".png' alt='" + it.n + "' onerror=\"this.style.display='none'\">";
     return pic;
   }
   var curCat = "hair";
@@ -213,9 +220,12 @@
         items.push({ v: ACCS[i].id, n: ACCS[i].name, lock: locked, img: ACCS[i].id.indexOf("glass-") === 0 });
       }
     }
-    if (cat === "hat" || cat === "top" || cat === "shoe") {
+    if (cat === "hat" || cat === "top" || cat === "shoe" || cat === "acc") {
       var sets = window.G3Store.load().sets || [];
-      var gold = { hat: [{ v: "set-gold-hat", n: "황금 모자" }], top: [{ v: "set-gold-cape", n: "황금 망토" }], shoe: [{ v: "set-gold-boots", n: "황금 부츠" }] }[cat];
+      var gold = { hat: [{ v: "set-gold-hat", n: "황금 모자" }, { v: "set-wiz-hat", n: "별마법사 모자" }, { v: "set-astro-helm", n: "우주 헬멧" }],
+        top: [{ v: "set-gold-cape", n: "황금 망토" }, { v: "set-wiz-robe", n: "별마법사 로브" }, { v: "set-astro-suit", n: "우주복" }],
+        shoe: [{ v: "set-gold-boots", n: "황금 부츠" }],
+        acc: [{ v: "glass-wizard", n: "마법 외알안경" }, { v: "set-fairy-wings", n: "요정 날개" }] }[cat];
       for (var g = 0; g < gold.length; g++) {
         var has = sets.indexOf(gold[g].v) >= 0;
         items.push({ v: gold[g].v, n: gold[g].n, lock: !has, lockNote: "뽑기 필요" });

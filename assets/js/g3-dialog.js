@@ -74,6 +74,21 @@
     showModal(npcFor(state.house));
     renderLessons();
   }
+  function twinFor(house, orig) {
+    try {
+      if (window.G3Pad && window.G3Pad.generateSet) {
+        for (var t = 0; t < 8; t++) {
+          var gen = window.G3Pad.generateSet(house, adaptLevel());
+          for (var i = 0; i < gen.length; i++) {
+            if (gen[i].q !== orig.q) {
+              return { q: gen[i].q, a: gen[i].a, steps: gen[i].steps, twin: true };
+            }
+          }
+        }
+      }
+    } catch (e) {}
+    return null;
+  }
   function openWrong() {
     var d = window.G3Store.load();
     if (!d.wrong || !d.wrong.length) {
@@ -81,11 +96,13 @@
       return;
     }
     state.mode = "wrong";
-    state.customTitle = "오답 노트 교실";
+    state.customTitle = "오답 노트 교실 · 쌍둥이 문제";
     state.customList = [];
     for (var i = 0; i < d.wrong.length; i++) {
       var found = findQuestion(d.wrong[i].q);
-      state.customList.push({ q: found.item.q, a: found.item.a, steps: found.item.steps, house: found.house, lid: found.lid, wrongIdx: i });
+      var twin = twinFor(found.house, found.item);
+      var use = twin || found.item;
+      state.customList.push({ q: use.q, a: use.a, steps: use.steps, house: found.house, lid: found.lid, wrongIdx: i, origQ: d.wrong[i].q, isTwin: !!twin });
     }
     state.qi = 0; state.tries = 0; state.firstOk = 0; state.total = state.customList.length;
     showModal("npc-bunny");
@@ -113,9 +130,40 @@
     npcSay("오늘의 도전! 여섯 단원에서 고른 다섯 문제를 풀어 보렴. 감점은 없단다!");
     renderQ();
   }
+  var BOSS_META = {
+    mul: { name: "태엽 연산 골렘", emoji: "🤖" }, divi: { name: "나눔 과일 골렘", emoji: "🍎" },
+    circ: { name: "동그라미 수호령", emoji: "⭕" }, frac: { name: "분수 마법사", emoji: "🧙" },
+    mea: { name: "황금 저울 연금술사", emoji: "⚖️" }, gra: { name: "별자리 그래프 마법사", emoji: "🔭" }
+  };
+  function TB(key, fallback) {
+    try {
+      var t = window.G3TUNE || {};
+      return (t[key] == null) ? fallback : t[key];
+    } catch (e) { return fallback; }
+  }
+  function bossFor(house) {
+    if (BOSS_META[house]) return BOSS_META[house];
+    var keys = ["boss-calc", "boss-shape", "boss-measure", "boss-data"];
+    var emojis = ["🤖", "🛡️", "⚗️", "🔭"];
+    var names = ["태엽 연산 골렘", "크리스탈 도형 기사", "황금 저울 연금술사", "별자리 그래프 마법사"];
+    var i = (String(house).length || 0) % 4;
+    try {
+      var order = window.GRADE_UNIT_ORDER || [];
+      for (var oi = 0; oi < order.length; oi++) {
+        if (order[oi] && order[oi][0] === house) { i = oi % 4; break; }
+      }
+    } catch (e) {}
+    return { name: names[i], emoji: emojis[i], img: "../assets/img/flow/parts/" + keys[i] + ".png" };
+  }
+  function adaptLevel() {
+    try {
+      if (window.G3Adapt && window.G3Adapt.level) return window.G3Adapt.level();
+    } catch (e) {}
+    return 2;
+  }
   function openInfinite() {
     if (!window.G3Pad || !window.G3Pad.generateSet) return;
-    var gen = window.G3Pad.generateSet(state.house);
+    var gen = window.G3Pad.generateSet(state.house, adaptLevel());
     var U = curUnit();
     state.mode = "infinite";
     state.customTitle = U.name + " · 숫자 바꿔 무한 연습";
@@ -128,6 +176,7 @@
     renderQ();
   }
   function close() {
+    stopStarTimer();
     var ov = document.getElementById("dlg");
     if (ov) ov.classList.remove("show");
   }
@@ -143,12 +192,26 @@
     var d = window.G3Store.load();
     var html = "<img class='houseimg' src='" + portraitFor(state.house) + "' alt='" + U.name + " 그림'><h3>" + U.name + " · 차시 목록</h3><div class='lessons'>";
     var L = U.lessons;
+    var S2 = d.stars2 || {};
+    function starTxt(id) {
+      var n = S2[id] || 0;
+      var s = "";
+      for (var k = 0; k < 3; k++) s += k < n ? "★" : "☆";
+      return " " + s;
+    }
     for (var i = 0; i < L.length; i++) {
       var done = d.done[L[i].id] ? " · 완료" : "";
-      html += "<button class='lesson btn-pulse' data-lesson='" + i + "'>" + L[i].title + done + "</button>";
+      html += "<button class='lesson btn-pulse' data-lesson='" + i + "'>" + L[i].title + done + starTxt(L[i].id) + "</button>";
+      if (d.done[L[i].id]) {
+        html += "<button class='lesson boss-btn btn-pulse' data-star='" + i + "'>👑 " + L[i].title.split(" · ")[0] + " 도전왕 (" + TB("starSecs", 20) + "초/문제)</button>";
+      }
     }
-    html += "</div><p class='hint'>기본 차시는 문제 6개, 실생활 문장제 차시는 4개입니다. 처음 끝내는 차시마다 씨앗 2개를 받습니다.</p>";
+    html += "</div><p class='hint'>기본 차시는 문제 6개, 실생활 문장제 차시는 4개입니다. 처음 끝내는 차시마다 씨앗 2개를 받습니다. 실수 없이 다 맞히면 🌈 무지개 씨앗!</p>";
     html += "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 무한 연습하기 (6문제)</button>";
+    html += "<button class='lesson' data-sheet-house='" + state.house + "'>🖨️ 이 단원 학습지 인쇄하기 (10문제)</button>";
+    var boss = bossFor(state.house);
+    var bossImg = boss.img ? ("<img class='boss-mini' src='" + boss.img + "' alt='' onerror=\"this.style.display='none'\">") : "";
+    html += "<button class='lesson boss-btn btn-pulse' data-boss='1'>" + bossImg + "⚡ 단원 수호자 대결: " + boss.emoji + " " + boss.name + " (" + TB("bossTotal", 5) + "문제·HP " + TB("bossHp", 3) + ")</button>";
     box.innerHTML = html;
   }
   function startLesson(i) {
@@ -175,9 +238,23 @@
     var steps = item.steps || [];
     var box = document.getElementById("dlgBody");
     var vis = (window.G3Visuals && window.G3Visuals.render) ? window.G3Visuals.render(cur.house, cur.lid, item) : "";
-    var html = "<p class='crumb'>" + cur.title + " · " + (state.qi + 1) + "/" + cur.len + "</p>";
+    var html = "";
+    if (window.G3Pet && window.G3Pet.comboBar) html += window.G3Pet.comboBar();
+    if (state.mode === "boss") {
+      var b = bossFor(state.house);
+      var maxHp = TB("bossHp", 3);
+      var hp = state.bossHp == null ? maxHp : state.bossHp;
+      var hearts = "";
+      for (var bi = 0; bi < maxHp; bi++) hearts += bi < hp ? "❤️" : "🤍";
+      var bimg = b.img ? ("<img class='boss-mini' src='" + b.img + "' alt='' onerror=\"this.style.display='none'\">") : "";
+      html += "<div class='boss-bar' aria-live='polite'>" + bimg + "<b>" + b.emoji + " " + b.name + "</b><span>" + hearts + " (남은 HP " + hp + "/" + maxHp + ")</span></div>";
+    }
+    html += "<p class='crumb'>" + cur.title + " · " + (state.qi + 1) + "/" + cur.len + "</p>";
+    if (state.mode === "wrong" && cur.item && cur.item.isTwin) {
+      html += "<p class='hint'>👯 지난번에 틀린 문제와 같은 유형! 숫자만 바뀌었어요.</p>";
+    }
     html += "<div class='qvis-wrap' data-qvis-wrap>" + vis + "</div>";
-    html += "<p class='q'>" + item.q + "</p>";
+    html += "<p class='q'>" + item.q + " <button type='button' class='mini-act' data-say-text=\"" + String(item.q).replace(/&/g, "&amp;").replace(/"/g, "&quot;") + "\" aria-label='문제 읽어주기'>🔊</button></p>";
     html += "<div class='ansrow'><input id='ans' inputmode='none' placeholder='키패드로 답 입력' aria-label='답 입력' readonly>";
     html += "<button id='sendBtn' class='go btn-pulse'>확인</button></div>";
     html += "<div id='padKeypad' class='keypad-grid' aria-label='숫자 키패드'></div>";
@@ -218,6 +295,16 @@
     }
     document.getElementById("ans").addEventListener("keydown", function (e) { if (e.key === "Enter") check(); });
     document.getElementById("ans").focus();
+    if (state.mode === "star") {
+      var tbar = document.querySelector("#dlgBody .hint-row");
+      if (tbar) {
+        var sp = document.createElement("span");
+        sp.id = "starTimer";
+        sp.className = "relay-timer";
+        tbar.appendChild(sp);
+      }
+      startStarTimer();
+    }
   }
   function normAns(s) {
     s = String(s == null ? "" : s).trim().replace(/[^0-9.]/g, "");
@@ -240,21 +327,39 @@
     if (v === normAns(item.a)) {
       var rate = state.tries === 0 ? 1 : (state.tries === 1 ? 0.6 : 0.3);
       if (state.tries === 0) state.firstOk++;
+      if (window.G3Adapt && window.G3Adapt.record) window.G3Adapt.record(state.tries === 0);
       var gain = Math.round(10 * rate);
+      if (window.G3Pet && window.G3Pet.festMult) gain = gain * window.G3Pet.festMult();
+      if (state.mode === "boss" && window.G3Pet && window.G3Pet.comboBar) {
+        var _cb = window.G3Store.load();
+        var _pc = (_cb.pet && _cb.pet.combo) || 0;
+        if (_pc >= TB("bossDoubleFrom", 2)) gain = gain * 2;
+      }
       var d = window.G3Store.load();
       d.stars += gain;
       if (state.mode === "wrong") {
-        d.wrong = d.wrong.filter(function (w) { return w.q !== item.q; });
+        var gone = (cur.item && cur.item.origQ) || item.q;
+        d.wrong = d.wrong.filter(function (w) { return w.q !== gone && w.q !== item.q; });
       }
       window.G3Store.save(d);
+      var petRes = window.G3Pet ? window.G3Pet.onSolve(true) : null;
       if (window.G3UI) { window.G3UI.stars(); if (window.G3UI.sfx) window.G3UI.sfx("ok"); }
       if (window.G3Journal) window.G3Journal.render();
-      fb.textContent = "맞았습니다! 별 +" + gain + " · " + item.steps.join(" → ");
+      var feverTxt = (petRes && petRes.fever) ? " 🌟 FEVER +" + petRes.combo + "콤보!" : "";
+      if (window.G3UI && window.G3UI.comboN) window.G3UI.comboN(petRes ? petRes.combo : 0);
+      var bossTxt = "";
+      if (state.mode === "boss") {
+        state.bossHp = Math.max(0, (state.bossHp == null ? TB("bossHp", 3) : state.bossHp) - 1);
+        bossTxt = " ⚡ 수호자에게 마법 별빛! (남은 HP " + state.bossHp + "/" + TB("bossHp", 3) + ")";
+      }
+      fb.textContent = "맞았습니다! 별 +" + gain + feverTxt + bossTxt + " · " + item.steps.join(" → ");
       setTimeout(next, 1300);
     } else {
       state.tries++;
+      if (window.G3Pet) window.G3Pet.onSolve(false);
       if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("no");
       if (state.tries >= 3) {
+        if (window.G3Adapt && window.G3Adapt.record) window.G3Adapt.record(false);
         if (state.mode === "unit") {
           var d2 = window.G3Store.load();
           d2.wrong.push({ lesson: cur.lid, q: item.q, at: Date.now() });
@@ -268,13 +373,126 @@
       }
     }
   }
+  function startBoss() {
+    if (!window.G3Pad || !window.G3Pad.generateSet) return;
+    var gen = window.G3Pad.generateSet(state.house).slice(0, TB("bossTotal", 5));
+    var U = curUnit();
+    var b = bossFor(state.house);
+    state.mode = "boss";
+    state.customTitle = U.name + " · ⚡ " + b.name + " 대결";
+    state.customList = [];
+    for (var i = 0; i < gen.length; i++) {
+      state.customList.push({ q: gen[i].q, a: gen[i].a, steps: gen[i].steps, house: state.house, lid: "boss" });
+    }
+    state.qi = 0; state.tries = 0; state.firstOk = 0; state.total = state.customList.length;
+    state.bossHp = TB("bossHp", 3);
+    npcSay(b.name + "이(가) 나타났다! " + TB("bossTotal", 5) + "문제 중 첫 시도 " + TB("bossWinAt", 3) + "문제를 맞히면 승리! 콤보가 터지면 별 2배!");
+    renderQ();
+  }
+  var starTimerId = null;
+  function stopStarTimer() {
+    if (starTimerId) { clearInterval(starTimerId); starTimerId = null; }
+  }
+  function startStarTimer() {
+    stopStarTimer();
+    var left = TB("starSecs", 20);
+    state.starLeft = left;
+    paintStarTimer();
+    var qiAt = state.qi, triesAt = state.tries;
+    starTimerId = setInterval(function () {
+      if (state.mode !== "star" || state.qi !== qiAt) { stopStarTimer(); return; }
+      state.starLeft -= 1;
+      paintStarTimer();
+      if (state.starLeft <= 0) {
+        stopStarTimer();
+        var fb = document.getElementById("fb");
+        var cur = null;
+        try { cur = activeItem().item; } catch (e) {}
+        if (fb && cur && state.tries === triesAt) {
+          state.tries = 3;
+          fb.textContent = "시간 초과! 풀이: " + (cur.steps || []).join(" → ") + " 다음 문제로 넘어간다.";
+          if (window.G3Pet) window.G3Pet.onSolve(false);
+          setTimeout(next, 1800);
+        }
+      }
+    }, 1000);
+  }
+  function paintStarTimer() {
+    var el = document.getElementById("starTimer");
+    if (el) {
+      el.textContent = "⏱️ " + state.starLeft + "초";
+      el.classList.toggle("urgent", state.starLeft <= 5);
+    }
+  }
+  function startStar(i) {
+    if (!window.G3Pad || !window.G3Pad.generateSet) return;
+    var U = curUnit();
+    var L = U.lessons[i];
+    if (!L || !window.G3Store.load().done[L.id]) return;
+    var gen = window.G3Pad.generateSet(state.house).slice(0, TB("starTotal", 5));
+    state.mode = "star";
+    state.starLid = L.id;
+    state.starIdx = i;
+    state.customTitle = U.name + " · 👑 " + L.title.split(" · ")[0] + " 도전왕";
+    state.customList = [];
+    for (var k = 0; k < gen.length; k++) {
+      state.customList.push({ q: gen[k].q, a: gen[k].a, steps: gen[k].steps, house: state.house, lid: "star" });
+    }
+    state.qi = 0; state.tries = 0; state.firstOk = 0; state.total = state.customList.length;
+    npcSay("도전왕 모드! 문제당 " + TB("starSecs", 20) + "초! " + TB("starWinAt", 4) + "문제를 첫 시도에 맞히면 ★★★!");
+    renderQ();
+  }
+  function finishStar() {
+    stopStarTimer();
+    var win = state.firstOk >= TB("starWinAt", 4);
+    var d = window.G3Store.load();
+    if (!d.stars2) d.stars2 = {};
+    if (win) {
+      d.stars2[state.starLid] = 3;
+      d.stars = (d.stars || 0) + TB("starWinStars", 20);
+      if (window.G3Journal) window.G3Journal.log("도전왕", state.customTitle + " 정복! (" + state.firstOk + "/" + state.total + "), 별 +" + TB("starWinStars", 20));
+    }
+    if (window.G3Pet) window.G3Pet.mark("play");
+    window.G3Store.save(d);
+    if (window.G3UI) { window.G3UI.stars(); if (window.G3UI.sfx) window.G3UI.sfx(win ? "fanfare" : "no"); }
+    if (win && window.G3Confetti) window.G3Confetti.burst();
+    document.getElementById("dlgBody").innerHTML = "<h3>" + (win ? "👑 도전왕 등극! ★★★" : "😿 아깝다! ★★☆에 머물렀다") + "</h3>"
+      + "<p>첫 시도 성공 " + state.firstOk + "/" + state.total + "문제! " + (win ? "별 +" + TB("starWinStars", 20) + " 획득!" : "다시 도전해 보자!") + "</p>"
+      + "<div class='lessons'><button class='lesson btn-pulse' data-star-retry='1'>👑 다시 도전하기</button><button class='lesson' data-back='1'>차시 목록으로</button></div>";
+  }
   function next() {
+    stopStarTimer();
     var cur = activeItem();
     state.qi++; state.tries = 0;
     if (state.qi >= cur.len) {
       if (state.mode === "unit") finish(curUnit(), curUnit().lessons[state.lesson]);
+      else if (state.mode === "boss") finishBoss();
+      else if (state.mode === "star") finishStar();
       else finishCustom();
     } else renderQ();
+  }
+  function finishBoss() {
+    var win = state.firstOk >= TB("bossWinAt", 3);
+    var b = bossFor(state.house);
+    if (win) {
+      if (window.G3Pet) window.G3Pet.bossWin(state.house);
+      if (window.G3Pet) window.G3Pet.mark("play");
+      var d = window.G3Store.load();
+      if (window.G3Journal) window.G3Journal.log("보스", b.name + " 격파! (" + state.firstOk + "/" + state.total + "), 별 +" + TB("bossStars", 25) + "·씨앗 +" + TB("bossSeeds", 2) + "·🌈무지개씨앗 +" + TB("bossRainbow", 1));
+      if (window.G3Journal) window.G3Journal.render();
+    } else {
+      var d0 = window.G3Store.load();
+      d0.stars = (d0.stars || 0) + TB("bossConsolation", 5);
+      window.G3Store.save(d0);
+      if (window.G3UI) window.G3UI.stars();
+      if (window.G3Pet) window.G3Pet.mark("play");
+      if (window.G3Journal) window.G3Journal.log("보스", b.name + "에게 아깝게 패배 (" + state.firstOk + "/" + state.total + "). 위로 별 +" + TB("bossConsolation", 5) + "! 다시 도전!");
+    }
+    if (window.G3Confetti && win) window.G3Confetti.burst();
+    if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx(win ? "fanfare" : "no");
+    document.getElementById("dlgBody").innerHTML = "<h3>" + (win ? "🏆 " + b.name + " 격파!" : "😿 아깝다! " + b.name + "이(가) 버텼다") + "</h3>"
+      + "<p>첫 시도 성공 " + state.firstOk + "/" + state.total + "문제! " + (win ? "수호자 트로피·별 +" + TB("bossStars", 25) + "·씨앗 +" + TB("bossSeeds", 2) + "·🌈무지개 씨앗 +" + TB("bossRainbow", 1) + " 획득!" : "도전 위로 별 +" + TB("bossConsolation", 5) + "! " + TB("bossWinAt", 3) + "문제를 첫 시도에 맞히면 승리! 다시 도전해 보자!") + "</p>"
+      + "<div class='lessons'><button class='lesson btn-pulse' data-boss='1'>⚡ 다시 대결하기</button><button class='lesson' data-back='1'>차시 목록으로</button></div>";
   }
   function finishCustom() {
     var d = window.G3Store.load();
@@ -294,6 +512,7 @@
     } else {
       if (window.G3Journal) window.G3Journal.log("오답교실", "오답 노트 다시 풀기 완료 (" + state.firstOk + "/" + state.total + ")");
     }
+    if (window.G3Pet) window.G3Pet.mark("play");
     if (window.G3Confetti) window.G3Confetti.burst();
     if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("fanfare");
     var againBtn = state.mode === "infinite" ? "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 한 번 더 연습</button>" : "";
@@ -305,31 +524,48 @@
     var d = window.G3Store.load();
     var first = !d.done[L.id];
     d.done[L.id] = { ok: state.firstOk, total: state.total, at: Date.now() };
-    if (first) { d.seeds += 2; }
+    if (!d.stars2) d.stars2 = {};
+    if (first) { d.seeds += 2; d.stars2[L.id] = Math.max(d.stars2[L.id] || 0, 1); }
+    var perfect = state.firstOk >= state.total && state.total > 0;
+    if (perfect) {
+      if (!d.pet) d.pet = {};
+      d.pet.rainbow = (d.pet.rainbow || 0) + 1;
+      d.stars2[L.id] = Math.max(d.stars2[L.id] || 0, 2);
+      if (window.G3Pet && window.G3Pet.notePerfect) {
+        window.G3Store.save(d);
+        window.G3Pet.notePerfect();
+        d = window.G3Store.load();
+      }
+    }
     window.G3Store.save(d);
+    if (window.G3Pet) window.G3Pet.mark("lesson");
     if (window.G3UI) { window.G3UI.stars(); if (window.G3UI.sfx) window.G3UI.sfx("fanfare"); }
     if (window.G3Farm) window.G3Farm.onLesson(first);
-    if (window.G3Journal) window.G3Journal.log("학습", U.name + " " + L.title + " 완료 " + state.firstOk + "/" + state.total);
+    if (window.G3Journal) window.G3Journal.log("학습", U.name + " " + L.title + " 완료 " + state.firstOk + "/" + state.total + (perfect ? " · 🌈무지개 씨앗 +1!" : ""));
     if (window.G3Quests) window.G3Quests.poke();
     npcSay(U.greet);
     var recBtn = (d.wrong && d.wrong.length)
       ? "<button class='lesson btn-pulse' data-open-wrong='1'>추천 갈래 · 오답 노트 교실 풀기 (" + d.wrong.length + "문항)</button>"
       : "<button class='lesson btn-pulse' data-open-daily='1'>추천 갈래 · 심화 오늘의 도전 풀기</button>";
+    var boss = bossFor(state.house);
     document.getElementById("dlgBody").innerHTML = "<h3>차시를 마쳤습니다</h3>"
-      + "<p>첫 성공 " + state.firstOk + "/" + state.total + ". " + (first ? "처음 끝낸 차시라 씨앗 2개를 받았다." : "복습을 마쳤다.") + "</p>"
-      + "<div class='lessons'>" + recBtn + "<button class='lesson' data-back='1'>차시 목록으로</button></div>";
+      + "<p>첫 성공 " + state.firstOk + "/" + state.total + ". " + (first ? "처음 끝낸 차시라 씨앗 2개를 받았다." : "복습을 마쳤다.") + (perfect ? " 실수 없이 다 맞춰 🌈 무지개 씨앗 +1!" : "") + "</p>"
+      + "<div class='lessons'>" + recBtn + "<button class='lesson boss-btn btn-pulse' data-boss='1'>⚡ " + boss.emoji + " " + boss.name + "에게 대결 신청!</button><button class='lesson' data-back='1'>차시 목록으로</button></div>";
   }
   document.addEventListener("click", function (e) {
-    var t = e.target.closest ? e.target.closest("[data-lesson],[data-back],[data-open-wrong],[data-open-daily],[data-close-dlg],[data-infinite]") : null;
+    var t = e.target.closest ? e.target.closest("[data-lesson],[data-back],[data-open-wrong],[data-open-daily],[data-close-dlg],[data-infinite],[data-boss],[data-star],[data-star-retry]") : null;
     if (!t) return;
     if (t.hasAttribute("data-lesson")) startLesson(parseInt(t.getAttribute("data-lesson"), 10));
     else if (t.hasAttribute("data-open-wrong")) openWrong();
     else if (t.hasAttribute("data-open-daily")) openDaily();
     else if (t.hasAttribute("data-infinite")) openInfinite();
+    else if (t.hasAttribute("data-boss")) startBoss();
+    else if (t.hasAttribute("data-star")) startStar(parseInt(t.getAttribute("data-star"), 10));
+    else if (t.hasAttribute("data-star-retry")) startStar(state.starIdx || 0);
     else if (t.hasAttribute("data-close-dlg")) close();
     else renderLessons();
   });
   var x = document.getElementById("dlgClose");
   if (x) x.addEventListener("click", close);
-  window.G3Dlg = { open: open, close: close, openWrong: openWrong, openDaily: openDaily, openInfinite: openInfinite };
+  window.G3Dlg = { open: open, close: close, openWrong: openWrong, openDaily: openDaily, openInfinite: openInfinite, openBoss: startBoss };
 })();

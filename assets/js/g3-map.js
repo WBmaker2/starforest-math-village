@@ -133,6 +133,7 @@
     for (var i = 0; i < btns.length; i++) {
       btns[i].classList.toggle("sel", btns[i].getAttribute("data-maptime") === t);
     }
+    if (window.G3UI && window.G3UI.bgm) window.G3UI.bgm(t);
     if (!silent) {
       var d = store();
       d.mapTime = t;
@@ -161,7 +162,21 @@
         if (!d.done[ls[j].id]) return { text: PINS[i].name + " · " + ls[j].title.split(" · ")[0] + " 풀기", act: "pin:" + PINS[i].id };
       }
     }
-    if (d.stars >= 30 && (d.sets || []).length < 3) return { text: "별 30개로 황금 세트 뽑기", act: "scroll:gachaSec" };
+    if (window.G3Pet) {
+      try {
+        var pd = window.G3Store.load();
+        var pm = (pd.pet && pd.pet.missions) || {};
+        if (!(pm.lesson && pm.farm && pm.play)) return { text: "오늘의 보물상자 미션 3종 완성하기!", act: "scroll:playSec" };
+        if (window.G3Pet.weekKey) {
+          var pw = (pd.pet && pd.pet.weekly) || {};
+          if (pw.week !== window.G3Pet.weekKey() || (!pw.done)) {
+            var wb = pw.boss || 0, wp = pw.perfect || 0;
+            if (wb < 3 || wp < 3) return { text: "이번 주 별숲 미션 (수호자·실수제로) 도전!", act: "scroll:playSec" };
+          }
+        }
+      } catch (e) {}
+    }
+    if (d.stars >= 30 && (d.sets || []).length < 9) return { text: "별 30개로 한정 세트 뽑기", act: "scroll:gachaSec" };
     return { text: "오늘의 도전 5문제 풀기", act: "daily" };
   }
   function syncTodo() {
@@ -243,11 +258,17 @@
     token.style.top = pos.y + "%";
     checkNear();
   }
+  function doorOf(p) {
+    // 출입구는 집 그림 아래쪽(남쪽). 데이터에 door가 있으면 그 좌표 우선.
+    if (p.door) return { x: p.door.x, y: p.door.y };
+    return { x: p.x, y: Math.min(94, p.y + 8) };
+  }
   function checkNear() {
     refreshPins();
-    var best = null, bd = 12;
+    var best = null, bd = 9;
     for (var i = 0; i < PINS.length; i++) {
-      var d = Math.hypot(pos.x - PINS[i].x, pos.y - PINS[i].y);
+      var door = doorOf(PINS[i]);
+      var d = Math.hypot(pos.x - door.x, pos.y - door.y);
       if (d < bd) { bd = d; best = PINS[i]; }
     }
     var label = document.getElementById("nearLabel");
@@ -307,7 +328,7 @@
           if (el) el.scrollIntoView({ behavior: "smooth" });
         } else if (act.indexOf("pin:") === 0) {
           var pid = act.slice(4);
-          for (var p = 0; p < PINS.length; p++) if (PINS[p].id === pid) moveToken(PINS[p].x, PINS[p].y + 6);
+          for (var p = 0; p < PINS.length; p++) if (PINS[p].id === pid) { var dr0 = doorOf(PINS[p]); moveToken(dr0.x, dr0.y); }
           enter(pid);
         } else if (act === "wrong" && window.G3Dlg) window.G3Dlg.openWrong();
         else if (act === "daily" && window.G3Dlg) window.G3Dlg.openDaily();
@@ -316,7 +337,7 @@
       var pin = e.target.closest ? e.target.closest("[data-pin]") : null;
       if (pin) {
         var id = pin.getAttribute("data-pin");
-        for (var i = 0; i < PINS.length; i++) if (PINS[i].id === id) moveToken(PINS[i].x, PINS[i].y + 6);
+        for (var i = 0; i < PINS.length; i++) if (PINS[i].id === id) { var dr1 = doorOf(PINS[i]); moveToken(dr1.x, dr1.y); }
         enter(id);
         return;
       }
@@ -335,19 +356,30 @@
       if (id) enter(id);
     });
     var held = { up: false, down: false, left: false, right: false };
-    var KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right", w: "up", s: "down", a: "left", d: "right", W: "up", S: "down", A: "left", D: "right" };
+    var KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right",
+      w: "up", s: "down", a: "left", d: "right", W: "up", S: "down", A: "left", D: "right",
+      "ㅈ": "up", "ㄴ": "down", "ㅁ": "left", "ㅇ": "right" };
+    var CODEMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right",
+      KeyW: "up", KeyS: "down", KeyA: "left", KeyD: "right" };
+    function keyDir(e) {
+      // e.code는 자판 배열과 무관하게 물리적 키를 가리켜 한글 모드에서도 동작
+      try {
+        if (e.code && CODEMAP[e.code]) return CODEMAP[e.code];
+      } catch (err) {}
+      return KEYMAP[e.key];
+    }
     window.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || "";
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (e.target && e.target.isContentEditable)) return;
       var ov = document.getElementById("dlg");
       if (ov && ov.classList.contains("show")) return;
-      var dir = KEYMAP[e.key];
+      var dir = keyDir(e);
       if (!dir) return;
       e.preventDefault();
       if (!held[dir]) { held[dir] = true; step(dir); }
     });
     window.addEventListener("keyup", function (e) {
-      var dir = KEYMAP[e.key];
+      var dir = keyDir(e);
       if (dir) held[dir] = false;
     });
     setInterval(function () {
