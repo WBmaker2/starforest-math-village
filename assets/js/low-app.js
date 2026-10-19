@@ -34,7 +34,7 @@
   var pos = { x: 50, y: 50 };
   var cur = { house: 0, qi: 0, touch: 0, mode: "unit", infList: null };
   function activeList() {
-    if ((cur.mode === "infinite" || cur.mode === "wrong") && cur.infList) return cur.infList;
+    if ((cur.mode === "infinite" || cur.mode === "wrong" || cur.mode === "focus") && cur.infList) return cur.infList;
     var hs = HOUSES();
     return (hs[cur.house] && hs[cur.house].list) || [];
   }
@@ -258,6 +258,11 @@
     if (pick === item.a) {
       var d = store();
       if (window.G3Adapt && window.G3Adapt.record) window.G3Adapt.record(cur.lowFirst !== false);
+      try {
+        if (window.G3Understand && window.G3Tags) {
+          window.G3Understand.record(window.G3Tags.low(h.id), cur.lowFirst !== false);
+        }
+      } catch (e) {}
       var fest = (window.G3Pet && window.G3Pet.festMult) ? window.G3Pet.festMult() : 1;
       if (cur.mode === "wrong") {
         var wk = item.wrongKey;
@@ -282,6 +287,13 @@
         if (window.G3Pet) window.G3Pet.onSolve(true);
         renderProgress();
         if (fb) fb.innerHTML = "<b>정답! ★+5</b> " + item.exp + " <button type='button' class='trial-next btn-pulse' data-lownext='1'>" + (cur.qi + 1 < list.length ? "다음 문제 →" : "한 번 더 놀기") + "</button>";
+      } else if (cur.mode === "focus") {
+        d.stars = (d.stars || 0) + 6 * fest;
+        window.G3Store.save(d);
+        if (window.G3UI) { window.G3UI.stars(); window.G3UI.sfx("ok"); }
+        if (window.G3Pet) window.G3Pet.onSolve(true);
+        renderProgress();
+        if (fb) fb.innerHTML = "<b>정답! ★+6</b> " + item.exp + " <button type='button' class='trial-next btn-pulse' data-lownext='1'>" + (cur.qi + 1 < list.length ? "다음 문제 →" : "마을로 돌아가기") + "</button>";
       } else {
         var key = h.id + "-" + cur.qi;
         if (!d.lowDone) d.lowDone = {};
@@ -303,6 +315,11 @@
       cur.lowFirst = false;
       if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("no");
       if (window.G3Pet) window.G3Pet.onSolve(false);
+      try {
+        if (window.G3Understand && window.G3Tags) {
+          window.G3Understand.record(window.G3Tags.low(h.id), false);
+        }
+      } catch (e) {}
       if (cur.mode === "unit") {
         try {
           var dd = store();
@@ -311,7 +328,7 @@
           var dup = false;
           for (var wi = 0; wi < dd.lowWrong.length; wi++) if (dd.lowWrong[wi].key === wk) dup = true;
           if (!dup) {
-            dd.lowWrong.push({ key: wk, house: h.id });
+            dd.lowWrong.push({ key: wk, house: h.id, tag: "low:" + h.id, tagName: h.name });
             if (dd.lowWrong.length > 20) dd.lowWrong = dd.lowWrong.slice(dd.lowWrong.length - 20);
             window.G3Store.save(dd);
           }
@@ -345,6 +362,18 @@
       renderProgress();
       toast(left ? ("쌍둥이 " + left + "개 남았어요! 다시 도전해 보세요!") : "틀린 문제 완전 정복! 참 잘했어요!");
       if (window.G3Confetti && window.G3Confetti.burst && !left) window.G3Confetti.burst();
+    }
+    else if (cur.mode === "focus") {
+      var ovf = document.getElementById("dlg");
+      if (ovf) ovf.classList.remove("show");
+      cur.mode = "unit"; cur.infList = null;
+      var df = store();
+      df.stars = (df.stars || 0) + 15; df.seeds = (df.seeds || 0) + 1;
+      window.G3Store.save(df);
+      if (window.G3UI) window.G3UI.stars();
+      if (window.G3Confetti && window.G3Confetti.burst) window.G3Confetti.burst();
+      renderProgress();
+      toast("약한 개념 다시 놀기 완료! 별 +15 · 씨앗 +1 보너스!");
     }
     else {
       var ov = document.getElementById("dlg");
@@ -386,11 +415,35 @@
       }
       var lw = [];
       try { lw = store().lowWrong || []; } catch (e) {}
+      var weak = [];
+      try { if (window.G3Understand) weak = window.G3Understand.weakTags(3); } catch (e) {}
+      if (weak.length) {
+        var wn = [];
+        for (var wi2 = 0; wi2 < weak.length; wi2++) wn.push(weak[wi2].name + " " + Math.round(weak[wi2].rate * 100) + "%");
+        html += "<button class='mapcell focus-btn btn-pulse' data-lowfocus='1'><b>🧭 약한 개념 다시 놀기</b><span>" + wn.join(", ") + "</span></button>";
+      }
       if (lw.length) {
         html += "<button class='mapcell btn-pulse' data-lowwrong='1'><b>👯 틀린 문제 다시 풀기</b><span>쌍둥이 문제 " + lw.length + "개</span></button>";
       }
       grid.innerHTML = html;
     }
+  }
+  function openLowFocus() {
+    if (!window.G3Understand || !window.G3Understand.focusQuestions) return;
+    var list = window.G3Understand.focusQuestions(8);
+    if (!list.length) { toast("아직 모은 기록이 적어요. 문제를 조금 더 풀어 보세요!"); return; }
+    cur.mode = "focus";
+    cur.infList = [];
+    for (var i = 0; i < list.length; i++) {
+      var it = list[i];
+      cur.infList.push({ q: it.q, a: it.a, exp: (it.steps && it.steps[0]) || "", svg: it.svg, choices: it.choices, house: it.house });
+    }
+    cur.house = houseIndex(list[0].house || HOUSES()[0].id);
+    cur.qi = 0; cur.touch = 0;
+    var ov = document.getElementById("dlg");
+    if (ov) ov.classList.add("show");
+    say("지난 기록에서 자주 헷갈린 그림 문제를 모았어! 천천히 다시 풀어 보자.");
+    renderQWrong();
   }
   function openLowWrong() {
     var d = store();
@@ -428,7 +481,7 @@
     var item = cur.infList[cur.qi];
     var box = document.getElementById("dlgBody");
     if (!box || !item) return;
-    var html = "<p class='crumb'>" + (G === "2" ? "2학년 새싹숲" : "1학년 새싹숲") + " · 👯 쌍둥이 문제 · " + (cur.qi + 1) + "/" + cur.infList.length + "</p>";
+    var html = "<p class='crumb'>" + (G === "2" ? "2학년 새싹숲" : "1학년 새싹숲") + " · " + (cur.mode === "focus" ? "🧭 약한 개념 다시 놀기" : "👯 쌍둥이 문제") + " · " + (cur.qi + 1) + "/" + cur.infList.length + "</p>";
     html += "<div class='trial-svg' data-lowtouch>" + item.svg + "</div>";
     html += "<p class='trial-q'>" + item.q + " <button type='button' class='mini-act' data-say-text=\"" + String(item.q).replace(/&/g, "&amp;").replace(/"/g, "&quot;") + "\" aria-label='문제 읽어주기'>🔊</button></p><div class='trial-choices low-mode'>";
     for (var i = 0; i < item.choices.length; i++) {
@@ -537,6 +590,8 @@
       if (ge) { open(ge.getAttribute("data-lowenter")); return; }
       var gw = e.target.closest ? e.target.closest("[data-lowwrong]") : null;
       if (gw) { openLowWrong(); return; }
+      var gf = e.target.closest ? e.target.closest("[data-lowfocus]") : null;
+      if (gf) { openLowFocus(); return; }
     });
     document.addEventListener("click", function (e2) {
       if (e2.target && e2.target.id === "lowBigBtn") {

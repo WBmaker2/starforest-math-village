@@ -161,6 +161,18 @@
     } catch (e) {}
     return 2;
   }
+  function openFocus() {
+    if (!window.G3Understand || !window.G3Understand.focusQuestions) return;
+    var list = window.G3Understand.focusQuestions(10);
+    if (!list.length) { if (window.G3UI) window.G3UI.toast("아직 모은 학습 기록이 적어요. 문제를 조금 더 풀어 보세요!"); return; }
+    state.mode = "focus";
+    state.customTitle = "🧭 취약 개념 집중 연습 (10문제)";
+    state.customList = list;
+    state.qi = 0; state.tries = 0; state.firstOk = 0; state.total = state.customList.length;
+    showModal("npc-bunny");
+    npcSay("지난 기록에서 자주 헷갈린 개념을 먼저 모았어! 천천히 다시 풀어 보자.");
+    renderQ();
+  }
   function openInfinite() {
     if (!window.G3Pad || !window.G3Pad.generateSet) return;
     var gen = window.G3Pad.generateSet(state.house, adaptLevel());
@@ -207,6 +219,13 @@
       }
     }
     html += "</div><p class='hint'>기본 차시는 문제 6개, 실생활 문장제 차시는 4개입니다. 처음 끝내는 차시마다 씨앗 2개를 받습니다. 실수 없이 다 맞히면 🌈 무지개 씨앗!</p>";
+    var weak = [];
+    try { if (window.G3Understand) weak = window.G3Understand.weakTags(3); } catch (e) {}
+    if (weak.length) {
+      var wnames = [];
+      for (var wi = 0; wi < weak.length; wi++) wnames.push(weak[wi].name + " " + Math.round(weak[wi].rate * 100) + "%");
+      html += "<button class='lesson focus-btn btn-pulse' data-open-focus='1'>🧭 취약 개념 집중 연습 (10문제) · " + wnames.join(", ") + "</button>";
+    }
     html += "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 무한 연습하기 (6문제)</button>";
     html += "<button class='lesson' data-sheet-house='" + state.house + "'>🖨️ 이 단원 학습지 인쇄하기 (10문제)</button>";
     var boss = bossFor(state.house);
@@ -328,6 +347,11 @@
       var rate = state.tries === 0 ? 1 : (state.tries === 1 ? 0.6 : 0.3);
       if (state.tries === 0) state.firstOk++;
       if (window.G3Adapt && window.G3Adapt.record) window.G3Adapt.record(state.tries === 0);
+      try {
+        if (window.G3Understand && window.G3Tags) {
+          window.G3Understand.record(window.G3Tags.forQuestion(cur.house, cur.lid, item), state.tries === 0);
+        }
+      } catch (e) {}
       var gain = Math.round(10 * rate);
       if (window.G3Pet && window.G3Pet.festMult) gain = gain * window.G3Pet.festMult();
       if (state.mode === "boss" && window.G3Pet && window.G3Pet.comboBar) {
@@ -362,7 +386,9 @@
         if (window.G3Adapt && window.G3Adapt.record) window.G3Adapt.record(false);
         if (state.mode === "unit") {
           var d2 = window.G3Store.load();
-          d2.wrong.push({ lesson: cur.lid, q: item.q, at: Date.now() });
+          var wt = null;
+          try { wt = (window.G3Tags && window.G3Tags.forQuestion(cur.house, cur.lid, item)) || null; } catch (e) { wt = null; }
+          d2.wrong.push({ lesson: cur.lid, q: item.q, tag: wt ? wt.id : "", tagName: wt ? wt.name : "", house: cur.house, at: Date.now() });
           window.G3Store.save(d2);
           if (window.G3Journal) window.G3Journal.render();
         }
@@ -509,14 +535,19 @@
       if (window.G3UI) window.G3UI.stars();
       if (window.G3Journal) window.G3Journal.log("무한연습", state.customTitle + " 완료 (" + state.firstOk + "/" + state.total + "), 별 +10·씨앗 +1");
       bonusMsg = "보너스 별 10개와 씨앗 1개를 받았습니다. 숫자를 바꿔 또 연습할 수 있어요!";
+    } else if (state.mode === "focus") {
+      d.stars += 12; d.seeds += 1;
+      window.G3Store.save(d);
+      if (window.G3UI) window.G3UI.stars();
+      if (window.G3Journal) window.G3Journal.log("집중연습", state.customTitle + " 완료 (" + state.firstOk + "/" + state.total + "), 별 +12·씨앗 +1");
+      bonusMsg = "보너스 별 12개와 씨앗 1개를 받았습니다. 약한 개념을 다시 풀어 보았어요!";
     } else {
       if (window.G3Journal) window.G3Journal.log("오답교실", "오답 노트 다시 풀기 완료 (" + state.firstOk + "/" + state.total + ")");
     }
     if (window.G3Pet) window.G3Pet.mark("play");
     if (window.G3Confetti) window.G3Confetti.burst();
     if (window.G3UI && window.G3UI.sfx) window.G3UI.sfx("fanfare");
-    var againBtn = state.mode === "infinite" ? "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 한 번 더 연습</button>" : "";
-    document.getElementById("dlgBody").innerHTML = "<h3>" + state.customTitle + " 완료!</h3>"
+    var againBtn = state.mode === "infinite" ? "<button class='lesson btn-pulse' data-infinite='1'>🎲 숫자 바꿔 한 번 더 연습</button>" : (state.mode === "focus" ? "<button class='lesson btn-pulse' data-open-focus='1'>🧭 취약 개념 다시 모아 풀기</button>" : "");    document.getElementById("dlgBody").innerHTML = "<h3>" + state.customTitle + " 완료!</h3>"
       + "<p>첫 시도 성공 " + state.firstOk + "/" + state.total + "문제! " + bonusMsg + "</p>"
       + "<div class='lessons'>" + againBtn + "<button class='lesson btn-pulse' data-close-dlg='1'>마을로 돌아가기</button></div>";
   }
@@ -553,11 +584,12 @@
       + "<div class='lessons'>" + recBtn + "<button class='lesson boss-btn btn-pulse' data-boss='1'>⚡ " + boss.emoji + " " + boss.name + "에게 대결 신청!</button><button class='lesson' data-back='1'>차시 목록으로</button></div>";
   }
   document.addEventListener("click", function (e) {
-    var t = e.target.closest ? e.target.closest("[data-lesson],[data-back],[data-open-wrong],[data-open-daily],[data-close-dlg],[data-infinite],[data-boss],[data-star],[data-star-retry]") : null;
+    var t = e.target.closest ? e.target.closest("[data-lesson],[data-back],[data-open-wrong],[data-open-daily],[data-open-focus],[data-close-dlg],[data-infinite],[data-boss],[data-star],[data-star-retry]") : null;
     if (!t) return;
     if (t.hasAttribute("data-lesson")) startLesson(parseInt(t.getAttribute("data-lesson"), 10));
     else if (t.hasAttribute("data-open-wrong")) openWrong();
     else if (t.hasAttribute("data-open-daily")) openDaily();
+    else if (t.hasAttribute("data-open-focus")) openFocus();
     else if (t.hasAttribute("data-infinite")) openInfinite();
     else if (t.hasAttribute("data-boss")) startBoss();
     else if (t.hasAttribute("data-star")) startStar(parseInt(t.getAttribute("data-star"), 10));
@@ -567,5 +599,5 @@
   });
   var x = document.getElementById("dlgClose");
   if (x) x.addEventListener("click", close);
-  window.G3Dlg = { open: open, close: close, openWrong: openWrong, openDaily: openDaily, openInfinite: openInfinite, openBoss: startBoss };
+  window.G3Dlg = { open: open, close: close, openWrong: openWrong, openDaily: openDaily, openInfinite: openInfinite, openFocus: openFocus, openBoss: startBoss };
 })();

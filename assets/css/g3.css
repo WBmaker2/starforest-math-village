@@ -138,6 +138,23 @@
 .npc { background: var(--leaf-pale); border-radius: 12px; padding: 10px 14px; font-size: 16px; }
 .lessons { display: grid; gap: 8px; margin-top: 10px; }
 .lesson { font-family: var(--display); font-size: 17px; text-align: left; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--paper); }
+.focus-btn { border-color: #7FA8E8; background: linear-gradient(180deg, #F2F7FF, #E7F0FF); }
+.understand-board { grid-column: 1 / -1; display: grid; gap: 6px; margin-top: 8px; padding: 12px 14px; border: 2px solid var(--line); border-radius: 16px; background: var(--card); }
+.ubar { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: #EFEAD9; overflow: hidden; font-size: 13px; }
+.ubar i { position: relative; z-index: 1; font-style: normal; font-family: var(--display); }
+.ubar em { position: relative; z-index: 1; font-style: normal; color: var(--ink-soft); }
+.ubar u { position: absolute; left: 0; top: 0; bottom: 0; background: #CFE3C9; text-decoration: none; }
+.ubar.weak u { background: #F6C9BC; }
+.ubar.master u { background: #9FD3A8; }
+.ubar.normal u { background: #F3E0A6; }
+.lr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+.lr-box { border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; background: var(--paper); display: grid; gap: 4px; text-align: center; }
+.lr-box b { font-family: var(--display); font-size: 15px; }
+.lr-box span { font-size: 13px; color: var(--ink-soft); }
+.lr-sec { width: 100%; text-align: left; display: grid; gap: 6px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.lr-list { margin: 0 0 0 20px; display: grid; gap: 4px; }
+.lr-list li { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.lr-list li span { color: var(--ink-soft); font-size: 13px; }
 .crumb { color: var(--ink-soft); font-size: 14px; }
 .q { font-family: var(--display); font-size: 30px; margin: 8px 0; }
 .ansrow { display: flex; gap: 8px; }
@@ -321,6 +338,14 @@ body.board-mode .dlgbox { max-width: 760px; }
   body.print-news #reportPane, body.print-news #reportBox, body.print-news .rep-grid, body.print-news #newsCard { display: block !important; }
   body.print-news #reportBox .idcard, body.print-news #reportBox .diploma#diplomaCard, body.print-news #reportBox .savebox { display: none !important; }
   body.print-news #newsCard { border: 3px double #333; break-inside: avoid; }
+  body.print-learning header.bar, body.print-learning .g3head, body.print-learning #avatar, body.print-learning #gachaSec, body.print-learning #village, body.print-learning #farm, body.print-learning #playSec, body.print-learning #deco, body.print-learning #quests, body.print-learning #collect, body.print-learning #historyBtn, body.print-learning #toast, body.print-learning #dlg { display: none !important; }
+  body.print-learning #note .tabs, body.print-learning #note #journalPane, body.print-learning #note #mapPane, body.print-learning #note #recordPane, body.print-learning #note .savebox, body.print-learning #note .idcard { display: none !important; }
+  body.print-learning main.wrap { width: 100%; padding: 0; }
+  body.print-learning #note { border: none; box-shadow: none; }
+  body.print-learning #reportPane, body.print-learning #reportBox, body.print-learning .rep-grid, body.print-learning #learningReportCard { display: block !important; }
+  body.print-learning #reportBox .idcard, body.print-learning #reportBox .diploma#diplomaCard, body.print-learning #reportBox .savebox, body.print-learning #reportBox #newsCard, body.print-learning #reportBox .pal-sec { display: none !important; }
+  body.print-learning #learningReportCard { border: 3px double #333; break-inside: avoid; }
+  body.print-learning #learningReportCard .mini-act { display: none !important; }
 }
 #sheetPrint { display: none; }
 .sheet-prev ol { margin: 8px 0 8px 20px; display: grid; gap: 6px; }

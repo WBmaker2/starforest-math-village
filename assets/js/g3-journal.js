@@ -70,6 +70,20 @@
         var st = doneL > 0 ? (doneL >= totalL ? "완료 (" + doneL + "/" + totalL + ")" : "학습 중 (" + doneL + "/" + totalL + ")") : (d2.visits[id] ? "방문" : "미방문");
         mh += "<button class='mapcell' data-enter='" + id + "'><b>" + hs[k][1] + "</b><span>" + st + "</span></button>";
       }
+      var board = [];
+      try { if (window.G3Understand) board = window.G3Understand.unitBoard(); } catch (e) { board = []; }
+      var hasStat = false;
+      for (var bi = 0; bi < board.length; bi++) if (board[bi].total > 0) hasStat = true;
+      if (hasStat) {
+        mh += "<div class='understand-board'><b>🧠 개념 이해도 현황판</b>";
+        for (var bj = 0; bj < board.length; bj++) {
+          var u = board[bj];
+          var cls = u.state === "master" ? "master" : (u.state === "weak" ? "weak" : "normal");
+          var label = u.state === "none" ? "기록 없음" : (u.state === "master" ? "숙달 " : (u.state === "weak" ? "취약 " : "보통 ")) + Math.round(u.rate * 100) + "%";
+          mh += "<span class='ubar " + cls + "'><i>" + u.name + "</i><em>" + label + "</em><u style='width:" + (u.rate == null ? 0 : Math.round(u.rate * 100)) + "%'></u></span>";
+        }
+        mh += "</div>";
+      }
       m.innerHTML = mh;
     }
     var r = document.getElementById("recordBox");

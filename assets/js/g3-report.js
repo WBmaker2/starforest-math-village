@@ -148,6 +148,7 @@
       + "<button type='button' class='mini-act btn-pulse' data-print-diploma='1'>🖨️ 졸업 상장 인쇄 / PDF 저장</button>"
       + "</div>"
       + wrongTopHtml(d)
+      + learningReportHtml()
       + newsHtml(d, a);
   }
   function esc(s) {
@@ -237,6 +238,67 @@
     html += "</ol></div>";
     return html;
   }
+  function learningReportHtml() {
+    var s = null;
+    try { if (window.G3Understand) s = window.G3Understand.summary(); } catch (e) { s = null; }
+    if (!s) return "";
+    var a = {};
+    try { a = (window.G3Store.load().avatar) || {}; } catch (e) {}
+    var dateStr = "";
+    try {
+      var t = new Date();
+      dateStr = t.getFullYear() + "년 " + (t.getMonth() + 1) + "월 " + t.getDate() + "일";
+    } catch (e) {}
+    function pct(ok, tot) { return tot ? Math.round((ok / tot) * 100) : 0; }
+    var today = s.today || { ok: 0, total: 0 };
+    var week = s.week || { ok: 0, total: 0 };
+    var weak = s.weak || [];
+    var mastered = s.mastered || [];
+    var html = "<div class='diploma learning-report' id='learningReportCard'>"
+      + "<p class='eyebrow'>오늘의 학습 리포트 · " + esc(dateStr) + "</p>"
+      + "<h3>📊 " + esc((a.name || "별숲 주민")) + "의 수학 기록</h3>"
+      + "<div class='lr-grid'>"
+      + "<div class='lr-box'><b>오늘</b><span>" + today.total + "문제 · 성공률 " + pct(today.ok, today.total) + "%</span></div>"
+      + "<div class='lr-box'><b>이번 주</b><span>" + week.total + "문제 · 성공률 " + pct(week.ok, week.total) + "%</span></div>"
+      + "<div class='lr-box'><b>누적</b><span>" + s.total + "문제 · 성공률 " + pct(s.ok, s.total) + "%</span></div>"
+      + "</div>";
+    html += "<div class='lr-sec'><b>🌱 잘하고 있는 개념</b>";
+    if (mastered.length) {
+      html += "<ul class='lr-list'>";
+      for (var mi = 0; mi < Math.min(5, mastered.length); mi++) {
+        html += "<li><b>" + esc(mastered[mi].name) + "</b><span>" + Math.round(mastered[mi].rate * 100) + "% · " + mastered[mi].total + "문제</span></li>";
+      }
+      html += "</ul>";
+    } else {
+      html += "<p class='hint'>조금 더 풀면 잘하는 개념이 나타나요.</p>";
+    }
+    html += "</div>";
+    html += "<div class='lr-sec'><b>🧭 다음에 연습할 개념</b>";
+    if (weak.length) {
+      html += "<ul class='lr-list'>";
+      for (var wi = 0; wi < weak.length; wi++) {
+        html += "<li><b>" + esc(weak[wi].name) + "</b><span>" + Math.round(weak[wi].rate * 100) + "% · " + weak[wi].total + "문제</span></li>";
+      }
+      html += "</ul>";
+    } else {
+      html += "<p class='hint'>지금은 크게 헷갈리는 개념이 없어요. 스스로 잘하고 있어요!</p>";
+    }
+    html += "</div>";
+    var units = s.units || [];
+    if (units.length) {
+      html += "<div class='lr-sec'><b>🏘️ 단원별 이해도</b><ul class='lr-list'>";
+      for (var ui = 0; ui < units.length; ui++) {
+        var u = units[ui];
+        var label = u.rate == null ? "기록 없음" : (u.state === "master" ? "숙달 " : (u.state === "weak" ? "취약 " : "보통 ")) + Math.round(u.rate * 100) + "%";
+        html += "<li><b>" + esc(u.name) + "</b><span>" + esc(label) + " · " + u.total + "문제</span></li>";
+      }
+      html += "</ul></div>";
+    }
+    html += "<p class='hint'>이 리포트는 이 기기에 저장된 학습 기록으로 만듭니다.</p>"
+      + "<button type='button' class='mini-act btn-pulse' data-print-learning='1'>🖨️ 학습 리포트 인쇄 / PDF 저장</button>"
+      + "</div>";
+    return html;
+  }
   function exportCode() {
     var d = window.G3Store.load();
     var code = encodeSave(d);
@@ -287,6 +349,7 @@
       document.body.classList.remove("print-idcard");
       document.body.classList.remove("print-diploma");
       document.body.classList.remove("print-news");
+      document.body.classList.remove("print-learning");
     });
   } catch (e) {}
   document.addEventListener("click", function (e) {
@@ -300,6 +363,8 @@
     }
     var nw = e.target.closest ? e.target.closest("[data-print-news]") : null;
     if (nw) { doPrint("print-news"); return; }
+    var lr = e.target.closest ? e.target.closest("[data-print-learning]") : null;
+    if (lr) { doPrint("print-learning"); return; }
     var pd = e.target.closest ? e.target.closest("[data-print-diploma]") : null;
     if (pd) { doPrint("print-diploma"); return; }
     var p = e.target.closest ? e.target.closest("[data-print-idcard]") : null;
