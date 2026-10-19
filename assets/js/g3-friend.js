@@ -305,7 +305,7 @@
     }
     return rows;
   }
-  function rankHtml() {
+  function rankItemsHtml() {
     var rows = rankRows();
     function val(r, k) { return (r[k] == null || r[k] < 0) ? "－" : r[k]; }
     var key = rankTab === "combo" ? "combo" : (rankTab === "boss" ? "bosses" : "stars");
@@ -314,20 +314,32 @@
     function eff(r) { return (r[key] == null || r[key] < 0) ? (r.bosses || 0) : r[key]; }
     others.sort(function (a, b) { return eff(b) - eff(a); });
     var ordered = mine.concat(others);
-    var html = "<div class='pal-sec'><b>🏆 우리 반 랭킹 (이 기기 기준)</b>"
-      + "<div class='prow'>"
-      + "<button type='button' class='mini-act" + (rankTab === "stars" ? " sel" : "") + "' data-rank-tab='stars'>별</button>"
-      + "<button type='button' class='mini-act" + (rankTab === "combo" ? " sel" : "") + "' data-rank-tab='combo'>최고 콤보</button>"
-      + "<button type='button' class='mini-act" + (rankTab === "boss" ? " sel" : "") + "' data-rank-tab='boss'>수호자 격파</button>"
-      + "</div><ol class='rank-list'>";
     var medals = ["🥇", "🥈", "🥉"];
+    var html = "";
     for (var i = 0; i < ordered.length; i++) {
       var r = ordered[i];
       html += "<li><span>" + (medals[i] || (i + 1) + "위") + "</span><b>" + esc(r.name) + "</b>"
         + "<span>별 " + val(r, "stars") + " · 콤보 " + val(r, "combo") + " · 격파 " + val(r, "bosses") + "</span></li>";
     }
-    html += "</ol><p class='hint'>친구의 별·콤보는 공유되지 않아 격파 수와 펫으로 응원해요.</p></div>";
     return html;
+  }
+  function rankHtml() {
+    var html = "<div class='pal-sec'><b>🏆 우리 반 랭킹 (이 기기 기준)</b>"
+      + "<div class='prow'>"
+      + "<button type='button' class='mini-act" + (rankTab === "stars" ? " sel" : "") + "' data-rank-tab='stars'>별</button>"
+      + "<button type='button' class='mini-act" + (rankTab === "combo" ? " sel" : "") + "' data-rank-tab='combo'>최고 콤보</button>"
+      + "<button type='button' class='mini-act" + (rankTab === "boss" ? " sel" : "") + "' data-rank-tab='boss'>수호자 격파</button>"
+      + "</div><ol class='rank-list' id='rankList'>"
+      + rankItemsHtml()
+      + "</ol><p class='hint'>친구의 별·콤보는 공유되지 않아 격파 수와 펫으로 응원해요.</p></div>";
+    return html;
+  }
+  // 별·콤보·격파가 바뀌면 목록만 다시 그립니다 (친구 코드 입력칸은 건드리지 않음).
+  function refreshRank() {
+    try {
+      var ol = document.getElementById("rankList");
+      if (ol) ol.innerHTML = rankItemsHtml();
+    } catch (e) {}
   }
   function top3() {
     try {
@@ -336,5 +348,5 @@
       return rows.slice(0, 3).map(function (r) { return r.name; });
     } catch (e) { return []; }
   }
-  window.G3Friend = { render: render, myCode: myCode, addCode: addCode, parseCode: parseCode, rankTop: top3 };
+  window.G3Friend = { render: render, refreshRank: refreshRank, myCode: myCode, addCode: addCode, parseCode: parseCode, rankTop: top3 };
 })();

@@ -395,7 +395,9 @@
         fb.textContent = "세 번 다르게 적었구나. 풀이: " + item.steps.join(" → ") + " 다음 문제로 넘어간다.";
         setTimeout(next, 2100);
       } else {
-        fb.textContent = "힌트: " + (item.steps[0] || "천천히 다시 계산해 보자") + " (" + state.tries + "/3)";
+        fb.textContent = "아쉬워요! 다시 계산해 보세요. 힌트: " + (item.steps[0] || "천천히 다시 계산해 보자") + " (" + state.tries + "/3)";
+        var ansEl = document.getElementById("ans");
+        if (ansEl) { ansEl.value = ""; ansEl.focus(); }
       }
     }
   }

@@ -174,6 +174,31 @@
     if (b) b.textContent = "씨앗 " + d.seeds;
     if (window.G3Map && window.G3Map.syncTodo) window.G3Map.syncTodo();
     if (window.G3Report && window.G3Report.render) window.G3Report.render();
+    if (window.G3Friend && window.G3Friend.refreshRank) window.G3Friend.refreshRank();
+  }
+  // 지도 이름표(.pin·.friend)가 지도 밖으로 삐져나오면 안쪽으로 살짝 당겨 잘림을 막습니다.
+  // (좁은 화면에서 집 이름이 지도 가장자리에서 잘리는 문제 대응)
+  function fitMapLabels(wrapId) {
+    try {
+      var wrap = document.getElementById(wrapId || "mapwrap") || document.getElementById("lowMapwrap");
+      if (!wrap) return;
+      var wr = wrap.getBoundingClientRect();
+      if (!wr.width) return;
+      var els = wrap.querySelectorAll(".pin, .friend");
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        var base = parseFloat(el.style.left);
+        if (!(base >= 0)) continue;
+        var r = el.getBoundingClientRect();
+        var over = 0;
+        if (r.left < wr.left + 2) over = (wr.left + 2) - r.left;
+        else if (r.right > wr.right - 2) over = (wr.right - 2) - r.right;
+        if (over !== 0) {
+          var pct = base + (over / wr.width) * 100;
+          el.style.left = Math.max(2, Math.min(98, pct)) + "%";
+        }
+      }
+    } catch (e) {}
   }
   function zoneTabs() {
     var bar = document.getElementById("zoneBar");
@@ -199,6 +224,16 @@
     initSfxBtn();
     initBoardBtn();
     zoneTabs();
+    var rsz = null;
+    window.addEventListener("resize", function () {
+      if (rsz) clearTimeout(rsz);
+      rsz = setTimeout(function () { fitMapLabels("mapwrap"); fitMapLabels("lowMapwrap"); }, 150);
+    });
+    try {
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () { fitMapLabels("mapwrap"); fitMapLabels("lowMapwrap"); });
+      }
+    } catch (e) {}
     var btns = document.querySelectorAll("[data-tab]");
     for (var i = 0; i < btns.length; i++) {
       btns[i].addEventListener("click", function () {
@@ -211,5 +246,5 @@
       });
     }
   }
-  window.G3UI = { toast: toast, stars: stars, tabs: tabs, sfx: sfx, speak: speak, bgm: bgm, stopBgm: stopBgm, comboN: comboN };
+  window.G3UI = { toast: toast, stars: stars, tabs: tabs, sfx: sfx, speak: speak, bgm: bgm, stopBgm: stopBgm, comboN: comboN, fitMapLabels: fitMapLabels };
 })();

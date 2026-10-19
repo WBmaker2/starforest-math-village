@@ -142,6 +142,7 @@
       else if (txt.indexOf("자라는") >= 0) pins[i].classList.add("lv-1");
       else pins[i].classList.add("lv-0");
     }
+    if (window.G3UI && window.G3UI.fitMapLabels) window.G3UI.fitMapLabels("lowMapwrap");
   }
   function moveToken(x, y, instant) {
     pos.x = Math.max(4, Math.min(96, x));

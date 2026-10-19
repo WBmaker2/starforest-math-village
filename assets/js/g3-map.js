@@ -236,6 +236,7 @@
         badge.textContent = "🌱 시작전";
       }
     }
+    if (window.G3UI && window.G3UI.fitMapLabels) window.G3UI.fitMapLabels("mapwrap");
   }
   function moveToken(x, y, instant) {
     var prevX = pos.x;
