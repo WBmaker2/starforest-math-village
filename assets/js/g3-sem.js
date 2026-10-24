@@ -114,7 +114,11 @@
           if (nq.indexOf("sem=") < 0) nq += (nq.indexOf("?") >= 0 ? "&" : "?") + "sem=" + ns;
           b.href = path + nq;
           b.textContent = (S === "1") ? "📚 2학기 마을로 가기" : "📚 1학기 마을로 가기";
-          if (nav.firstChild) nav.insertBefore(b, nav.firstChild);
+          var g6 = null;
+          for (var gi = 0; gi < links.length; gi++) {
+            if ((links[gi].textContent || "").trim() === "6학년") { g6 = links[gi]; break; }
+          }
+          if (g6 && g6.nextSibling) nav.insertBefore(b, g6.nextSibling);
           else nav.appendChild(b);
         }
       }
