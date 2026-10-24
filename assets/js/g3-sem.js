@@ -97,7 +97,14 @@
             var sep = (href.indexOf("?") >= 0) ? "&" : "?";
             if (href.indexOf("sem=") < 0) links[i].setAttribute("href", href + sep + "sem=" + S);
             if (curGrade) {
-              var isCur = curIsLower ? (href.indexOf("lower") >= 0 && href.indexOf("grade=" + curGrade) >= 0) : (href.indexOf("grade" + curGrade + "/") >= 0);
+              var isCur;
+              if (curIsLower) {
+                isCur = href.indexOf("grade=" + curGrade) >= 0
+                  && href.indexOf("grade3") < 0 && href.indexOf("grade4") < 0
+                  && href.indexOf("grade5") < 0 && href.indexOf("grade6") < 0;
+              } else {
+                isCur = href.indexOf("grade" + curGrade + "/") >= 0;
+              }
               if (isCur) links[i].setAttribute("aria-current", "page");
             }
           }
