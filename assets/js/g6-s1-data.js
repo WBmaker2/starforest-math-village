@@ -1,15 +1,15 @@
 (function () {
   // 6학년 1학기 (아이스크림 순서). sem=1일 때 g3-sem.js가 교체한다.
   window.GRADE_PINS_S1 = [
-    { id: "s1-fracdiv", name: "분수나눗셈 분배소", x: 50, y: 17 },
-    { id: "s1-prism", name: "각기둥 목공소", x: 82, y: 31 },
-    { id: "s1-decdiv", name: "소수나눗셈 정밀실", x: 80, y: 61 },
-    { id: "s1-ratio", name: "비와비율 배합실", x: 50, y: 77 },
-    { id: "s1-graph", name: "그래프 관측소", x: 25, y: 62 },
-    { id: "s1-volume", name: "부피 창고", x: 28, y: 32 }
+    { id: "s1-fracdiv", name: "분수나눗셈 분배소", x: 27, y: 53 },
+    { id: "s1-prism", name: "각기둥 목공소", x: 85, y: 64 },
+    { id: "s1-decdiv", name: "소수나눗셈 정밀실", x: 17, y: 25 },
+    { id: "s1-ratio", name: "비와비율 배합실", x: 36, y: 32 },
+    { id: "s1-graph", name: "그래프 관측소", x: 84, y: 18 },
+    { id: "s1-volume", name: "부피 창고", x: 50, y: 84 }
   ];
   window.GRADE_FRIENDS_S1 = [
-    { name: "몽실", line: "분수나눗셈 분배소 1차시를 끝내면 씨앗을 줄게!", x: 38, y: 39, img: "../assets/img/flow/parts/npc-mong.png" },
+    { name: "몽실", line: "분수나눗셈 분배소 1차시를 끝내면 씨앗을 줄게!", x: 50, y: 45, img: "../assets/img/flow/parts/npc-mong.png" },
     { name: "햇살이", line: "각기둥 목공소에서 전개도를 펼쳐 봐!", x: 63, y: 39, img: "../assets/img/flow/parts/npc-haetsal.png" },
     { name: "반짝이", line: "그래프 관측소에서 띠그래프를 읽어 봐!", x: 38, y: 63, img: "../assets/img/flow/parts/npc-banjjak.png" }
   ];

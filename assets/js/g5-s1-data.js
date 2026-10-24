@@ -1,12 +1,12 @@
 (function () {
   // 5학년 1학기 (아이스크림 순서). sem=1일 때 g3-sem.js가 교체한다.
   window.GRADE_PINS_S1 = [
-    { id: "s1-mix", name: "혼합계산 조리실", x: 50, y: 17 },
-    { id: "s1-divisor", name: "약수배수 열쇠공방", x: 82, y: 31 },
-    { id: "s1-cor", name: "규칙대응 전령소", x: 80, y: 61 },
-    { id: "s1-reduce", name: "약분통분 분수공방", x: 50, y: 77 },
-    { id: "s1-fracadd", name: "분수덧뺄 양조장", x: 25, y: 62 },
-    { id: "s1-poly", name: "다각형 측량들판", x: 28, y: 32 }
+    { id: "s1-mix", name: "혼합계산 조리실", x: 25, y: 27 },
+    { id: "s1-divisor", name: "약수배수 열쇠공방", x: 85, y: 24 },
+    { id: "s1-cor", name: "규칙대응 전령소", x: 50, y: 50 },
+    { id: "s1-reduce", name: "약분통분 분수공방", x: 48, y: 36 },
+    { id: "s1-fracadd", name: "분수덧뺄 양조장", x: 16, y: 62 },
+    { id: "s1-poly", name: "다각형 측량들판", x: 77, y: 69 }
   ];
   window.GRADE_FRIENDS_S1 = [
     { name: "몽실", line: "혼합계산 조리실 1차시를 끝내면 씨앗을 줄게!", x: 38, y: 39, img: "../assets/img/flow/parts/npc-mong.png" },

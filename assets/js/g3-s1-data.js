@@ -1,17 +1,17 @@
 (function () {
   // 3학년 1학기 (아이스크림 순서). sem=1일 때 g3-sem.js가 G3Units와 핀을 교체한다.
   window.GRADE_PINS_S1 = [
-    { id: "s1-add", name: "덧뺄셈 저울방", x: 50, y: 17 },
-    { id: "s1-shape", name: "평면도형 제재소", x: 82, y: 31 },
-    { id: "s1-div", name: "등분 나눗셈 정거장", x: 80, y: 61 },
-    { id: "s1-mul", name: "곱셈 방앗간", x: 50, y: 77 },
-    { id: "s1-len", name: "길이시계 탑", x: 25, y: 62 },
-    { id: "s1-frac", name: "조각소수 샘터", x: 28, y: 32 }
+    { id: "s1-add", name: "덧뺄셈 저울방", x: 36, y: 58 },
+    { id: "s1-shape", name: "평면도형 제재소", x: 70, y: 60 },
+    { id: "s1-div", name: "등분 나눗셈 정거장", x: 22, y: 32 },
+    { id: "s1-mul", name: "곱셈 방앗간", x: 85, y: 47 },
+    { id: "s1-len", name: "길이시계 탑", x: 55, y: 22 },
+    { id: "s1-frac", name: "조각소수 샘터", x: 13, y: 56 }
   ];
   window.GRADE_FRIENDS_S1 = [
     { name: "몽실", line: "덧뺄셈 저울방 1차시를 끝내면 씨앗을 줄게!", x: 38, y: 39, img: "../assets/img/flow/parts/npc-mong.png" },
     { name: "햇살이", line: "평면도형 제재소에서 직선을 찾아봐!", x: 63, y: 39, img: "../assets/img/flow/parts/npc-haetsal.png" },
-    { name: "반짝이", line: "조각소수 샘터에서 분수와 소수를 읽어 봐!", x: 38, y: 63, img: "../assets/img/flow/parts/npc-banjjak.png" }
+    { name: "반짝이", line: "조각소수 샘터에서 분수와 소수를 읽어 봐!", x: 30, y: 72, img: "../assets/img/flow/parts/npc-banjjak.png" }
   ];
   window.GRADE_PORTRAITS_S1 = {
     "s1-add": "../assets/img/flow/house-g3-mul.jpg", "s1-shape": "../assets/img/flow/house-g3-div.jpg",

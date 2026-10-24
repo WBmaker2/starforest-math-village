@@ -1,17 +1,17 @@
 (function () {
   // 4학년 1학기 (아이스크림 순서). sem=1일 때 g3-sem.js가 교체한다.
   window.GRADE_PINS_S1 = [
-    { id: "s1-big", name: "큰수 전망대", x: 50, y: 17 },
-    { id: "s1-angle", name: "각도 측량소", x: 82, y: 31 },
-    { id: "s1-muldiv", name: "곱나눗셈 풍차", x: 80, y: 61 },
-    { id: "s1-move", name: "도형이동 미끄럼틀", x: 50, y: 77 },
-    { id: "s1-bar", name: "막대그래프 게시판", x: 25, y: 62 },
-    { id: "s1-rule", name: "규칙 암호동굴", x: 28, y: 32 }
+    { id: "s1-big", name: "큰수 전망대", x: 78, y: 30 },
+    { id: "s1-angle", name: "각도 측량소", x: 29, y: 66 },
+    { id: "s1-muldiv", name: "곱나눗셈 풍차", x: 14, y: 20 },
+    { id: "s1-move", name: "도형이동 미끄럼틀", x: 42, y: 40 },
+    { id: "s1-bar", name: "막대그래프 게시판", x: 52, y: 86 },
+    { id: "s1-rule", name: "규칙 암호동굴", x: 62, y: 72 }
   ];
   window.GRADE_FRIENDS_S1 = [
-    { name: "몽실", line: "큰수 전망대 1차시를 끝내면 씨앗을 줄게!", x: 38, y: 39, img: "../assets/img/flow/parts/npc-mong.png" },
+    { name: "몽실", line: "큰수 전망대 1차시를 끝내면 씨앗을 줄게!", x: 55, y: 48, img: "../assets/img/flow/parts/npc-mong.png" },
     { name: "햇살이", line: "각도 측량소에서 90도를 찾아봐!", x: 63, y: 39, img: "../assets/img/flow/parts/npc-haetsal.png" },
-    { name: "반짝이", line: "막대그래프 게시판에서 가장 긴 막대를 찾아봐!", x: 38, y: 63, img: "../assets/img/flow/parts/npc-banjjak.png" }
+    { name: "반짝이", line: "막대그래프 게시판에서 가장 긴 막대를 찾아봐!", x: 20, y: 55, img: "../assets/img/flow/parts/npc-banjjak.png" }
   ];
   window.GRADE_PORTRAITS_S1 = {
     "s1-big": "../assets/img/flow/house-g4-frac.jpg", "s1-angle": "../assets/img/flow/house-g4-tri.jpg",
