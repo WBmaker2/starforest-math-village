@@ -14,15 +14,27 @@
       } else { done(value); }
     } catch (e) { done(value); }
   }
-  function demoUrl(n) {
+  function seasonalSem() {
+    try {
+      var m = (new Date()).getMonth() + 1;
+      return (m >= 2 && m <= 8) ? "1" : "2";
+    } catch (e) { return "2"; }
+  }
+  function demoUrl(n, sem) {
     var base = "";
     try { base = location.href.split("#")[0]; } catch (e) { base = ""; }
-    return base + "#grade-" + n;
+    sem = (String(sem) === "1") ? "1" : "2";
+    return base + "#grade-" + n + "-s" + sem;
+  }
+  function villageUrl(n, sem) {
+    sem = (String(sem) === "1") ? "1" : "2";
+    if (n === 1 || n === 2) return "lower/index.html?grade=" + n + "&sem=" + sem;
+    return "grade" + n + "/index.html?sem=" + sem;
   }
   var gradeDialog = document.getElementById("gradeDialog");
   var gradeTitle = document.getElementById("gradeTitle");
   var gradeBody = document.getElementById("gradeBody");
-  var tState = { grade: 1, idx: 0 };
+  var tState = { grade: 1, sem: seasonalSem(), idx: 0 };
   function renderTrial() {
     var box = document.getElementById("gradeTrialBox");
     if (!box) return;
@@ -39,12 +51,12 @@
     html += "</div><p id='trialFb' class='trial-fb' aria-live='polite'></p></div>";
     box.innerHTML = html;
   }
-  function openGrade(n) {
-    tState.grade = n; tState.idx = 0;
+  function openGrade(n, sem) {
+    tState.grade = n; tState.sem = (sem === "1" || sem === "2") ? sem : seasonalSem(); tState.idx = 0;
     var item = null;
-    try { item = window.StarforestGrades.text(n); } catch (e) { item = null; }
-    if (gradeTitle) gradeTitle.textContent = n + "학년 마을 · 수업 체험";
-    if (gradeBody) gradeBody.textContent = item ? item.demo : "별숲 마을 입구입니다.";
+    try { item = window.StarforestGrades.text(n, tState.sem); } catch (e) { item = null; }
+    if (gradeTitle) gradeTitle.textContent = n + "학년 " + tState.sem + "학기 마을 · 수업 체험";
+    if (gradeBody) gradeBody.textContent = item ? (item.demo + " (단원 순서: " + item.places.map(function (p) { return p[1]; }).join(" → ") + ")") : "별숲 마을 입구입니다.";
     var trialBox = document.getElementById("gradeTrialBox");
     if (!trialBox && gradeBody) {
       trialBox = document.createElement("div");
@@ -62,13 +74,14 @@
     }
     if (enter) {
       enter.style.display = "inline-flex";
+      var semLabel = (tState.sem === "1") ? "1학기" : "2학기";
       var ENTERS = {
-        1: ["lower/index.html?grade=1", "1학년 새싹숲 입장하기 (6곳·큰 단추)"],
-        2: ["lower/index.html?grade=2", "2학년 새싹숲 입장하기 (6곳·큰 단추)"],
-        3: ["grade3/index.html", "3학년 마을 입장하기 (방앗간 마을·6단원)"],
-        4: ["grade4/index.html", "4학년 마을 입장하기 (전망대 마을·6단원)"],
-        5: ["grade5/index.html", "5학년 마을 입장하기 (농장 마을·6단원)"],
-        6: ["grade6/index.html", "6학년 마을 입장하기 (배합소 마을·6단원)"]
+        1: ["lower/index.html?grade=1&sem=" + tState.sem, "1학년 " + semLabel + " 새싹숲 입장하기"],
+        2: ["lower/index.html?grade=2&sem=" + tState.sem, "2학년 " + semLabel + " 새싹숲 입장하기"],
+        3: ["grade3/index.html?sem=" + tState.sem, "3학년 " + semLabel + " 마을 입장하기"],
+        4: ["grade4/index.html?sem=" + tState.sem, "4학년 " + semLabel + " 마을 입장하기"],
+        5: ["grade5/index.html?sem=" + tState.sem, "5학년 " + semLabel + " 마을 입장하기"],
+        6: ["grade6/index.html?sem=" + tState.sem, "6학년 " + semLabel + " 마을 입장하기"]
       };
       var cfg = ENTERS[n] || ENTERS[3];
       enter.href = cfg[0];
@@ -100,12 +113,14 @@
     }
     var b = ev.target.closest ? ev.target.closest("[data-grade]") : null;
     if (!b) return;
+    var semAttr = b.getAttribute("data-sem");
+    var sem = (semAttr === "1" || semAttr === "2") ? semAttr : seasonalSem();
     if (b.classList.contains("copy-link")) {
       var n = parseInt(b.getAttribute("data-grade"), 10);
-      copyText(demoUrl(n), n + "학년 학급 주소를 복사했습니다.");
+      copyText(demoUrl(n, sem), n + "학년 " + sem + "학기 학급 주소를 복사했습니다.");
     } else {
       var m = parseInt(b.getAttribute("data-grade"), 10);
-      openGrade(m);
+      openGrade(m, sem);
     }
   });
   var guide = document.getElementById("guideDialog");
@@ -136,6 +151,11 @@
     }
   }
   renderHistory();
+  try {
+    var nowSem = seasonalSem();
+    var note = document.querySelector(".doors-note");
+    if (note) note.textContent = "지금은 " + (nowSem === "1" ? "1학기 시즌(2~8월)" : "2학기 시즌(9~1월)") + "이라 " + nowSem + "학기가 먼저 보여요. 다른 학기는 각 카드의 학기 버튼으로 열 수 있습니다.";
+  } catch (e) {}
   var historyBtn = document.getElementById("historyBtn");
   if (historyBtn) historyBtn.addEventListener("click", function () {
     renderHistory();
@@ -147,17 +167,19 @@
   if (closeHistoryX) closeHistoryX.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
   var teacherDialog = document.getElementById("teacherDialog");
   var VILLAGE_URLS = {
-    1: "lower/index.html?grade=1", 2: "lower/index.html?grade=2",
-    3: "grade3/index.html", 4: "grade4/index.html",
-    5: "grade5/index.html", 6: "grade6/index.html"
+    1: "lower/index.html?grade=1&sem=2", 2: "lower/index.html?grade=2&sem=2",
+    3: "grade3/index.html?sem=2", 4: "grade4/index.html?sem=2",
+    5: "grade5/index.html?sem=2", 6: "grade6/index.html?sem=2"
   };
   function renderTeacherBox() {
     var links = document.getElementById("teacherLinks");
     if (links) {
       var html = "";
       for (var g = 1; g <= 6; g++) {
-        html += "<div class='tbox-row'><b>" + g + "학년</b><span class='mail'>" + demoUrl(g) + "</span><button type='button' class='copy' data-copy-grade='" + g + "'>복사</button></div>";
-        html += "<div class='tbox-row'><b>" + g + "학년 마을</b><span class='mail'>" + VILLAGE_URLS[g] + "</span><button type='button' class='copy' data-copy-village='" + g + "'>복사</button></div>";
+        html += "<div class='tbox-row'><b>" + g + "학년 1학기</b><span class='mail'>" + demoUrl(g, "1") + "</span><button type='button' class='copy' data-copy-grade='" + g + "' data-copy-sem='1'>복사</button></div>";
+        html += "<div class='tbox-row'><b>" + g + "학년 1학기 마을</b><span class='mail'>" + villageUrl(g, "1") + "</span><button type='button' class='copy' data-copy-village='" + g + "' data-copy-sem='1'>복사</button></div>";
+        html += "<div class='tbox-row'><b>" + g + "학년 2학기</b><span class='mail'>" + demoUrl(g, "2") + "</span><button type='button' class='copy' data-copy-grade='" + g + "' data-copy-sem='2'>복사</button></div>";
+        html += "<div class='tbox-row'><b>" + g + "학년 2학기 마을</b><span class='mail'>" + villageUrl(g, "2") + "</span><button type='button' class='copy' data-copy-village='" + g + "' data-copy-sem='2'>복사</button></div>";
       }
       links.innerHTML = html;
     }
@@ -173,21 +195,23 @@
   document.addEventListener("click", function (ev2) {
     var cg = ev2.target.closest ? ev2.target.closest("[data-copy-grade],[data-copy-village]") : null;
     if (!cg) return;
+    var csem = (cg.getAttribute("data-copy-sem") === "1") ? "1" : "2";
     if (cg.hasAttribute("data-copy-grade")) {
       var n = parseInt(cg.getAttribute("data-copy-grade"), 10);
-      copyText(demoUrl(n), n + "학년 주소를 복사했습니다.");
+      copyText(demoUrl(n, csem), n + "학년 " + csem + "학기 주소를 복사했습니다.");
     } else {
       var m = parseInt(cg.getAttribute("data-copy-village"), 10);
-      copyText(VILLAGE_URLS[m] || ("grade" + m + "/index.html"), m + "학년 마을 주소를 복사했습니다.");
+      copyText(villageUrl(m, csem), m + "학년 " + csem + "학기 마을 주소를 복사했습니다.");
     }
   });
   function checkHashGrade() {
     try {
       var h = (location.hash || "").replace("#", "");
-      var m = h.match(/^grade-([1-6])$/);
+      var m = h.match(/^grade-([1-6])(?:-s([12]))?$/);
       if (m) {
         var n = parseInt(m[1], 10);
-        openGrade(n);
+        var s = (m[2] === "1" || m[2] === "2") ? m[2] : seasonalSem();
+        openGrade(n, s);
         var g = document.getElementById("grades");
         if (g) g.scrollIntoView({ behavior: "smooth" });
       }
@@ -197,8 +221,7 @@
   else checkHashGrade();
   window.addEventListener("hashchange", checkHashGrade);
   try {
-    var blocks = document.querySelectorAll(".rise");
-    if (!("IntersectionObserver" in window)) {
+    var blocks = document.querySelectorAll(".rise");    if (!("IntersectionObserver" in window)) {
       for (var i = 0; i < blocks.length; i++) blocks[i].classList.add("in");
     } else {
       var io = new IntersectionObserver(function (entries) {

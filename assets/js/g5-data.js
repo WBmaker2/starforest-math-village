@@ -24,8 +24,8 @@
     "g5-decimul": "npc-mole", "g5-cuboid": "npc-chick", "g5-avg": "npc-bunny"
   };
   window.GRADE_UNIT_ORDER = [
-    ["g5-range", "어림"], ["g5-fracmul", "분수곱"], ["g5-symm", "대칭"],
-    ["g5-decimul", "소수곱"], ["g5-cuboid", "직육면체"], ["g5-avg", "평균"]
+    ["g5-range", "수의 범위와 어림하기"], ["g5-fracmul", "분수의 곱셈"], ["g5-symm", "합동과 대칭"],
+    ["g5-decimul", "소수의 곱셈"], ["g5-cuboid", "직육면체"], ["g5-avg", "평균과 가능성"]
   ];
   window.G3Units = {
     "g5-range": { name: "어림 전망대", greet: "수를 어림해 멀리 내다보는 전망대야.",

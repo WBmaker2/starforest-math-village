@@ -1,12 +1,12 @@
 (function () {
   var LOW = [
     { grade: 1, cls: "g1", sem: "2학기", tag: "새싹숲", places: [
-      ["숫자 화단", "100까지의 수 세기"],
-      ["더하기 작업실", "덧셈과 뺄셈 첫걸음"],
-      ["모양·시계 아틀리에", "모양과 시각 읽기"],
-      ["열매 모으기", "덧셈과 뺄셈 두걸음"],
-      ["규칙 산책로", "규칙 찾기"],
-      ["모둠 천막", "덧셈과 뺄셈 모으기"]
+      ["숫자 화단", "100까지의 수"],
+      ["더하기 작업실", "덧셈과 뺄셈(1)"],
+      ["모양 공작소", "여러 가지 모양"],
+      ["열매 모으기", "덧셈과 뺄셈(2)"],
+      ["시계 산책로", "시계 보기와 규칙 찾기"],
+      ["모둠 천막", "덧셈과 뺄셈(3)"]
     ], demo: "1학년 마을 입구입니다. 큰 그림과 큰 단추로 시작합니다." },
     { grade: 2, cls: "g2", sem: "2학기", tag: "새싹숲", places: [
       ["자리수 텃밭", "네 자리 수"],
@@ -17,6 +17,23 @@
       ["무늬 산책로", "규칙 찾기"]
     ], demo: "2학년 마을 입구입니다. 표와 시계를 그림으로 읽습니다." }
   ];
+  var LOW_S1 = [
+    { grade: 1, cls: "g1", sem: "1학기", tag: "새싹숲", places: [
+      ["씨앗 숫자밭", "9까지의 수"],
+      ["모양 공작소", "여러 가지 모양"],
+      ["모으기 나눔터", "덧셈과 뺄셈"],
+      ["자 비교다리", "비교하기"],
+      ["50 열매밭", "50까지의 수"]
+    ], demo: "1학년 1학기 마을 입구입니다. 씨앗 숫자밭에서 9까지의 수부터 시작합니다." },
+    { grade: 2, cls: "g2", sem: "1학기", tag: "새싹숲", places: [
+      ["자리수 논밭", "세 자리 수"],
+      ["도형 놀이집", "여러 가지 도형"],
+      ["덧뺄셈 물레방아", "덧셈과 뺄셈"],
+      ["자 대여소", "길이 재기"],
+      ["분류 우체통", "분류하기"],
+      ["묶음 노래방앗간", "곱셈"]
+    ], demo: "2학년 1학기 마을 입구입니다. 자리수 논밭에서 세 자리 수부터 시작합니다." }
+  ];
   var HIGH = [
     { grade: 3, cls: "g3", sem: "2학기", tag: "별숲", places: [
       ["곱셈 방앗간", "곱셈"],
@@ -24,32 +41,66 @@
       ["동그라미 시계소", "원"],
       ["조각 피자부엌", "분수"],
       ["되와 무게 실험실", "들이와 무게"],
-      ["그림소식 우체통", "그림그래프"]
-    ], demo: "3학년 마을 입구입니다. 여섯 단원 장소를 돕니다." },
+      ["그림소식 우체통", "자료의 정리"]
+    ], demo: "3학년 2학기 마을 입구입니다. 여섯 단원 장소를 돕니다." },
     { grade: 4, cls: "g4", sem: "2학기", tag: "별숲", places: [
-      ["조각 빵나눔터", "분수"],
+      ["조각 빵나눔터", "분수의 덧셈과 뺄셈"],
       ["세모 지붕소", "삼각형"],
-      ["리본 문구점", "소수"],
+      ["리본 문구점", "소수의 덧셈과 뺄셈"],
       ["네모 설계실", "사각형"],
       ["꺾은길 전망대", "꺾은선그래프"],
       ["모자이크 공방", "다각형"]
-    ], demo: "4학년 마을 입구입니다. 그래프 읽기와 도형 이름 붙이기를 다룹니다." },
+    ], demo: "4학년 2학기 마을 입구입니다. 그래프 읽기와 도형 이름 붙이기를 다룹니다." },
     { grade: 5, cls: "g5", sem: "2학기", tag: "별숲", places: [
-      ["어림 전망대", "수의 범위"],
+      ["어림 전망대", "수의 범위와 어림하기"],
       ["분수 과일농장", "분수의 곱셈"],
       ["거울 정원", "합동과 대칭"],
       ["소수 비닐하우스", "소수의 곱셈"],
       ["쌓기 창고", "직육면체"],
-      ["기록 텃밭", "평균"]
-    ], demo: "5학년 마을 입구입니다. 수확물을 재고 나누는 흐름입니다." },
+      ["기록 텃밭", "평균과 가능성"]
+    ], demo: "5학년 2학기 마을 입구입니다. 수확물을 재고 나누는 흐름입니다." },
     { grade: 6, cls: "g6", sem: "2학기", tag: "별숲", places: [
-      ["조각 나눔터", "분수"],
-      ["꼼꼼 배달소", "소수"],
-      ["차곡 건축창고", "공간과 쌓기"],
-      ["물감 배합소", "비와 비례"],
-      ["동그라미 화단", "원"],
-      ["빙글 입체공방", "입체도형"]
-    ], demo: "6학년 마을 입구입니다. 비례식으로 나누고 비교합니다." }
+      ["조각 나눔터", "분수의 나눗셈"],
+      ["꼼꼼 배달소", "소수의 나눗셈"],
+      ["차곡 건축창고", "공간과 입체"],
+      ["물감 배합소", "비례식과 비례배분"],
+      ["동그라미 화단", "원의 넓이"],
+      ["빙글 입체공방", "원기둥·원뿔·구"]
+    ], demo: "6학년 2학기 마을 입구입니다. 비례식으로 나누고 비교합니다." }
+  ];
+  var HIGH_S1 = [
+    { grade: 3, cls: "g3", sem: "1학기", tag: "별숲", places: [
+      ["덧뺄셈 저울방", "덧셈과 뺄셈"],
+      ["평면도형 제재소", "평면도형"],
+      ["등분 나눗셈 정거장", "나눗셈"],
+      ["곱셈 방앗간", "곱셈"],
+      ["길이시계 탑", "길이와 시간"],
+      ["조각소수 샘터", "분수와 소수"]
+    ], demo: "3학년 1학기 마을 입구입니다. 덧셈과 뺄셈부터 분수와 소수까지 돕니다." },
+    { grade: 4, cls: "g4", sem: "1학기", tag: "별숲", places: [
+      ["큰수 전망대", "큰 수"],
+      ["각도 측량소", "각도"],
+      ["곱나눗셈 풍차", "곱셈과 나눗셈"],
+      ["도형이동 미끄럼틀", "평면도형의 이동"],
+      ["막대그래프 게시판", "막대그래프"],
+      ["규칙 암호동굴", "규칙 찾기"]
+    ], demo: "4학년 1학기 마을 입구입니다. 큰 수와 각도부터 규칙 찾기까지 돕니다." },
+    { grade: 5, cls: "g5", sem: "1학기", tag: "별숲", places: [
+      ["혼합계산 조리실", "자연수의 혼합 계산"],
+      ["약수배수 열쇠공방", "약수와 배수"],
+      ["규칙대응 전령소", "규칙과 대응"],
+      ["약분통분 분수공방", "약분과 통분"],
+      ["분수덧뺄 양조장", "분수의 덧셈과 뺄셈"],
+      ["다각형 측량들판", "다각형의 둘레와 넓이"]
+    ], demo: "5학년 1학기 마을 입구입니다. 혼합 계산부터 다각형 넓이까지 돕니다." },
+    { grade: 6, cls: "g6", sem: "1학기", tag: "별숲", places: [
+      ["분수나눗셈 분배소", "분수의 나눗셈"],
+      ["각기둥 목공소", "각기둥과 각뿔"],
+      ["소수나눗셈 정밀실", "소수의 나눗셈"],
+      ["비와비율 배합실", "비와 비율"],
+      ["그래프 관측소", "여러 가지 그래프"],
+      ["부피 창고", "직육면체의 부피와 겉넓이"]
+    ], demo: "6학년 1학기 마을 입구입니다. 분수 나눗셈부터 부피까지 돕니다." }
   ];
   var TOWNS = [
     { cls: "g3", tag: "3학년 별숲", title: "방앗간과 부엌이 있는 마을", desc: "곱셈과 나눗셈을 상점을 오가며 묻고, 분수는 조각 그림으로 설명합니다.", art: "방앗간 언덕", img: "assets/img/flow/town-g3.jpg" },
@@ -71,26 +122,46 @@
     if (html) d.innerHTML = html;
     return d;
   }
-  function doorCard(item) {
+  function seasonalSem() {
+    try {
+      var m = (new Date()).getMonth() + 1;
+      return (m >= 2 && m <= 8) ? "1" : "2";
+    } catch (e) { return "2"; }
+  }
+  function doorCard(item, s1item) {
     var a = el("article", "door rise " + item.cls);
     var top = "<div class='door-top'><span class='grade'><b>" + item.grade + "</b>" + item.grade + "학년</span>";
-    top += "<span class='sem'>" + item.sem + "</span><span class='count'>" + item.tag + "</span></div>";
-    var list = "<ul class='places'>";
-    for (var i = 0; i < item.places.length; i++) {
-      list += "<li><i>" + (i + 1) + "</i><span><b>" + item.places[i][0] + "</b> " + item.places[i][1] + "</span></li>";
+    top += "<span class='sem'>1·2학기</span><span class='count'>" + item.tag + "</span></div>";
+    function plist(semLabel, places, isNow) {
+      var list = "<ul class='places'><li class='sem-label'>" + semLabel + (isNow ? " <b class='now-badge'>지금 시즌</b>" : "") + "</li>";
+      for (var i = 0; i < places.length; i++) {
+        list += "<li><i>" + (i + 1) + "</i><span><b>" + places[i][0] + "</b> " + places[i][1] + "</span></li>";
+      }
+      list += "</ul>";
+      return list;
     }
-    list += "</ul>";
-    var acts = "<div class='door-actions'><button class='go btn-pulse' type='button' data-grade='" + item.grade + "'>" + item.grade + "학년 마을 열기</button>";
-    acts += "<button class='copy-link' type='button' data-grade='" + item.grade + "'>링크 복사</button></div>";
-    acts += "<span class='man-link'>학급 주소 · 이 브라우저에 기록 저장</span>";
-    a.innerHTML = top + list + acts;
+    var html = top;
+    var now = seasonalSem();
+    if (now === "1") {
+      if (s1item) html += plist("1학기", s1item.places, true);
+      html += plist("2학기", item.places, false);
+    } else {
+      html += plist("2학기", item.places, true);
+      if (s1item) html += plist("1학기", s1item.places, false);
+    }
+    var acts = "<div class='door-actions'><button class='go btn-pulse' type='button' data-grade='" + item.grade + "' data-sem='1'>" + item.grade + "학년 1학기 마을 열기</button>";
+    acts += "<button class='go btn-pulse' type='button' data-grade='" + item.grade + "' data-sem='2'>" + item.grade + "학년 2학기 마을 열기</button></div>";
+    acts += "<div class='door-actions sub'><button class='copy-link' type='button' data-grade='" + item.grade + "' data-sem='1'>1학기 링크 복사</button>";
+    acts += "<button class='copy-link' type='button' data-grade='" + item.grade + "' data-sem='2'>2학기 링크 복사</button></div>";
+    acts += "<span class='man-link'>학급 주소 · 이 브라우저에 기록 저장 (학기별 분리)</span>";
+    a.innerHTML = html + acts;
     return a;
   }
   function renderDoors() {
     var low = document.getElementById("doorsLow");
     var high = document.getElementById("doorsHigh");
-    if (low) { for (var i = 0; i < LOW.length; i++) low.appendChild(doorCard(LOW[i])); }
-    if (high) { for (var j = 0; j < HIGH.length; j++) high.appendChild(doorCard(HIGH[j])); }
+    if (low) { for (var i = 0; i < LOW.length; i++) low.appendChild(doorCard(LOW[i], LOW_S1[i])); }
+    if (high) { for (var j = 0; j < HIGH.length; j++) high.appendChild(doorCard(HIGH[j], HIGH_S1[j])); }
   }
   function renderTowns() {
     var box = document.getElementById("townRows");
@@ -142,10 +213,10 @@
       box.appendChild(b);
     }
   }
-  function gradeText(n) {
-    var all = LOW.concat(HIGH);
-    for (var i = 0; i < all.length; i++) {
-      if (all[i].grade === n) return all[i];
+  function gradeText(n, sem) {
+    var arr = (String(sem) === "1") ? LOW_S1.concat(HIGH_S1) : LOW.concat(HIGH);
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].grade === n) return arr[i];
     }
     return null;
   }
@@ -241,5 +312,5 @@
   renderPlays();
   renderMini();
   renderQuickDock();
-  window.StarforestGrades = { all: LOW.concat(HIGH), text: gradeText, trials: TRIALS };
+  window.StarforestGrades = { all: LOW.concat(HIGH), allS1: LOW_S1.concat(HIGH_S1), text: gradeText, trials: TRIALS };
 })();

@@ -24,7 +24,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='50' cy='45' r='11' fill='#6FBAD2'/><circle cx='86' cy='45' r='11' fill='#6FBAD2'/><circle cx='122' cy='45' r='11' fill='#6FBAD2'/><circle cx='158' cy='45' r='11' fill='#6FBAD2'/><circle cx='194' cy='45' r='11' fill='#E6DFC9'/><circle cx='230' cy='45' r='11' fill='#E6DFC9'/></svg>",
           choices: ["4", "5", "6"], a: "5", exp: "9에서 4를 덜면 5가 남아요!" }
       ] },
-    { id: "g1-shape", name: "모양·시계 아틀리에", x: 80, y: 30, npc: "그림 화가 팔레트", npcImg: "npc-bunny", houseImg: "house-low-clock",
+    { id: "g1-shape", name: "모양 공작소", x: 80, y: 30, npc: "그림 화가 팔레트", npcImg: "npc-bunny", houseImg: "house-low-clock",
       list: [
         { q: "긴바늘이 12, 짧은바늘이 4를 가리킵니다. 몇 시일까요?",
           svg: "<svg viewBox='0 0 300 90'><circle cx='150' cy='45' r='36' fill='#FFFDF6' stroke='#F08FB0' stroke-width='3'/><line x1='150' y1='45' x2='150' y2='18' stroke='#3E3428' stroke-width='2.5' stroke-linecap='round'/><line x1='150' y1='45' x2='170' y2='56' stroke='#EE7F62' stroke-width='3.5' stroke-linecap='round'/><circle cx='150' cy='45' r='3' fill='#3E3428'/></svg>",
@@ -48,7 +48,7 @@
           svg: "<svg viewBox='0 0 300 90'><circle cx='50' cy='45' r='11' fill='#EE7F62'/><circle cx='86' cy='45' r='11' fill='#EE7F62'/><circle cx='122' cy='45' r='11' fill='#EE7F62'/><circle cx='158' cy='45' r='11' fill='#E6DFC9'/><circle cx='194' cy='45' r='11' fill='#E6DFC9'/><circle cx='230' cy='45' r='11' fill='#E6DFC9'/></svg>",
           choices: ["6개", "7개", "8개"], a: "7개", exp: "10 - 3 = 7개예요!" }
       ] },
-    { id: "g1-rule", name: "규칙 산책로", x: 24, y: 59, npc: "산책 안내원 나뭇잎", npcImg: "npc-bunny", houseImg: "house-low-deck",
+    { id: "g1-rule", name: "시계 산책로", x: 24, y: 59, npc: "산책 안내원 나뭇잎", npcImg: "npc-bunny", houseImg: "house-low-deck",
       list: [
         { q: "○ △ ○ △ 다음에 올 모양은 무엇일까요?",
           svg: "<svg viewBox='0 0 300 90'><circle cx='60' cy='45' r='20' fill='#F5B23A'/><polygon points='130,25 110,65 150,65' fill='#6FBAD2'/><circle cx='190' cy='45' r='20' fill='#F5B23A'/><polygon points='260,25 240,65 280,65' fill='#6FBAD2'/></svg>",

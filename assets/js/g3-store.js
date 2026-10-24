@@ -20,24 +20,50 @@
       return (d && d.avatar && d.avatar.name) || "";
     } catch (e) { return ""; }
   }
+  function seasonalSem() {
+    try {
+      var m = (new Date()).getMonth() + 1;
+      return (m >= 2 && m <= 8) ? "1" : "2";
+    } catch (e) { return "2"; }
+  }
+  function currentSem() {
+    try {
+      var q = (location.search || "").match(/[?&]sem=([12])/);
+      if (q) return q[1];
+      var m = document.querySelector('meta[name="starforest-sem"]');
+      if (m && m.getAttribute("content")) return m.getAttribute("content");
+      if (window.STARFOREST_SEM) return String(window.STARFOREST_SEM);
+    } catch (e) {}
+    return seasonalSem();
+  }
   function currentGrade() {
     try {
-      if (window.STARFOREST_GRADE) return window.STARFOREST_GRADE;
+      var base = null;
+      if (window.STARFOREST_GRADE) base = window.STARFOREST_GRADE;
       var m = document.querySelector('meta[name="starforest-grade"]');
-      if (m && m.getAttribute("content")) return m.getAttribute("content");
-      var q = (location.search || "").match(/[?&]grade=([1-6])/);
-      if (q) return "g" + q[1];
-      var h = (location.pathname || "");
-      if (h.indexOf("grade4") >= 0) return "g4";
-      if (h.indexOf("grade5") >= 0) return "g5";
-      if (h.indexOf("grade6") >= 0) return "g6";
-      if (h.indexOf("lower") >= 0) {
-        var qq = (location.search || "").match(/[?&]grade=([12])/);
-        return qq ? ("g" + qq[1]) : "g1";
+      if (!base && m && m.getAttribute("content")) base = m.getAttribute("content");
+      if (!base) {
+        var q = (location.search || "").match(/[?&]grade=([1-6])/);
+        if (q) base = "g" + q[1];
       }
-      if (h.indexOf("grade3") >= 0) return "g3";
+      if (!base) {
+        var h = (location.pathname || "");
+        if (h.indexOf("grade4") >= 0) base = "g4";
+        else if (h.indexOf("grade5") >= 0) base = "g5";
+        else if (h.indexOf("grade6") >= 0) base = "g6";
+        else if (h.indexOf("lower") >= 0) {
+          var qq = (location.search || "").match(/[?&]grade=([12])/);
+          base = qq ? ("g" + qq[1]) : "g1";
+        }
+        else if (h.indexOf("grade3") >= 0) base = "g3";
+      }
+      if (!base) base = "g3";
+      // 구 키(g3 등)가 들어오면 학기를 붙여 정규화. 기존 기록은 2학기로 간주.
+      var mm = String(base).match(/^(g[1-6])(s[12])?$/);
+      if (mm) return mm[1] + "s" + currentSem();
+      return base;
     } catch (e) {}
-    return "g3";
+    return "g3s2";
   }
   function blankGrade() {
     return { done: {}, wrong: [], visits: {}, quests: { done: [] }, lowDone: {}, journal: [], stars2: {}, recent: [], adaptLevel: 2 };
@@ -50,13 +76,14 @@
       friends: { mong: 0, chick: 0, bunny: 0 },
       mapTime: "day",
       journal: [], visits: {}, harvests: 0,
-      grades: { g1: blankGrade(), g2: blankGrade(), g3: blankGrade(), g4: blankGrade(), g5: blankGrade(), g6: blankGrade() } };
+      grades: { g1s1: blankGrade(), g1s2: blankGrade(), g2s1: blankGrade(), g2s2: blankGrade(), g3s1: blankGrade(), g3s2: blankGrade(), g4s1: blankGrade(), g4s2: blankGrade(), g5s1: blankGrade(), g5s2: blankGrade(), g6s1: blankGrade(), g6s2: blankGrade() } };
   }
+  var GRADE_IDS = ["g1s1", "g1s2", "g2s1", "g2s2", "g3s1", "g3s2", "g4s1", "g4s2", "g5s1", "g5s2", "g6s1", "g6s2"];
+  var LEGACY_GRADE_IDS = ["g1", "g2", "g3", "g4", "g5", "g6"];
   function ensureGrades(d) {
     if (!d.grades || typeof d.grades !== "object") d.grades = {};
-    var ids = ["g1", "g2", "g3", "g4", "g5", "g6"];
-    for (var i = 0; i < ids.length; i++) {
-      var g = d.grades[ids[i]] || {};
+    for (var i = 0; i < GRADE_IDS.length; i++) {
+      var g = d.grades[GRADE_IDS[i]] || {};
       if (!g.done) g.done = {};
       if (!g.wrong) g.wrong = [];
       if (!g.visits) g.visits = {};
@@ -66,25 +93,39 @@
       if (!g.stars2) g.stars2 = {};
       if (!g.recent) g.recent = [];
       if (!g.adaptLevel) g.adaptLevel = 2;
-      d.grades[ids[i]] = g;
+      d.grades[GRADE_IDS[i]] = g;
     }
-    // 구 저장 데이터(g3 단일 구조)를 g3 칸으로 옮기기 (하위 호환)
-    if (d.done && Object.keys(d.done).length && !Object.keys(d.grades.g3.done).length) {
-      d.grades.g3.done = d.done;
+    // 구 저장 데이터(학기 구분 없음, g1..g6)를 2학기 칸으로 옮기기 (하위 호환)
+    for (var li = 0; li < LEGACY_GRADE_IDS.length; li++) {
+      var lg = LEGACY_GRADE_IDS[li];
+      var src = d.grades[lg];
+      if (!src || typeof src !== "object") continue;
+      var dst = d.grades[lg + "s2"];
+      if (src.done && Object.keys(src.done).length && !Object.keys(dst.done).length) dst.done = src.done;
+      if (src.wrong && src.wrong.length && !dst.wrong.length) dst.wrong = src.wrong;
+      if (src.visits && Object.keys(src.visits).length && !Object.keys(dst.visits).length) dst.visits = src.visits;
+      if (src.quests && src.quests.done && src.quests.done.length && !dst.quests.done.length) dst.quests = src.quests;
+      if (src.lowDone && Object.keys(src.lowDone).length && !Object.keys(dst.lowDone).length) dst.lowDone = src.lowDone;
+      if (src.stars2 && Object.keys(src.stars2).length && !Object.keys(dst.stars2).length) dst.stars2 = src.stars2;
+      if (src.journal && src.journal.length && !dst.journal.length) dst.journal = src.journal;
     }
-    if (d.wrong && d.wrong.length && !d.grades.g3.wrong.length) {
-      d.grades.g3.wrong = d.wrong;
+    // 구 저장 데이터(g3 단일 구조)를 g3s2 칸으로 옮기기 (하위 호환)
+    if (d.done && Object.keys(d.done).length && !Object.keys(d.grades.g3s2.done).length) {
+      d.grades.g3s2.done = d.done;
     }
-    if (d.visits && Object.keys(d.visits).length && !Object.keys(d.grades.g3.visits).length) {
-      d.grades.g3.visits = d.visits;
+    if (d.wrong && d.wrong.length && !d.grades.g3s2.wrong.length) {
+      d.grades.g3s2.wrong = d.wrong;
     }
-    if (d.quests && d.quests.done && d.quests.done.length && !d.grades.g3.quests.done.length) {
-      d.grades.g3.quests = d.quests;
+    if (d.visits && Object.keys(d.visits).length && !Object.keys(d.grades.g3s2.visits).length) {
+      d.grades.g3s2.visits = d.visits;
+    }
+    if (d.quests && d.quests.done && d.quests.done.length && !d.grades.g3s2.quests.done.length) {
+      d.grades.g3s2.quests = d.quests;
     }
     if (d.lowDone && Object.keys(d.lowDone).length) {
       for (var k in d.lowDone) {
-        if (!d.grades.g1.lowDone[k]) d.grades.g1.lowDone[k] = d.lowDone[k];
-        if (!d.grades.g2.lowDone[k]) d.grades.g2.lowDone[k] = d.lowDone[k];
+        if (!d.grades.g1s2.lowDone[k]) d.grades.g1s2.lowDone[k] = d.lowDone[k];
+        if (!d.grades.g2s2.lowDone[k]) d.grades.g2s2.lowDone[k] = d.lowDone[k];
       }
     }
     return d;
@@ -145,14 +186,14 @@
         copy[k] = d[k];
       }
       copy.grades = d.grades;
-      // 구 버전 호환용 평탄 필드도 함께 보관 (g3 기준)
-      if (g === "g3") {
+      // 구 버전 호환용 평탄 필드도 함께 보관 (g3s2 기준)
+      if (g === "g3s2" || g === "g3") {
         copy.done = d.done; copy.wrong = d.wrong; copy.visits = d.visits; copy.quests = d.quests;
       } else {
-        copy.done = (d.grades.g3 && d.grades.g3.done) || {};
-        copy.wrong = (d.grades.g3 && d.grades.g3.wrong) || [];
-        copy.visits = (d.grades.g3 && d.grades.g3.visits) || {};
-        copy.quests = (d.grades.g3 && d.grades.g3.quests) || { done: [] };
+        copy.done = (d.grades.g3s2 && d.grades.g3s2.done) || {};
+        copy.wrong = (d.grades.g3s2 && d.grades.g3s2.wrong) || [];
+        copy.visits = (d.grades.g3s2 && d.grades.g3s2.visits) || {};
+        copy.quests = (d.grades.g3s2 && d.grades.g3s2.quests) || { done: [] };
       }
       localStorage.setItem(keyFor(slot()), JSON.stringify(copy));
     } catch (e) {}
@@ -165,6 +206,6 @@
       return true;
     } catch (e) { return false; }
   }
-  window.G3Store = { load: load, save: save, grade: currentGrade,
+  window.G3Store = { load: load, save: save, grade: currentGrade, sem: currentSem, seasonal: seasonalSem,
     slot: slot, slotName: slotName, switchSlot: switchSlot };
 })();

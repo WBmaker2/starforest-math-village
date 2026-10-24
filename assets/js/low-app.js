@@ -8,6 +8,18 @@
     } catch (e) { return "1"; }
   }
   var G = grade();
+  function sem() {
+    try {
+      var q = (location.search || "").match(/[?&]sem=([12])/);
+      if (q) return q[1];
+      if (window.G3Store && window.G3Store.seasonal) return window.G3Store.seasonal();
+    } catch (e) {}
+    try {
+      var m = (new Date()).getMonth() + 1;
+      return (m >= 2 && m <= 8) ? "1" : "2";
+    } catch (e2) { return "2"; }
+  }
+  var S = sem();
   function HOUSES() {
     try {
       if (window.LowData) return G === "2" ? window.LowData.g2 : window.LowData.g1;
@@ -20,6 +32,18 @@
     "반짝이": "../assets/img/flow/parts/npc-banjjak.png"
   };
   function FRIENDS() {
+    if (S === "1") {
+      if (G === "2") return [
+        { name: "몽실", line: "자리수 논밭에서 100 모형을 세어 봐!", x: 20, y: 42, img: FRIEND_IMGS["몽실"] },
+        { name: "햇살이", line: "도형 놀이집에서 직사각형을 찾아봐!", x: 84, y: 44, img: FRIEND_IMGS["햇살이"] },
+        { name: "반짝이", line: "묶음 노래방앗간에서 곱셈 노래를 불러봐!", x: 68, y: 76, img: FRIEND_IMGS["반짝이"] }
+      ];
+      return [
+        { name: "몽실", line: "씨앗 숫자밭에서 9까지의 수를 세어 봐!", x: 37, y: 36, img: FRIEND_IMGS["몽실"] },
+        { name: "햇살이", line: "모양 공작소에서 동그라미를 찾아봐!", x: 66, y: 24, img: FRIEND_IMGS["햇살이"] },
+        { name: "반짝이", line: "자 비교다리에서 길이를 비교해 봐!", x: 36, y: 74, img: FRIEND_IMGS["반짝이"] }
+      ];
+    }
     if (G === "2") return [
       { name: "몽실", line: "길이 재기소에서 자 눈금을 읽어 봐!", x: 20, y: 42, img: FRIEND_IMGS["몽실"] },
       { name: "햇살이", line: "시계 전망대에서 몇 시 몇 분인지 찾아봐!", x: 84, y: 44, img: FRIEND_IMGS["햇살이"] },
@@ -85,15 +109,22 @@
     bar.className = "zonebar";
     bar.setAttribute("role", "group");
     bar.setAttribute("aria-label", "새싹숲 학년 바꾸기");
-    bar.innerHTML = "<button type='button' data-lowgrade='1' class='" + (G === "1" ? "sel" : "") + "'>🌱 1학년 새싹숲 (6곳)</button>"
-      + "<button type='button' data-lowgrade='2' class='" + (G === "2" ? "sel" : "") + "'>🌿 2학년 새싹숲 (6곳)</button>";
+    bar.innerHTML = "<button type='button' data-lowgrade='1' class='" + (G === "1" ? "sel" : "") + "'>🌱 1학년 (" + (S === "1" ? "1학기·5곳" : "2학기·6곳") + ")</button>"
+      + "<button type='button' data-lowgrade='2' class='" + (G === "2" ? "sel" : "") + "'>🌿 2학년 (" + (S === "1" ? "1학기·6곳" : "2학기·6곳") + ")</button>"
+      + "<button type='button' data-lowsem='" + (S === "1" ? "2" : "1") + "' class='sem-switch btn-pulse'>" + (S === "1" ? "📚 2학기 마을로 가기" : "📚 1학기 마을로 가기") + "</button>";
     sec.insertBefore(bar, sec.querySelector("#lowMapwrap"));
   }
   function build() {
     var wrap = document.getElementById("lowMapwrap");
     if (!wrap) return;
-    var mapSrc = G === "2" ? "../assets/img/flow/map-g2.jpg" : "../assets/img/flow/map-g1.jpg";
-    var mapAlt = G === "2" ? "2학년 새싹숲 마을 지도" : "1학년 새싹숲 마을 지도";
+    var mapSrc, mapAlt;
+    if (S === "1") {
+      mapSrc = G === "2" ? "../assets/img/flow/map-g2s1.jpg" : "../assets/img/flow/map-g1s1.jpg";
+      mapAlt = G === "2" ? "2학년 1학기 논밭 마을 지도" : "1학년 1학기 씨앗밭 마을 지도";
+    } else {
+      mapSrc = G === "2" ? "../assets/img/flow/map-g2.jpg" : "../assets/img/flow/map-g1.jpg";
+      mapAlt = G === "2" ? "2학년 새싹숲 마을 지도" : "1학년 새싹숲 마을 지도";
+    }
     wrap.innerHTML = "<img id='lowMapimg' src='" + mapSrc + "' alt='" + mapAlt + "'>";
     wrap.dataset.built = "1";
     var token = document.createElement("div");
@@ -497,13 +528,26 @@
     try {
       var url = new URL(location.href);
       url.searchParams.set("grade", ng);
-      location.href = url.pathname + "?grade=" + ng;
+      url.searchParams.set("sem", S);
+      location.href = url.pathname + "?grade=" + ng + "&sem=" + S;
     } catch (e) {
-      location.href = "index.html?grade=" + ng;
+      location.href = "index.html?grade=" + ng + "&sem=" + S;
+    }
+  }
+  function switchSem() {
+    var ns = (S === "1") ? "2" : "1";
+    try {
+      var url = new URL(location.href);
+      url.searchParams.set("grade", G);
+      url.searchParams.set("sem", ns);
+      location.href = url.pathname + "?grade=" + G + "&sem=" + ns;
+    } catch (e) {
+      location.href = "index.html?grade=" + G + "&sem=" + ns;
     }
   }
   function init() {
-    window.STARFOREST_GRADE = G === "2" ? "g2" : "g1";
+    window.STARFOREST_GRADE = (G === "2" ? "g2" : "g1") + "s" + S;
+    window.STARFOREST_SEM = S;
     try {
       var meta = document.querySelector('meta[name="starforest-grade"]');
       if (meta) meta.setAttribute("content", window.STARFOREST_GRADE);
@@ -513,7 +557,7 @@
     refreshAvatar();
     if (window.G3UI) { window.G3UI.tabs(); window.G3UI.stars(); }
     var head = document.querySelector(".g3head h1");
-    if (head) head.textContent = G === "2" ? "그림을 누르고 고르는 2학년 마을" : "그림을 누르고 고르는 1학년 마을";
+    if (head) head.textContent = (G === "2" ? "2학년" : "1학년") + " " + (S === "1" ? "1학기" : "2학기") + " 새싹숲 마을";
     var wrap = document.getElementById("lowMapwrap");
     if (wrap) wrap.addEventListener("click", function (e) {
       var pin = e.target.closest ? e.target.closest("[data-lowpin]") : null;
@@ -573,6 +617,8 @@
       }
       var g = e.target.closest ? e.target.closest("[data-lowgrade]") : null;
       if (g) { switchGrade(g.getAttribute("data-lowgrade")); return; }
+      var sm = e.target.closest ? e.target.closest("[data-lowsem]") : null;
+      if (sm) { switchSem(); return; }
       var tt = e.target.closest ? e.target.closest("[data-lowtouch]") : null;
       if (tt) {
         cur.touch++;

@@ -1,5 +1,5 @@
 /* 별숲 수학마을 서비스워커 (오프라인 학습 지원) */
-var CACHE = "starforest-v2";
+var CACHE = "starforest-v3";
 var CORE = [
   "./",
   "./index.html",

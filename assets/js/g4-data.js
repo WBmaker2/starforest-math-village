@@ -24,8 +24,8 @@
     "g4-quad": "npc-mole", "g4-line": "npc-bunny", "g4-poly": "npc-chick"
   };
   window.GRADE_UNIT_ORDER = [
-    ["g4-frac", "분수"], ["g4-tri", "삼각형"], ["g4-deci", "소수"],
-    ["g4-quad", "사각형"], ["g4-line", "꺾은선"], ["g4-poly", "다각형"]
+    ["g4-frac", "분수의 덧셈과 뺄셈"], ["g4-tri", "삼각형"], ["g4-deci", "소수의 덧셈과 뺄셈"],
+    ["g4-quad", "사각형"], ["g4-line", "꺾은선그래프"], ["g4-poly", "다각형"]
   ];
   window.G3Units = {
     "g4-frac": { name: "조각 빵나눔터", greet: "어서 오렴! 똑같이 나눈 빵을 더하고 빼는 빵나눔터야.",

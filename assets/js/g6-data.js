@@ -24,8 +24,8 @@
     "g6-ratio": "npc-mole", "g6-circle": "npc-bunny", "g6-cyl": "npc-chick"
   };
   window.GRADE_UNIT_ORDER = [
-    ["g6-fracdiv", "분수나눗"], ["g6-decdiv", "소수나눗"], ["g6-space", "쌓기"],
-    ["g6-ratio", "비례"], ["g6-circle", "원넓이"], ["g6-cyl", "입체"]
+    ["g6-fracdiv", "분수의 나눗셈"], ["g6-decdiv", "소수의 나눗셈"], ["g6-space", "공간과 입체"],
+    ["g6-ratio", "비례식과 비례배분"], ["g6-circle", "원의 넓이"], ["g6-cyl", "원기둥·원뿔·구"]
   ];
   window.G3Units = {
     "g6-fracdiv": { name: "조각 나눔터", greet: "분수를 나누어 똑같이 나누는 나눔터야.",

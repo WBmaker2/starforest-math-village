@@ -254,5 +254,17 @@
     }
   };
   window.G3Units = UNITS;
+  window.GRADE_PINS = [
+    { id: "mul", name: "곱셈 방앗간", x: 22, y: 15 },
+    { id: "divi", name: "나눔 과일정거장", x: 78, y: 15 },
+    { id: "circ", name: "동그라미 시계소", x: 14, y: 43 },
+    { id: "frac", name: "조각 피자부엌", x: 27, y: 65 },
+    { id: "mea", name: "되와 무게 실험실", x: 68, y: 68 },
+    { id: "gra", name: "그림소식 우체통", x: 88, y: 56 }
+  ];
+  window.GRADE_UNIT_ORDER = [
+    ["mul", "곱셈"], ["divi", "나눗셈"], ["circ", "원"],
+    ["frac", "분수"], ["mea", "들이와 무게"], ["gra", "자료의 정리"]
+  ];
   window.G3Mul = { lessons: UNITS.mul.lessons };
 })();

@@ -64,6 +64,28 @@ no drop shadows touching the edges, keep the same style as Star Forest Math Vill
 7. 로컬 서버(`python3 -m http.server 8000`)에서 산책 지도·대화창·옷장·텃밭 실화면 확인
 8. 이미지가 오기 전까지는 코드의 이모지/SVG 대체 표시로 정상 동작 (점진적 교체)
 
+ ## 1학기 마을 지도 5종 (신규, 2026-10-24 계획)
+
+- 방식: 2학기 지도와 같은 파스텔 둥근 마을 지도, 집 6곳(1학년은 5곳)이 들어갈 여백 포함, 인물 없이 배경만
+- 저장: `assets/img/flow/map-g1s1.jpg, map-g2s1.jpg, town-g3s1.jpg, town-g4s1.jpg, town-g5s1.jpg, town-g6s1.jpg`
+  (새싹 1·2 + 별숲 3/4·5·6 컨셉 — 3·4학년은 한 장을 공유해도 되나 가급적 학년별 6장)
+- 컨셉:
+  - `map-g1s1`: 햇살 씨앗 숫자밭 마을 (9까지의 수, 비교하기) — 노랑·연두 새싹 정원
+  - `map-g2s1`: 자리수 논밭과 도형 놀이집 마을 — 논두렁 격자 + 도형 간판
+  - `town-g3s1`: 저울방·제재소 골목 마을 — 저울과 나무 판자 공방
+  - `town-g4s1`: 큰수 전망대와 측량소 마을 — 높은 전망대 + 각도기 조형물
+  - `town-g5s1`: 조리실·열쇠공방·측량들판 농장 마을 — 주방과 밭
+  - `town-g6s1`: 분배소·목공소·관측소 공방 마을 — 실험실과 창고
+- 프롬프트 추가: `cozy pastel round village map for kids math game, empty houses spots, no people, no text, same style as Star Forest Math Village, map-gXsY series`
+- 임시 대응: 이미지 오기 전까지 2학기 지도(`map-g1.jpg` 등)를 그대로 표시 — `g3-sem.js`에서 교체하지 않음
+- 1학기 단원 집 그림 35종은 2학기 집 그림(`house-g*-*.jpg`)을 임시 재사용 — `GRADE_PORTRAITS_S1`이 2학기 그림을 가리킴
+
+## 진행 상태 (2026-10-24 완료)
+
+- 6장 전부 Flow(Nano Banana 2.1, 가로 4:3, 2K→2400×1792)로 생성해 저장했어요.
+- 검수: 6장 모두 사람·글자·숫자 없음, 파스텔 이야기 그림체, 마을 핀 5~6곳이 올라갈 빈자리 있음 — 통과.
+- 마을 연결: 1학기로 들어가면 새 지도가 보여요 (`low-app.js`·`g3-sem.js`가 학기에 따라 그림을 바꿈).
+
 ## 파일명 규칙
 
 - 시트: `assets/img/flow/<이름>-sheet.jpg`
