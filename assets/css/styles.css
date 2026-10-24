@@ -206,3 +206,9 @@ dialog button { font-family: var(--display); margin-top: 12px; padding: 10px 18p
   html { scroll-behavior: auto; }
   .rise { opacity: 1; transform: none; }
 }
+/* 마을 헤더: 학년 바로가기·학기 전환 강조 */
+.bar nav a { background: var(--card); border: 2px solid var(--line); box-shadow: 0 2px 0 var(--line); font-size: 16px; padding: 7px 14px; }
+.bar nav a:hover { border-color: var(--leaf); background: var(--leaf-pale); color: var(--leaf-deep); }
+.bar nav a[aria-current="page"] { background: var(--leaf); border-color: var(--leaf-deep); color: #fff; }
+#semSwitchBtn { background: var(--sun); border-color: #C97A1B; color: #fff; box-shadow: 0 2px 0 #C97A1B; font-size: 16px; }
+#semSwitchBtn:hover { background: var(--sun); border-color: #C97A1B; color: #fff; filter: brightness(1.06); }

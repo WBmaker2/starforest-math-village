@@ -54,17 +54,19 @@
         grade = ((q && q[1] === "2") ? "2학년" : "1학년");
         if (h1) h1.textContent = grade + " " + (S === "1" ? "1학기" : "2학기") + " 새싹숲 마을";
         if (eye) eye.textContent = grade + " · " + (S === "1" ? "1학기" : "2학기") + " 저학년 산책";
-        return;
-      }
-      var names = { "3학년": "덧셈과 나눗셈이 열리는 마을", "4학년": "큰 수와 각도를 재는 마을", "5학년": "약수와 분수를 나누는 마을", "6학년": "비율과 부피를 재는 마을" };
-      if (S === "1") {
-        if (eye) eye.textContent = grade + " 1학기 별숲 마을";
-        if (h1) h1.textContent = (names[grade] || "1학기 마을이 열리는 마을");
-        if (lead) lead.textContent = "주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 1학기 여섯 단원 장소입니다.";
+        document.title = grade + " " + (S === "1" ? "1학기" : "2학기") + " 새싹숲 마을 · 별숲 수학마을";
       } else {
-        if (eye) eye.textContent = grade + " 2학기 별숲 마을";
+        var names = { "3학년": "덧셈과 나눗셈이 열리는 마을", "4학년": "큰 수와 각도를 재는 마을", "5학년": "약수와 분수를 나누는 마을", "6학년": "비율과 부피를 재는 마을" };
+        if (S === "1") {
+          if (eye) eye.textContent = grade + " 1학기 별숲 마을";
+          if (h1) h1.textContent = (names[grade] || "1학기 마을이 열리는 마을");
+          if (lead) lead.textContent = "주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 1학기 여섯 단원 장소입니다.";
+          document.title = grade + " 1학기 별숲 마을 · 별숲 수학마을";
+        } else {
+          if (eye) eye.textContent = grade + " 2학기 별숲 마을";
+          document.title = grade + " 2학기 별숲 마을 · 별숲 수학마을";
+        }
       }
-      document.title = grade + " " + (S === "1" ? "1학기" : "2학기") + " 별숲 마을 · 별숲 수학마을";
     } catch (e) {}
     try {
       // 마을 상단 내비의 학기 유지 + 학기 전환 버튼 + 1학기 지도 교체
@@ -80,11 +82,24 @@
       var nav = document.querySelector("header.bar nav");
       if (nav) {
         var links = nav.querySelectorAll("a");
+        var curGrade = null, curIsLower = false;
+        try {
+          var gq = (location.search || "").match(/[?&]grade=([12])/);
+          if (path0.indexOf("lower") >= 0) { curIsLower = true; curGrade = gq ? gq[1] : "1"; }
+          else if (path0.indexOf("grade3") >= 0) curGrade = "3";
+          else if (path0.indexOf("grade4") >= 0) curGrade = "4";
+          else if (path0.indexOf("grade5") >= 0) curGrade = "5";
+          else if (path0.indexOf("grade6") >= 0) curGrade = "6";
+        } catch (e3) {}
         for (var i = 0; i < links.length; i++) {
           var href = links[i].getAttribute("href") || "";
           if (href.indexOf("grade") >= 0 || href.indexOf("lower") >= 0) {
             var sep = (href.indexOf("?") >= 0) ? "&" : "?";
             if (href.indexOf("sem=") < 0) links[i].setAttribute("href", href + sep + "sem=" + S);
+            if (curGrade) {
+              var isCur = curIsLower ? (href.indexOf("lower") >= 0 && href.indexOf("grade=" + curGrade) >= 0) : (href.indexOf("grade" + curGrade + "/") >= 0);
+              if (isCur) links[i].setAttribute("aria-current", "page");
+            }
           }
         }
         if (!document.getElementById("semSwitchBtn")) {
@@ -99,7 +114,8 @@
           if (nq.indexOf("sem=") < 0) nq += (nq.indexOf("?") >= 0 ? "&" : "?") + "sem=" + ns;
           b.href = path + nq;
           b.textContent = (S === "1") ? "📚 2학기 마을로 가기" : "📚 1학기 마을로 가기";
-          nav.appendChild(b);
+          if (nav.firstChild) nav.insertBefore(b, nav.firstChild);
+          else nav.appendChild(b);
         }
       }
     } catch (e2) {}

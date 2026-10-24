@@ -120,7 +120,7 @@
       copyText(demoUrl(n, sem), n + "학년 " + sem + "학기 학급 주소를 복사했습니다.");
     } else {
       var m = parseInt(b.getAttribute("data-grade"), 10);
-      openGrade(m, sem);
+      location.href = villageUrl(m, sem);
     }
   });
   var guide = document.getElementById("guideDialog");
@@ -211,9 +211,7 @@
       if (m) {
         var n = parseInt(m[1], 10);
         var s = (m[2] === "1" || m[2] === "2") ? m[2] : seasonalSem();
-        openGrade(n, s);
-        var g = document.getElementById("grades");
-        if (g) g.scrollIntoView({ behavior: "smooth" });
+        location.href = villageUrl(n, s);
       }
     } catch (e) {}
   }
