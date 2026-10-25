@@ -17,6 +17,7 @@
   });
   function showBanner() {
     try {
+      if (document.body.classList.contains("landing")) return;
       if (document.getElementById("pwaBanner") || localStorage.getItem("starforest-pwa-hide") === "1") return;
       var bar = document.createElement("div");
       bar.id = "pwaBanner";

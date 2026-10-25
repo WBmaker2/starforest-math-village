@@ -1,209 +1,297 @@
 (function () {
+  var toastTimer = null;
+
   function toast(msg) {
     var t = document.getElementById("toast");
     if (!t) return;
     t.textContent = msg;
     t.classList.add("show");
-    setTimeout(function () { t.classList.remove("show"); }, 2200);
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
   }
+  window.StarforestToast = toast;
+
   function copyText(value, okMsg) {
-    function done(m) { toast(m); }
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = value;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        ta.style.left = "-1000px";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        toast(ok ? okMsg : value);
+      } catch (e) {
+        toast(value);
+      }
+    }
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value).then(function () { done(okMsg); }, function () { done(value); });
-      } else { done(value); }
-    } catch (e) { done(value); }
+        navigator.clipboard.writeText(value).then(function () { toast(okMsg); }, fallback);
+      } else {
+        fallback();
+      }
+    } catch (e) {
+      fallback();
+    }
   }
+
   function seasonalSem() {
     try {
       var m = (new Date()).getMonth() + 1;
       return (m >= 2 && m <= 8) ? "1" : "2";
-    } catch (e) { return "2"; }
+    } catch (e) {
+      return "2";
+    }
   }
+
   function demoUrl(n, sem) {
     var base = "";
     try { base = location.href.split("#")[0]; } catch (e) { base = ""; }
     sem = (String(sem) === "1") ? "1" : "2";
     return base + "#grade-" + n + "-s" + sem;
   }
+
   function villageUrl(n, sem) {
     sem = (String(sem) === "1") ? "1" : "2";
     if (n === 1 || n === 2) return "lower/index.html?grade=" + n + "&sem=" + sem;
     return "grade" + n + "/index.html?sem=" + sem;
   }
-  var gradeDialog = document.getElementById("gradeDialog");
-  var gradeTitle = document.getElementById("gradeTitle");
-  var gradeBody = document.getElementById("gradeBody");
-  var tState = { grade: 1, sem: seasonalSem(), idx: 0 };
-  function renderTrial() {
-    var box = document.getElementById("gradeTrialBox");
-    if (!box) return;
-    var tr = window.StarforestGrades && window.StarforestGrades.trials && window.StarforestGrades.trials[tState.grade];
-    if (!tr || !tr.list || !tr.list.length) { box.innerHTML = ""; return; }
-    var qObj = tr.list[tState.idx % tr.list.length];
-    var html = "<div class='trial-card'><div class='trial-top'><span class='tag'>" + tr.unit + "</span><small>체험 " + ((tState.idx % tr.list.length) + 1) + "/" + tr.list.length + "</small></div>";
-    html += "<div class='trial-svg'>" + qObj.svg + "</div>";
-    html += "<p class='trial-q'>" + qObj.q + "</p>";
-    html += "<div class='trial-choices " + (tr.mode === "low" ? "low-mode" : "") + "'>";
-    for (var i = 0; i < qObj.choices.length; i++) {
-      html += "<button type='button' class='trial-choice btn-pulse' data-tchoice='" + qObj.choices[i] + "'>" + qObj.choices[i] + "</button>";
-    }
-    html += "</div><p id='trialFb' class='trial-fb' aria-live='polite'></p></div>";
-    box.innerHTML = html;
+
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
-  function openGrade(n, sem) {
-    tState.grade = n; tState.sem = (sem === "1" || sem === "2") ? sem : seasonalSem(); tState.idx = 0;
-    var item = null;
-    try { item = window.StarforestGrades.text(n, tState.sem); } catch (e) { item = null; }
-    if (gradeTitle) gradeTitle.textContent = n + "학년 " + tState.sem + "학기 마을 · 수업 체험";
-    if (gradeBody) gradeBody.textContent = item ? (item.demo + " (단원 순서: " + item.places.map(function (p) { return p[1]; }).join(" → ") + ")") : "별숲 마을 입구입니다.";
-    var trialBox = document.getElementById("gradeTrialBox");
-    if (!trialBox && gradeBody) {
-      trialBox = document.createElement("div");
-      trialBox.id = "gradeTrialBox";
-      gradeBody.parentNode.insertBefore(trialBox, gradeBody.nextSibling);
+
+  var state = { grade: 3, sem: seasonalSem() };
+
+  function dataFor(n, sem) {
+    try {
+      return window.StarforestGrades ? window.StarforestGrades.text(n, sem) : null;
+    } catch (e) {
+      return null;
     }
-    renderTrial();
-    var enter = document.getElementById("gradeEnter");
-    if (!enter && gradeBody) {
-      enter = document.createElement("a");
-      enter.id = "gradeEnter";
-      enter.className = "go btn-pulse";
-      enter.style.marginTop = "12px";
-      gradeBody.parentNode.insertBefore(enter, trialBox ? trialBox.nextSibling : gradeBody.nextSibling);
-    }
-    if (enter) {
-      enter.style.display = "inline-flex";
-      var semLabel = (tState.sem === "1") ? "1학기" : "2학기";
-      var ENTERS = {
-        1: ["lower/index.html?grade=1&sem=" + tState.sem, "1학년 " + semLabel + " 새싹숲 입장하기"],
-        2: ["lower/index.html?grade=2&sem=" + tState.sem, "2학년 " + semLabel + " 새싹숲 입장하기"],
-        3: ["grade3/index.html?sem=" + tState.sem, "3학년 " + semLabel + " 마을 입장하기"],
-        4: ["grade4/index.html?sem=" + tState.sem, "4학년 " + semLabel + " 마을 입장하기"],
-        5: ["grade5/index.html?sem=" + tState.sem, "5학년 " + semLabel + " 마을 입장하기"],
-        6: ["grade6/index.html?sem=" + tState.sem, "6학년 " + semLabel + " 마을 입장하기"]
-      };
-      var cfg = ENTERS[n] || ENTERS[3];
-      enter.href = cfg[0];
-      enter.textContent = cfg[1];
-    }
-    if (gradeDialog && gradeDialog.showModal) gradeDialog.showModal();
-    else toast(n + "학년 마을 안내입니다.");
   }
-  document.addEventListener("click", function (ev) {
-    var tc = ev.target.closest ? ev.target.closest("[data-tchoice]") : null;
-    if (tc) {
-      var tr = window.StarforestGrades && window.StarforestGrades.trials && window.StarforestGrades.trials[tState.grade];
-      if (!tr) return;
-      var qObj = tr.list[tState.idx % tr.list.length];
-      var pick = tc.getAttribute("data-tchoice");
-      var fb = document.getElementById("trialFb");
-      if (pick === qObj.a) {
-        if (fb) fb.innerHTML = "<b>정답입니다! ★+10</b> · " + qObj.exp + (tr.list.length > 1 ? " <button type='button' class='trial-next btn-pulse' data-tnext='1'>다음 체험 문제 →</button>" : "");
-      } else {
-        if (fb) fb.textContent = "다시 한번 그림을 살펴볼까요? (" + qObj.exp + ")";
+
+  function applyState() {
+    var item = dataFor(state.grade, state.sem);
+    if (!item) return;
+    var first = item.places[0];
+    var count = item.places.length;
+
+    $$(".grade-cell").forEach(function (cell) {
+      var n = parseInt(cell.getAttribute("data-grade"), 10);
+      var it = dataFor(n, state.sem);
+      var unit = $(".cell-unit", cell);
+      if (it && unit) unit.textContent = it.places[0][0] + " · " + it.places[0][1];
+      var selected = n === state.grade;
+      cell.setAttribute("aria-pressed", selected ? "true" : "false");
+      cell.classList.toggle("is-selected", selected);
+    });
+
+    $$(".sem-btn").forEach(function (btn) {
+      var selected = btn.getAttribute("data-sem") === state.sem;
+      btn.setAttribute("aria-pressed", selected ? "true" : "false");
+      btn.classList.toggle("is-selected", selected);
+    });
+
+    var plan = document.getElementById("planList");
+    if (plan) {
+      var html = "";
+      for (var i = 0; i < item.places.length; i++) {
+        html += "<li><span class=\"plan-num\" aria-hidden=\"true\">" + (i + 1) + "</span>"
+          + "<span class=\"plan-place\">" + item.places[i][0] + "</span>"
+          + "<span class=\"plan-unit\">" + item.places[i][1] + "</span></li>";
       }
+      plan.innerHTML = html;
+    }
+
+    var planMeta = document.getElementById("planMeta");
+    if (planMeta) {
+      planMeta.textContent = state.grade + "학년 · " + state.sem + "학기 · " + item.tag + " · " + count + "곳";
+    }
+
+    var heroNote = document.getElementById("heroNote");
+    if (heroNote) {
+      heroNote.textContent = state.grade + "학년 " + state.sem + "학기는 " + first[0] + "에서 시작해요.";
+    }
+
+    var longLabel = state.grade + "학년 " + state.sem + "학기 마을 열기";
+    $$(".enter-label").forEach(function (el) { el.textContent = longLabel; });
+    $$("[data-enter]").forEach(function (a) { a.href = villageUrl(state.grade, state.sem); });
+    $$("[data-copy]").forEach(function (btn) {
+      btn.setAttribute("aria-label", state.grade + "학년 " + state.sem + "학기 학급 주소 복사");
+    });
+
+    var dockGrade = document.getElementById("dockGrade");
+    var dockSem = document.getElementById("dockSem");
+    if (dockGrade) dockGrade.textContent = state.grade + "학년";
+    if (dockSem) dockSem.textContent = state.sem + "학기 · " + item.tag;
+
+    var live = document.getElementById("selectionStatus");
+    if (live) {
+      live.textContent = state.grade + "학년 " + state.sem + "학기, 단원 장소 " + count + "곳. " + first[0] + "에서 시작합니다.";
+    }
+  }
+
+  document.addEventListener("click", function (ev) {
+    var target = ev.target;
+    if (!target || !target.closest) return;
+
+    var cell = target.closest(".grade-cell");
+    if (cell) {
+      state.grade = parseInt(cell.getAttribute("data-grade"), 10);
+      applyState();
       return;
     }
-    var tn = ev.target.closest ? ev.target.closest("[data-tnext]") : null;
-    if (tn) {
-      tState.idx++;
-      renderTrial();
+
+    var sem = target.closest(".sem-btn");
+    if (sem) {
+      state.sem = sem.getAttribute("data-sem") === "1" ? "1" : "2";
+      applyState();
       return;
     }
-    var b = ev.target.closest ? ev.target.closest("[data-grade]") : null;
-    if (!b) return;
-    var semAttr = b.getAttribute("data-sem");
-    var sem = (semAttr === "1" || semAttr === "2") ? semAttr : seasonalSem();
-    if (b.classList.contains("copy-link")) {
-      var n = parseInt(b.getAttribute("data-grade"), 10);
-      copyText(demoUrl(n, sem), n + "학년 " + sem + "학기 학급 주소를 복사했습니다.");
-    } else {
-      var m = parseInt(b.getAttribute("data-grade"), 10);
-      location.href = villageUrl(m, sem);
+
+    var copy = target.closest("[data-copy]");
+    if (copy) {
+      copyText(demoUrl(state.grade, state.sem), state.grade + "학년 " + state.sem + "학기 학급 주소를 복사했습니다.");
+      return;
+    }
+
+    var copyAddr = target.closest("[data-copy-address]");
+    if (copyAddr) {
+      copyText(copyAddr.getAttribute("data-copy-address"), copyAddr.getAttribute("data-copy-label") || "주소를 복사했습니다.");
     }
   });
-  var guide = document.getElementById("guideDialog");
-  var openGuide = document.getElementById("openGuide");
-  if (openGuide) openGuide.addEventListener("click", function () {
-    if (guide && guide.showModal) guide.showModal(); else toast("이용 흐름 안내입니다.");
-  });
-  var closeGuide = document.getElementById("closeGuide");
-  if (closeGuide) closeGuide.addEventListener("click", function () { if (guide) guide.close(); });
-  var closeGrade = document.getElementById("closeGrade");
-  if (closeGrade) closeGrade.addEventListener("click", function () { if (gradeDialog) gradeDialog.close(); });
+
+  function setDate() {
+    var d = new Date();
+    var dateEl = document.getElementById("boardDate");
+    var semEl = document.getElementById("boardSem");
+    if (dateEl) dateEl.textContent = d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + ".";
+    if (semEl) semEl.textContent = seasonalSem() + "학기";
+    $$(".sem-btn").forEach(function (btn) {
+      btn.classList.toggle("is-now", btn.getAttribute("data-sem") === seasonalSem());
+    });
+  }
+
+  var teacherDialog = document.getElementById("teacherDialog");
+  var guideDialog = document.getElementById("guideDialog");
   var historyDialog = document.getElementById("historyDialog");
-  var historyList = document.getElementById("historyList");
+
+  function openDialog(d) {
+    if (!d) return;
+    if (d.showModal) {
+      if (!d.open) d.showModal();
+    } else {
+      d.setAttribute("open", "");
+    }
+    document.body.classList.add("dialog-open");
+  }
+
+  function closeDialog(d) {
+    if (!d) return;
+    if (d.close) d.close();
+    else d.removeAttribute("open");
+    document.body.classList.remove("dialog-open");
+  }
+
+  $$("dialog").forEach(function (d) {
+    d.addEventListener("close", function () {
+      document.body.classList.remove("dialog-open");
+    });
+    d.addEventListener("click", function (ev) {
+      if (ev.target === d) closeDialog(d);
+    });
+  });
+
+  function renderTeacherBox() {
+    var box = document.getElementById("teacherLinks");
+    if (!box) return;
+    box.innerHTML = "";
+    for (var g = 1; g <= 6; g++) {
+      for (var s = 1; s <= 2; s++) {
+        var sem = String(s);
+        var row = document.createElement("div");
+        row.className = "tbox-row";
+
+        var label = document.createElement("b");
+        label.textContent = g + "학년 " + sem + "학기";
+
+        var code = document.createElement("code");
+        code.textContent = demoUrl(g, sem);
+
+        var copy = document.createElement("button");
+        copy.type = "button";
+        copy.className = "tbox-copy";
+        copy.setAttribute("data-copy-address", demoUrl(g, sem));
+        copy.setAttribute("data-copy-label", g + "학년 " + sem + "학기 학급 주소를 복사했습니다.");
+        copy.textContent = "복사";
+
+        var open = document.createElement("a");
+        open.className = "tbox-open";
+        open.href = villageUrl(g, sem);
+        open.target = "_blank";
+        open.rel = "noopener";
+        open.textContent = "마을 열기";
+
+        row.appendChild(label);
+        row.appendChild(code);
+        row.appendChild(copy);
+        row.appendChild(open);
+        box.appendChild(row);
+      }
+    }
+  }
+
   function renderHistory() {
-    if (!historyList) return;
-    historyList.innerHTML = "";
+    var list = document.getElementById("historyList");
+    if (!list) return;
+    list.innerHTML = "";
     var items = window.StarforestHistory || [];
     for (var i = 0; i < items.length; i++) {
-      var d = document.createElement("div");
-      var h = document.createElement("b");
-      h.textContent = items[i].date + " · " + items[i].title;
-      var p = document.createElement("p");
-      p.textContent = items[i].desc;
-      p.style.margin = "6px 0 0";
-      d.appendChild(h);
-      d.appendChild(p);
-      historyList.appendChild(d);
+      var wrap = document.createElement("div");
+      wrap.className = "history-item";
+      var title = document.createElement("b");
+      title.textContent = items[i].date + " · " + items[i].title;
+      var desc = document.createElement("p");
+      desc.textContent = items[i].desc;
+      wrap.appendChild(title);
+      wrap.appendChild(desc);
+      list.appendChild(wrap);
     }
   }
-  renderHistory();
-  try {
-    var nowSem = seasonalSem();
-    var note = document.querySelector(".doors-note");
-    if (note) note.textContent = "지금은 " + (nowSem === "1" ? "1학기 시즌(2~8월)" : "2학기 시즌(9~1월)") + "이라 " + nowSem + "학기가 먼저 보여요. 다른 학기는 각 카드의 학기 버튼으로 열 수 있습니다.";
-  } catch (e) {}
-  var historyBtn = document.getElementById("historyBtn");
-  if (historyBtn) historyBtn.addEventListener("click", function () {
-    renderHistory();
-    if (historyDialog && historyDialog.showModal) historyDialog.showModal();
-  });
-  var closeHistory = document.getElementById("closeHistory");
-  if (closeHistory) closeHistory.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
-  var closeHistoryX = document.getElementById("closeHistoryX");
-  if (closeHistoryX) closeHistoryX.addEventListener("click", function () { if (historyDialog) historyDialog.close(); });
-  var teacherDialog = document.getElementById("teacherDialog");
-  var VILLAGE_URLS = {
-    1: "lower/index.html?grade=1&sem=2", 2: "lower/index.html?grade=2&sem=2",
-    3: "grade3/index.html?sem=2", 4: "grade4/index.html?sem=2",
-    5: "grade5/index.html?sem=2", 6: "grade6/index.html?sem=2"
-  };
-  function renderTeacherBox() {
-    var links = document.getElementById("teacherLinks");
-    if (links) {
-      var html = "";
-      for (var g = 1; g <= 6; g++) {
-        html += "<div class='tbox-row'><b>" + g + "학년 1학기</b><span class='mail'>" + demoUrl(g, "1") + "</span><button type='button' class='copy' data-copy-grade='" + g + "' data-copy-sem='1'>복사</button></div>";
-        html += "<div class='tbox-row'><b>" + g + "학년 1학기 마을</b><span class='mail'>" + villageUrl(g, "1") + "</span><button type='button' class='copy' data-copy-village='" + g + "' data-copy-sem='1'>복사</button></div>";
-        html += "<div class='tbox-row'><b>" + g + "학년 2학기</b><span class='mail'>" + demoUrl(g, "2") + "</span><button type='button' class='copy' data-copy-grade='" + g + "' data-copy-sem='2'>복사</button></div>";
-        html += "<div class='tbox-row'><b>" + g + "학년 2학기 마을</b><span class='mail'>" + villageUrl(g, "2") + "</span><button type='button' class='copy' data-copy-village='" + g + "' data-copy-sem='2'>복사</button></div>";
-      }
-      links.innerHTML = html;
-    }
-  }
+
   var openTeacherBox = document.getElementById("openTeacherBox");
   if (openTeacherBox) openTeacherBox.addEventListener("click", function () {
     renderTeacherBox();
-    if (teacherDialog && teacherDialog.showModal) teacherDialog.showModal();
-    else toast("선생님 교실 도구함입니다.");
+    openDialog(teacherDialog);
   });
-  var closeTeacher = document.getElementById("closeTeacher");
-  if (closeTeacher) closeTeacher.addEventListener("click", function () { if (teacherDialog) teacherDialog.close(); });
-  document.addEventListener("click", function (ev2) {
-    var cg = ev2.target.closest ? ev2.target.closest("[data-copy-grade],[data-copy-village]") : null;
-    if (!cg) return;
-    var csem = (cg.getAttribute("data-copy-sem") === "1") ? "1" : "2";
-    if (cg.hasAttribute("data-copy-grade")) {
-      var n = parseInt(cg.getAttribute("data-copy-grade"), 10);
-      copyText(demoUrl(n, csem), n + "학년 " + csem + "학기 주소를 복사했습니다.");
-    } else {
-      var m = parseInt(cg.getAttribute("data-copy-village"), 10);
-      copyText(villageUrl(m, csem), m + "학년 " + csem + "학기 마을 주소를 복사했습니다.");
-    }
+
+  var openGuide = document.getElementById("openGuide");
+  if (openGuide) openGuide.addEventListener("click", function () { openDialog(guideDialog); });
+
+  var historyBtn = document.getElementById("historyBtn");
+  if (historyBtn) historyBtn.addEventListener("click", function () {
+    renderHistory();
+    openDialog(historyDialog);
   });
+
+  function bindClose(id, d) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("click", function () { closeDialog(d); });
+  }
+  bindClose("closeTeacher", teacherDialog);
+  bindClose("closeTeacherX", teacherDialog);
+  bindClose("closeGuide", guideDialog);
+  bindClose("closeGuideX", guideDialog);
+  bindClose("closeHistory", historyDialog);
+  bindClose("closeHistoryX", historyDialog);
+
   function checkHashGrade() {
     try {
       var h = (location.hash || "").replace("#", "");
@@ -215,19 +303,27 @@
       }
     } catch (e) {}
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", checkHashGrade);
-  else checkHashGrade();
+
+  var footer = document.querySelector(".site-foot");
+  if (footer && "IntersectionObserver" in window) {
+    var footerObserver = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        document.body.classList.toggle("footer-in-view", entries[i].isIntersecting);
+      }
+    }, { threshold: 0.12 });
+    footerObserver.observe(footer);
+  }
+
+  function init() {
+    setDate();
+    applyState();
+    checkHashGrade();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
   window.addEventListener("hashchange", checkHashGrade);
-  try {
-    var blocks = document.querySelectorAll(".rise");    if (!("IntersectionObserver" in window)) {
-      for (var i = 0; i < blocks.length; i++) blocks[i].classList.add("in");
-    } else {
-      var io = new IntersectionObserver(function (entries) {
-        for (var k = 0; k < entries.length; k++) {
-          if (entries[k].isIntersecting) { entries[k].target.classList.add("in"); io.unobserve(entries[k].target); }
-        }
-      }, { threshold: 0.15 });
-      for (var j = 0; j < blocks.length; j++) io.observe(blocks[j]);
-    }
-  } catch (e) {}
 })();

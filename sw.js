@@ -1,11 +1,23 @@
 /* 별숲 수학마을 서비스워커 (오프라인 학습 지원) */
-var CACHE = "starforest-v3";
+var CACHE = "starforest-v4";
 var CORE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./assets/css/styles.css",
   "./assets/css/g3.css",
+  "./assets/css/landing.css?v=2",
+  "./assets/js/grades.js?v=20",
+  "./assets/js/history.js?v=20",
+  "./assets/js/app.js?v=22",
+  "./assets/js/pwa.js?v=2",
+  "./assets/img/landing/town-g3-564.webp",
+  "./assets/img/landing/town-g4-640.webp",
+  "./assets/img/landing/town-g5-640.webp",
+  "./assets/img/landing/town-g6-640.webp",
+  "./assets/img/landing/map-g2-640.webp",
+  "./assets/img/landing/lesson-quiz-640.webp",
+  "./assets/img/landing/hero-640.webp",
   "./lower/index.html",
   "./grade3/index.html",
   "./grade4/index.html",

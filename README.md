@@ -4,7 +4,7 @@
 
 ## 마을 소개
 
-- 마을 입구 안내(`index.html`): 학년 입구 6종, 학습 도구, 새싹숲(1·2학년), 별숲(3~6학년), 성장 순환, 마을 놀이, 교실 도구함
+- 마을 입구 안내(`index.html`): 칠판 수업 보드에서 학년·학기 선택, 단원 장소, 마을 열기·학급 주소 복사, 실제 마을 그림과 교구, 성장 순환, 교실 도구함
 - 1학년 새싹숲(`lower/?grade=1`): 숫자 화단·더하기 작업실·모양 시계·열매 모으기·규칙 산책로·모둠 천막 6곳
 - 2학년 새싹숲(`lower/?grade=2`): 자리수 텃밭·곱셈 노래방·길이 재기소·시계 전망대·관찰 데크·무늬 산책로 6곳
 - 3학년 별숲 마을(`grade3/`): 곱셈 방앗간 마을, 단원 장소 6곳
@@ -19,14 +19,14 @@
 
 ## 구성
 
-- `index.html`, `assets/css/styles.css`, `assets/js/grades.js`, `assets/js/history.js`, `assets/js/app.js`
+- `index.html`, `assets/css/landing.css`(랜딩 전용), `assets/css/styles.css`(마을 화면 공용), `assets/js/grades.js`, `assets/js/history.js`, `assets/js/app.js`, `assets/img/landing/`(WebP 파생본)
 - 학년 마을: `lower/index.html`, `grade3/index.html`, `grade4/index.html`, `grade5/index.html`, `grade6/index.html`, `assets/js/g3-*.js`, `assets/js/g4-data.js`, `assets/js/g5-data.js`, `assets/js/g6-data.js`, `assets/js/low-data.js`, `assets/js/g-visuals-extra.js`, `assets/css/g3.css`
 
 ## 공개 주소 (배포)
 
 https://wbmaker2.github.io/starforest-math-village/
 
-위 주소로 바로 열 수 있습니다. 학년별 주소 뒤에 `#grade-1`부터 `#grade-6`을 붙이면 해당 학년 체험이 바로 실행됩니다.
+위 주소로 바로 열 수 있습니다. 학년별 주소 뒤에 `#grade-1`부터 `#grade-6`을 붙이면 해당 학년 마을로 바로 들어갑니다.
 
 ## 로컬 확인
 
@@ -34,6 +34,7 @@ python3 -m http.server 8000 --directory . 실행 후 http://localhost:8000 열�
 
 ## 내역
 
+- 2026-10-25: 랜딩페이지를 칠판 수업 보드로 새 단장(학년·학기 선택, 단원 장소 계획, 마을 열기·학급 주소 복사, 모바일 하단 독, 실제 마을 그림·교구·두 입구·성장 순환, 업데이트 내역).
 - 2026-10-19: 개념 이해도 추적(태그별 성공률), 취약 개념 집중 연습, 지도 이해도 현황판, 학습 리포트 인쇄 추가.
 - 2026-10-17: 교실 테스트 반영(모의 3페르소나 실측, 실버그 3건 수정, 상자 무지개율 상향·패배 위로별, 새 그림 26종 Flow 생성·장착).
 - 2026-10-17: 3차 개선 7종(읽어주기·PWA 설치·오르골·주간 미션과 별빛 축제·단원 별점 도전왕·쌍둥이 오답·별숲 신문 인쇄).
