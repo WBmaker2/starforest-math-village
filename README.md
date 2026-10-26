@@ -11,7 +11,7 @@
 - 4학년 별숲 마을(`grade4/`): 그래프 전망대 마을, 분수·삼각형·소수·사각형·꺾은선·다각형 6곳
 - 5학년 별숲 마을(`grade5/`): 농장 마을, 어림·분수곱·대칭·소수곱·직육면체·평균 6곳
 - 6학년 별숲 마을(`grade6/`): 배합소 마을, 분수나눗·소수나눗·쌓기·비례·원넓이·입체 6곳
-- 전 학년 공통: 주민 만들기, 마을 산책, 텃밭과 꾸미기, 일지와 기록 (아바타·별·씨앗 공유, 진도는 학년별 분리)
+- 전 학년 공통: 지도 중심 마을 광장, 오늘의 길, 마을 살림 허브, 첫 실행 3단계, 주민 만들기, 마을 산책, 텃밭과 꾸미기, 일지와 기록 (아바타·별·씨앗 공유, 진도는 학년별 분리)
 
 ## 새로 만든 것
 
@@ -19,7 +19,7 @@
 
 ## 구성
 
-- `index.html`, `assets/css/landing.css`(랜딩 전용), `assets/css/styles.css`(마을 화면 공용), `assets/js/grades.js`, `assets/js/history.js`, `assets/js/app.js`, `assets/img/landing/`(WebP 파생본)
+- `index.html`, `assets/css/landing.css`(랜딩 전용), `assets/css/styles.css`(마을 화면 공용), `assets/css/village.css`(마을 셸), `assets/js/village-shell.js`(마을 셸), `assets/js/grades.js`, `assets/js/history.js`, `assets/js/app.js`, `assets/img/landing/`(WebP 파생본)
 - 학년 마을: `lower/index.html`, `grade3/index.html`, `grade4/index.html`, `grade5/index.html`, `grade6/index.html`, `assets/js/g3-*.js`, `assets/js/g4-data.js`, `assets/js/g5-data.js`, `assets/js/g6-data.js`, `assets/js/low-data.js`, `assets/js/g-visuals-extra.js`, `assets/css/g3.css`
 
 ## 공개 주소 (배포)
@@ -34,6 +34,7 @@ python3 -m http.server 8000 --directory . 실행 후 http://localhost:8000 열�
 
 ## 내역
 
+- 2026-10-26: 마을 화면을 지도 중심 마을 광장으로 개편(학년 선택·학기 단추·마을 메뉴, 오늘의 길, 핀 상태와 장소 시트, 마을 살림 허브, 첫 실행 3단계, 학년별 구역 키트).
 - 2026-10-25: 랜딩페이지를 칠판 수업 보드로 새 단장(학년·학기 선택, 단원 장소 계획, 마을 열기·학급 주소 복사, 모바일 하단 독, 실제 마을 그림·교구·두 입구·성장 순환, 업데이트 내역).
 - 2026-10-19: 개념 이해도 추적(태그별 성공률), 취약 개념 집중 연습, 지도 이해도 현황판, 학습 리포트 인쇄 추가.
 - 2026-10-17: 교실 테스트 반영(모의 3페르소나 실측, 실버그 3건 수정, 상자 무지개율 상향·패배 위로별, 새 그림 26종 Flow 생성·장착).

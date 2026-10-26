@@ -41,7 +41,7 @@
   swapLow();
   function label() {
     try {
-      var h1 = document.querySelector(".g3head h1");      var eye = document.querySelector(".g3head .eyebrow");
+      var h1 = document.querySelector(".g3head h1");
       var lead = document.querySelector(".g3head .lead");
       if (!h1) return;
       var path = location.pathname || "";
@@ -52,24 +52,20 @@
       else if (path.indexOf("lower") >= 0) {
         var q = (location.search || "").match(/[?&]grade=([12])/);
         grade = ((q && q[1] === "2") ? "2학년" : "1학년");
-        if (h1) h1.textContent = grade + " " + (S === "1" ? "1학기" : "2학기") + " 새싹숲 마을";
-        if (eye) eye.textContent = grade + " · " + (S === "1" ? "1학기" : "2학기") + " 저학년 산책";
+        h1.textContent = grade + " " + (S === "1" ? "1학기" : "2학기") + " 새싹숲 마을";
         document.title = grade + " " + (S === "1" ? "1학기" : "2학기") + " 새싹숲 마을 · 별숲 수학마을";
       } else {
         var names = { "3학년": "덧셈과 나눗셈이 열리는 마을", "4학년": "큰 수와 각도를 재는 마을", "5학년": "약수와 분수를 나누는 마을", "6학년": "비율과 부피를 재는 마을" };
         if (S === "1") {
-          if (eye) eye.textContent = grade + " 1학기 별숲 마을";
-          if (h1) h1.textContent = (names[grade] || "1학기 마을이 열리는 마을");
+          h1.textContent = (names[grade] || "1학기 마을이 열리는 마을");
           if (lead) lead.textContent = "주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 1학기 여섯 단원 장소입니다.";
           document.title = grade + " 1학기 별숲 마을 · 별숲 수학마을";
         } else {
-          if (eye) eye.textContent = grade + " 2학기 별숲 마을";
           document.title = grade + " 2학기 별숲 마을 · 별숲 수학마을";
         }
       }
     } catch (e) {}
     try {
-      // 마을 상단 내비의 학기 유지 + 학기 전환 버튼 + 1학기 지도 교체
       var path0 = location.pathname || "";
       if (S === "1") {
         var gm = path0.indexOf("grade4") >= 0 ? "g4" : (path0.indexOf("grade5") >= 0 ? "g5" : (path0.indexOf("grade6") >= 0 ? "g6" : (path0.indexOf("grade3") >= 0 ? "g3" : null)));
@@ -78,55 +74,56 @@
           if (mi) { mi.src = "../assets/img/flow/town-" + gm + "s1.jpg"; mi.alt = gm.replace("g", "") + "학년 1학기 마을 지도"; }
         }
       }
-      // 마을 상단 내비의 학기 유지 + 학기 전환 버튼 추가
-      var nav = document.querySelector("header.bar nav");
-      if (nav) {
-        var links = nav.querySelectorAll("a");
-        var curGrade = null, curIsLower = false;
-        try {
-          var gq = (location.search || "").match(/[?&]grade=([12])/);
-          if (path0.indexOf("lower") >= 0) { curIsLower = true; curGrade = gq ? gq[1] : "1"; }
-          else if (path0.indexOf("grade3") >= 0) curGrade = "3";
-          else if (path0.indexOf("grade4") >= 0) curGrade = "4";
-          else if (path0.indexOf("grade5") >= 0) curGrade = "5";
-          else if (path0.indexOf("grade6") >= 0) curGrade = "6";
-        } catch (e3) {}
-        for (var i = 0; i < links.length; i++) {
-          var href = links[i].getAttribute("href") || "";
-          if (href.indexOf("grade") >= 0 || href.indexOf("lower") >= 0) {
-            var sep = (href.indexOf("?") >= 0) ? "&" : "?";
-            if (href.indexOf("sem=") < 0) links[i].setAttribute("href", href + sep + "sem=" + S);
-            if (curGrade) {
-              var isCur;
-              if (curIsLower) {
-                isCur = href.indexOf("grade=" + curGrade) >= 0
-                  && href.indexOf("grade3") < 0 && href.indexOf("grade4") < 0
-                  && href.indexOf("grade5") < 0 && href.indexOf("grade6") < 0;
-              } else {
-                isCur = href.indexOf("grade" + curGrade + "/") >= 0;
-              }
-              if (isCur) links[i].setAttribute("aria-current", "page");
-            }
+      var links = document.querySelectorAll("#villageGradeLinks a[data-grade-link]");
+      var curGrade = null, curIsLower = false;
+      try {
+        var gq = (location.search || "").match(/[?&]grade=([12])/);
+        if (path0.indexOf("lower") >= 0) { curIsLower = true; curGrade = gq ? gq[1] : "1"; }
+        else if (path0.indexOf("grade3") >= 0) curGrade = "3";
+        else if (path0.indexOf("grade4") >= 0) curGrade = "4";
+        else if (path0.indexOf("grade5") >= 0) curGrade = "5";
+        else if (path0.indexOf("grade6") >= 0) curGrade = "6";
+      } catch (e3) {}
+      for (var i = 0; i < links.length; i++) {
+        var href = links[i].getAttribute("href") || "";
+        var sep = (href.indexOf("?") >= 0) ? "&" : "?";
+        if (href.indexOf("sem=") < 0) links[i].setAttribute("href", href + sep + "sem=" + S);
+        if (curGrade) {
+          var isCur;
+          if (curIsLower) {
+            isCur = href.indexOf("grade=" + curGrade) >= 0
+              && href.indexOf("grade3") < 0 && href.indexOf("grade4") < 0
+              && href.indexOf("grade5") < 0 && href.indexOf("grade6") < 0;
+          } else {
+            isCur = href.indexOf("grade" + curGrade + "/") >= 0;
           }
+          if (isCur) links[i].setAttribute("aria-current", "page");
+          else links[i].removeAttribute("aria-current");
         }
-        if (!document.getElementById("semSwitchBtn")) {
-          var b = document.createElement("a");
-          b.id = "semSwitchBtn";
-          b.className = "mini-act btn-pulse";
-          b.style.marginLeft = "8px";
-          var ns = (S === "1") ? "2" : "1";
-          var path = location.pathname || "";
-          var q = location.search || "";
-          var nq = q.replace(/([?&])sem=[12]/, "$1sem=" + ns);
-          if (nq.indexOf("sem=") < 0) nq += (nq.indexOf("?") >= 0 ? "&" : "?") + "sem=" + ns;
-          b.href = path + nq;
-          b.textContent = (S === "1") ? "📚 2학기 마을로 가기" : "📚 1학기 마을로 가기";
-          var g6 = null;
-          for (var gi = 0; gi < links.length; gi++) {
-            if ((links[gi].textContent || "").trim() === "6학년") { g6 = links[gi]; break; }
+      }
+      var slot = document.getElementById("semSwitchSlot");
+      if (slot && !document.getElementById("semSwitchBtn")) {
+        var path = location.pathname || "";
+        var q = location.search || "";
+        for (var ss = 1; ss <= 2; ss++) {
+          var ssv = String(ss);
+          if (ssv === S) {
+            var current = document.createElement("span");
+            current.className = "village-sem-choice is-current";
+            current.setAttribute("aria-current", "page");
+            current.textContent = ssv + "학기";
+            slot.appendChild(current);
+          } else {
+            var nq = q.replace(/([?&])sem=[12]/, "$1sem=" + ssv);
+            if (nq.indexOf("sem=") < 0) nq += (nq.indexOf("?") >= 0 ? "&" : "?") + "sem=" + ssv;
+            var next = document.createElement("a");
+            next.id = "semSwitchBtn";
+            next.className = "village-sem-choice";
+            next.href = path + nq;
+            next.textContent = ssv + "학기";
+            next.setAttribute("aria-label", ssv + "학기 마을로 가기");
+            slot.appendChild(next);
           }
-          if (g6 && g6.nextSibling) nav.insertBefore(b, g6.nextSibling);
-          else nav.appendChild(b);
         }
       }
     } catch (e2) {}

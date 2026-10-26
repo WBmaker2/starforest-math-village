@@ -17,8 +17,7 @@
     if (window.G3Relay) window.G3Relay.render();
     if (window.G3Sheet) window.G3Sheet.render();
     if (window.G3Slots) window.G3Slots.render();
-    var d = window.G3Store.load();
-    if (!d.avatar) document.getElementById("avatar").scrollIntoView();
+    // 첫 실행 안내는 village-shell.js가 지도 위에서 보여 줍니다.
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();

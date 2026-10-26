@@ -96,7 +96,7 @@
     btn.type = "button";
     btn.className = "sfx-btn";
     function syncText() {
-      btn.textContent = muted ? "🔇 소리 끔" : "🔊 소리 켬";
+      btn.textContent = muted ? "소리 끔" : "소리 켬";
       btn.setAttribute("aria-pressed", muted ? "false" : "true");
     }
     syncText();
@@ -119,7 +119,7 @@
     btn.className = "sfx-btn";
     function syncText() {
       var on = document.body.classList.contains("board-mode");
-      btn.textContent = on ? "📺 칠판 끄기" : "📺 칠판 모드";
+      btn.textContent = on ? "칠판 끄기" : "칠판 모드";
       btn.setAttribute("aria-pressed", on ? "true" : "false");
     }
     syncText();
@@ -140,7 +140,7 @@
     try {
       var synth = window.speechSynthesis;
       if (!synth) { toast("이 기기는 읽어주기를 지원하지 않아요."); return; }
-      if (muted) { toast("소리가 꺼져 있어요. 🔊 소리 켬을 눌러 주세요."); return; }
+      if (muted) { toast("소리가 꺼져 있어요. 소리 켬을 눌러 주세요."); return; }
       synth.cancel();
       var u = new SpeechSynthesisUtterance(msg);
       u.lang = "ko-KR";

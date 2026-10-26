@@ -12,42 +12,124 @@
 <link rel="apple-touch-icon" href="../assets/img/icon-192.png">
 <link rel="stylesheet" href="../assets/css/styles.css?v=37">
 <link rel="stylesheet" href="../assets/css/g3.css?v=34">
+<link rel="stylesheet" href="../assets/css/village.css?v=1">
 <meta name="starforest-grade" content="g3">
-<meta name="g3" content="2d"> 
+<meta name="g3" content="2d">
 </head>
-<body>
+<body data-village data-grade="g3">
 <a class="skip" href="#village">마을로 바로가기</a>
-<header class="bar"><div class="wrap bar-in">
-<a class="logo" href="../index.html">별숲 수학마을</a>
-<nav aria-label="3학년"><a href="../index.html">마을 입구로</a><a href="../lower/index.html?grade=1">1학년</a><a href="../lower/index.html?grade=2">2학년</a><a href="../grade4/index.html">4학년</a><a href="../grade5/index.html">5학년</a><a href="../grade6/index.html">6학년</a></nav>
-<span class="purse"><span id="starCount">별 0</span><span id="seedTop">씨앗 0</span></span>
-</div></header>
+<header class="bar village-bar">
+  <div class="wrap village-bar-in">
+    <a class="logo" href="../index.html">별숲 수학마을</a>
+    <div class="village-bar-tools">
+      <details class="village-grade-menu">
+        <summary class="village-grade-summary"><span class="village-grade-label" id="villageGradeLabel">3학년 별숲</span><span class="village-chev" aria-hidden="true"></span></summary>
+        <div class="village-grade-panel">
+          <p class="village-panel-title">학년 마을</p>
+          <div class="village-grade-links" id="villageGradeLinks">
+<a data-grade-link href="../lower/index.html?grade=1">1학년 새싹숲</a>
+<a data-grade-link href="../lower/index.html?grade=2">2학년 새싹숲</a>
+<a data-grade-link href="../grade3/index.html">3학년 별숲</a>
+<a data-grade-link href="../grade4/index.html">4학년 별숲</a>
+<a data-grade-link href="../grade5/index.html">5학년 별숲</a>
+<a data-grade-link href="../grade6/index.html">6학년 별숲</a>
+          </div>
+          <p class="village-panel-note">학기는 오른쪽 단추에서 바꿀 수 있어요.</p>
+        </div>
+      </details>
+      <div class="village-sem" id="semSwitchSlot" role="group" aria-label="학기 선택"></div>
+    </div>
+    <span class="purse"><span id="starCount">별 0</span><span id="seedTop">씨앗 0</span></span>
+    <details class="village-menu">
+      <summary aria-label="마을 메뉴"><span class="village-menu-icon" aria-hidden="true"></span>메뉴</summary>
+      <div class="village-menu-panel">
+        <p class="village-panel-title">마을 메뉴</p>
+        <a class="village-menu-item" href="../index.html">마을 입구로</a>
+        <a class="village-menu-item" href="../index.html#teacher">선생님 안내</a>
+        <button class="village-menu-item" id="villageInstallBtn" type="button">앱으로 설치</button>
+        <div class="village-menu-settings" id="villageSettingsSlot"></div>
+      </div>
+    </details>
+  </div>
+</header>
 <main class="wrap">
-<section class="g3head">
-<p class="eyebrow">3학년 별숲 마을</p>
-<h1>곱셈 방앗간이 열리는 마을</h1>
-<p class="lead">주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 텃밭, 꾸미기, 일지, 지도는 별숲의 마을 생활 요소입니다.</p>
+<section class="g3head village-sign" aria-labelledby="villageTitle">
+  <span class="village-seal" aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="13"/><circle cx="24" cy="24" r="4"/><path d="M24 11v26M11 24h26M15 15l18 18M33 15L15 33"/></svg></span>
+  <div class="village-sign-copy">
+    <h1 id="villageTitle">곱셈 방앗간이 열리는 마을</h1>
+    <p class="lead">주민을 만들고 마을을 걸어 단원 집에 들어가면 대화로 문제를 풉니다. 텃밭, 꾸미기, 일지, 지도는 별숲의 마을 생활 요소입니다.</p>
+    <div class="village-sign-chips" id="villageSignChips"></div>
+  </div>
 </section>
+<section id="village" class="card village-map-card" data-zone="walk" aria-labelledby="villageMapTitle">
+  <div class="village-map-head">
+    <div><h2 id="villageMapTitle">마을 산책</h2><p class="hint">지도를 눌러 걷고, 집 앞에서 들어가요.</p></div>
+    <button class="village-time-chip" id="villageTimeChip" type="button" aria-expanded="false">낮</button>
+  </div>
+  <div class="village-map-stage">
+    <div class="village-map-viewport"><div id="mapwrap"><img id="mapimg" src="../assets/img/flow/map-a.jpg" alt="파스텔 톤의 둥근 마을 지도"></div></div>
+    <div class="pad dpad" aria-label="이동 조이스틱">
+      <button data-move="up" class="d-up" aria-label="위로 이동">▲<small>위</small></button>
+      <button data-move="left" class="d-left" aria-label="왼쪽으로 이동">◀<small>왼쪽</small></button>
+      <button data-move="down" class="d-down" aria-label="아래로 이동">▼<small>아래</small></button>
+      <button data-move="right" class="d-right" aria-label="오른쪽으로 이동">▶<small>오른쪽</small></button>
+    </div>
+    <div class="village-primary-bar">
+      <button class="village-primary btn-pulse" id="villagePrimary" type="button"><span class="village-primary-kicker" id="villagePrimaryKicker">오늘의 길</span><span class="village-primary-text" id="villagePrimaryText">오늘 할 일을 준비하는 중…</span><svg class="village-primary-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <span class="village-near" id="nearLabel">지도를 눌러 산책하세요</span>
+    </div>
+    <div class="hud village-hud">
+      <button id="enterBtn" class="go" type="button" hidden>들어가기</button>
+      <button class="mini-act" type="button" data-open-daily="1">오늘의 도전</button>
+      <button class="mini-act" type="button" data-open-wrong="1">오답 교실</button>
+    </div>
+
+  </div>
+</section>
+<h2 class="village-hub-title" id="villageHubTitle">마을 살림</h2>
+<nav class="village-hub" id="villageHub" aria-labelledby="villageHubTitle">
+<button class="hub-tile" type="button" data-hub="avatar">
+  <span class="hub-art" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></span>
+  <span class="hub-copy"><b>내 주민</b><small id="hubAvatarStatus">이름 짓기</small></span>
+  <svg class="hub-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</button><button class="hub-tile" type="button" data-hub="farm">
+  <span class="hub-art" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 14C6 14 4 9 4 5c6 0 8 5 8 9Z"/><path d="M12 14c6 0 8-5 8-9-6 0-8 5-8 9Z"/></svg></span>
+  <span class="hub-copy"><b>텃밭·부엌</b><small id="hubFarmStatus">씨앗 0</small></span>
+  <svg class="hub-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</button><button class="hub-tile" type="button" data-hub="quest">
+  <span class="hub-art" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/><path d="M9 20v-6h6v6"/></svg></span>
+  <span class="hub-copy"><b>꾸미기·부탁</b><small id="hubQuestStatus">도감 0/10</small></span>
+  <svg class="hub-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</button><button class="hub-tile" type="button" data-hub="note">
+  <span class="hub-art" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7a3 3 0 0 1 3 3v13a3 3 0 0 0-3-3H4Z"/><path d="M20 5h-7a3 3 0 0 0-3 3v13a3 3 0 0 1 3-3h7Z"/></svg></span>
+  <span class="hub-copy"><b>도감·기록</b><small id="hubNoteStatus">일지 · 주민증</small></span>
+  <svg class="hub-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</button>
+</nav>
+<div class="village-group-bar" id="villageGroupBar" hidden>
+  <b id="villageGroupLabel">마을 살림</b>
+  <button class="village-back" id="villageBack" type="button">지도로</button>
+</div>
 <nav id="zoneBar" class="zonebar" aria-label="구역 바로가기">
 <button type="button" data-zone="all" class="sel">전체 보기</button><button type="button" data-zone="avatar">👗 옷장·뽑기</button><button type="button" data-zone="walk">🗺️ 마을 산책</button><button type="button" data-zone="farm">🌱 텃밭·놀이</button><button type="button" data-zone="quest">🏡 꾸미기·부탁</button><button type="button" data-zone="note">🪪 도감·주민증</button>
 </nav>
-<section id="avatar" class="card" data-zone="avatar">
+<section id="avatar" class="card village-deep" data-village-group="avatar" data-zone="avatar">
 <h2>나만의 주민 만들기</h2>
 <div class="avgrid">
 <div class="avstage" aria-label="주민 미리보기">
   <svg id="avatarSvg" viewBox="0 0 200 250" role="img" aria-label="기본 아바타 몸통"></svg>
-  <span id="shoePair"><img id="shoeL" alt="왼쪽 신발"><img id="shoeR" alt="오른쪽 신발"></span>
-  <img id="botImg" alt="선택한 하의">
-  <img id="topImg" alt="선택한 상의">
-  <img id="hairImg" alt="선택한 머리 모양">
+  <span id="shoePair"><img id="shoeL" src="../assets/img/flow/parts/shoe-sneakers.png" alt="왼쪽 신발"><img id="shoeR" src="../assets/img/flow/parts/shoe-sneakers.png" alt="오른쪽 신발"></span>
+  <img id="botImg" src="../assets/img/flow/parts/bot-jeans.png" alt="선택한 하의">
+  <img id="topImg" src="../assets/img/flow/parts/top-stripe.png" alt="선택한 상의">
+  <img id="hairImg" src="../assets/img/flow/parts/hair-long.png" alt="선택한 머리 모양">
   <svg id="faceOverlaySvg" viewBox="0 0 200 250" aria-hidden="true"></svg>
-  <img id="accImg" alt="선택한 장식">
-  <img id="hatImg" alt="선택한 모자">
+  <img id="accImg" src="../assets/img/flow/parts/glass-star.png" alt="선택한 장식">
+  <img id="hatImg" src="../assets/img/flow/parts/hat-cap.png" alt="선택한 모자">
 </div>
 <form id="avatarForm">
 <div class="av-toprow">
   <label class="av-namelabel">이름<input id="avName" maxlength="8" placeholder="예: 별빛이"></label>
-  <button class="play-btn btn-pulse av-submit" type="submit">마을로 나가기</button>
+  <button class="play-btn av-submit" type="submit">마을로 나가기</button>
 </div>
 <div id="pickTabs" role="tablist" aria-label="꾸미기 항목">
 <button type="button" data-ptab="hair" class="sel">머리</button><button type="button" data-ptab="face">표정</button><button type="button" data-ptab="top">상의</button><button type="button" data-ptab="bottom">하의</button><button type="button" data-ptab="shoe">신발</button><button type="button" data-ptab="hat">모자</button><button type="button" data-ptab="acc">장식</button>
@@ -56,30 +138,19 @@
 </form>
 </div>
 </section>
-<section id="gachaSec" class="card" data-zone="avatar">
+<section id="gachaSec" class="card village-deep" data-village-group="avatar" data-zone="avatar">
 <h2>황금 세트 뽑기</h2>
 <p class="hint">별을 모아 한정 세트 조각을 뽑아 보세요. 뽑은 조각은 아바타 옷장에서 입을 수 있습니다.</p>
 <div id="gachaBox"></div>
 </section>
-<section id="village" class="card" data-zone="walk">
-<h2>마을 산책</h2>
-<p class="hint">WASD 키나 방향키, 아래 단추로 걷습니다. 집 앞에 서면 입장 단추가 뜹니다.</p>
-<div id="mapwrap"><img id="mapimg" src="../assets/img/flow/map-a.jpg" alt="파스텔 톤의 둥근 마을 지도"></div>
-<div class="hud"><span id="nearLabel">주민에게 다가가면 말이 뜹니다</span><button id="enterBtn" class="go btn-pulse" type="button" hidden>들어가기</button><button class="mini-act" type="button" data-open-daily="1">오늘의 도전</button><button class="mini-act" type="button" data-open-wrong="1">오답 교실</button></div>
-<div class="pad dpad" aria-label="이동 조이스틱">
-<button data-move="up" class="d-up" aria-label="위로 이동">▲<small>위</small></button>
-<button data-move="left" class="d-left" aria-label="왼쪽으로 이동">◀<small>왼쪽</small></button>
-<button data-move="down" class="d-down" aria-label="아래로 이동">▼<small>아래</small></button>
-<button data-move="right" class="d-right" aria-label="오른쪽으로 이동">▶<small>오른쪽</small></button>
-</div>
-</section>
-<section id="farm" class="card" data-zone="farm">
+
+<section id="farm" class="card village-deep" data-village-group="farm" data-zone="farm">
 <h2>씨앗 텃밭</h2>
 <p class="hint">차시를 끝내면 씨앗을 받습니다. 심고 물을 주면 별로 자랍니다.</p>
 <p id="seedCount"></p>
 <div id="farmPlots" class="plots"></div>
 </section>
-<section id="playSec" class="card" data-zone="farm">
+<section id="playSec" class="card village-deep" data-village-group="farm" data-zone="farm">
 <h2>마을 부엌 · 장터 · 강가 · 화단 · 감별실 놀이</h2>
 <p class="hint">거둔 작물의 무게를 재어 장터에 팔거나 요리해 선물하고, 강가 채집과 꽃 배합·모눈 그림 감별 놀이를 즐겨 보세요.</p>
 <div id="marketBox"></div>
@@ -87,21 +158,21 @@
 <div id="flowerBox"></div>
 <div id="gridBox"></div>
 </section>
-<section id="deco" class="card" data-zone="quest">
+<section id="deco" class="card village-deep" data-village-group="quest" data-zone="quest">
 <h2>우리 집 꾸미기</h2>
 <div id="decoBox"></div>
 </section>
-<section id="quests" class="card" data-zone="quest">
+<section id="quests" class="card village-deep" data-village-group="quest" data-zone="quest">
 <h2>주민 부탁</h2>
 <p class="hint">부탁을 해결하면 카드와 씨앗, 별을 받습니다.</p>
 <div id="questList" class="quests"></div>
 </section>
-<section id="collect" class="card" data-zone="quest">
+<section id="collect" class="card village-deep" data-village-group="quest" data-zone="quest">
 <h2>수집 도감</h2>
 <p class="hint" id="cardCount">모은 카드 0/10</p>
 <div id="cardBox" class="cards2"></div>
 </section>
-<section id="note" class="card" data-zone="note">
+<section id="note" class="card village-deep" data-village-group="note" data-zone="note">
 <h2>일지 · 지도 · 기록 · 주민증</h2>
 <div class="tabs"><button data-tab="journalPane" class="sel">일지</button><button data-tab="mapPane">지도</button><button data-tab="recordPane">기록</button><button data-tab="reportPane">주민증·이어하기</button></div>
 <div id="journalPane" class="panel on"><div id="journalList"></div></div>
@@ -112,7 +183,7 @@
 </main>
 <div id="dlg" aria-label="단원 집 대화"><div class="dlgbox">
 <button id="dlgClose">닫기</button>
-<div class="npcwrap"><img id="npcImg" alt="주민 그림"><p id="npcText" class="npc"></p><div class="dlg-avwrap"><div id="dlgAvatar" role="img" aria-label="내 아바타"></div><small id="dlgAvName"></small></div></div>
+<div class="npcwrap"><img id="npcImg" src="../assets/img/flow/parts/npc-mong.png" alt="주민 그림"><p id="npcText" class="npc"></p><div class="dlg-avwrap"><div id="dlgAvatar" role="img" aria-label="내 아바타"></div><small id="dlgAvName"></small></div></div>
 <div id="dlgBody"></div>
 </div></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -123,29 +194,30 @@
 <script src="../assets/js/g3-friend.js?v=34"></script>
 <script src="../assets/js/g3-questions.js?v=36"></script>
 <script src="../assets/js/g3-s1-data.js?v=37"></script>
-<script src="../assets/js/g3-sem.js?v=41"></script>
+<script src="../assets/js/g3-sem.js?v=42"></script>
 <script src="../assets/js/g3-tags.js?v=34"></script>
 <script src="../assets/js/g3-understand.js?v=34"></script>
 <script src="../assets/js/g-visuals-extra.js?v=34"></script>
 <script src="../assets/js/g3-visuals.js?v=34"></script>
 <script src="../assets/js/g3-pad.js?v=36"></script>
-<script src="../assets/js/g3-ui.js?v=34"></script>
-<script src="../assets/js/g3-history.js?v=34"></script>
-<script src="../assets/js/g3-avatar.js?v=34"></script>
+<script src="../assets/js/g3-ui.js?v=35"></script>
+<script src="../assets/js/g3-history.js?v=35"></script>
+<script src="../assets/js/g3-avatar.js?v=35"></script>
 <script src="../assets/js/g3-farm.js?v=34"></script>
 <script src="../assets/js/g3-play.js?v=34"></script>
 <script src="../assets/js/g3-deco.js?v=34"></script>
 <script src="../assets/js/g3-journal.js?v=34"></script>
 <script src="../assets/js/g3-report.js?v=34"></script>
 <script src="../assets/js/g3-dialog.js?v=34"></script>
-<script src="../assets/js/g3-map.js?v=34"></script>
+<script src="../assets/js/g3-map.js?v=35"></script>
 <script src="../assets/js/g3-quests.js?v=34"></script>
 <script src="../assets/js/g3-collect.js?v=34"></script>
 <script src="../assets/js/g3-gacha.js?v=34"></script>
 <script src="../assets/js/g3-relay.js?v=34"></script>
 <script src="../assets/js/g3-sheet.js?v=34"></script>
 <script src="../assets/js/g3-slots.js?v=34"></script>
-<script src="../assets/js/g3-boot.js?v=34"></script>
-<script src="../assets/js/pwa.js"></script>
+<script src="../assets/js/g3-boot.js?v=35"></script>
+<script src="../assets/js/village-shell.js?v=1"></script>
+<script src="../assets/js/pwa.js?v=3"></script>
 </body>
 </html>

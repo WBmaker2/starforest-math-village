@@ -1,5 +1,5 @@
 /* 별숲 수학마을 서비스워커 (오프라인 학습 지원) */
-var CACHE = "starforest-v4";
+var CACHE = "starforest-v5";
 var CORE = [
   "./",
   "./index.html",
@@ -18,6 +18,8 @@ var CORE = [
   "./assets/img/landing/map-g2-640.webp",
   "./assets/img/landing/lesson-quiz-640.webp",
   "./assets/img/landing/hero-640.webp",
+  "./assets/css/village.css?v=1",
+  "./assets/js/village-shell.js?v=1",
   "./lower/index.html",
   "./grade3/index.html",
   "./grade4/index.html",

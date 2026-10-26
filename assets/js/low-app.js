@@ -81,9 +81,9 @@
     var done = lowDone();
     var c = 0;
     for (var j = 0; j < h.list.length; j++) if (done[h.id + "-" + j]) c++;
-    if (c >= h.list.length) return "👑 꽃핀 집";
-    if (c > 0) return "🌼 자라는 중 " + c + "/" + h.list.length;
-    return "🌱 시작전";
+    if (c >= h.list.length) return "꽃핀 집";
+    if (c > 0) return "자라는 중 " + c + "/" + h.list.length;
+    return "시작전";
   }
   function refreshAvatar() {
     var d = store();
@@ -422,7 +422,7 @@
         bb.id = "lowBigBtn";
         bb.type = "button";
         bb.className = "mini-act";
-        bb.textContent = "🔍 큰 글자";
+        bb.textContent = "큰 글자";
         bb.setAttribute("aria-pressed", document.body.classList.contains("low-big") ? "true" : "false");
         sec.insertBefore(bb, sec.querySelector("#lowProgGrid"));
       }
@@ -442,7 +442,7 @@
       for (var k = 0; k < hs.length; k++) {
         var c = 0;
         for (var m = 0; m < hs[k].list.length; m++) if (done[hs[k].id + "-" + m]) c++;
-        var st = c >= hs[k].list.length ? "👑 꽃핀 집 완료!" : (c > 0 ? "🌼 자라는 중 (" + c + "/3)" : "🌱 시작전");
+        var st = c >= hs[k].list.length ? "꽃핀 집 완료!" : (c > 0 ? "자라는 중 (" + c + "/3)" : "시작 전");
         html += "<button class='mapcell' data-lowenter='" + hs[k].id + "'><b>" + hs[k].name + "</b><span>" + st + "</span></button>";
       }
       var lw = [];
@@ -452,10 +452,10 @@
       if (weak.length) {
         var wn = [];
         for (var wi2 = 0; wi2 < weak.length; wi2++) wn.push(weak[wi2].name + " " + Math.round(weak[wi2].rate * 100) + "%");
-        html += "<button class='mapcell focus-btn btn-pulse' data-lowfocus='1'><b>🧭 약한 개념 다시 놀기</b><span>" + wn.join(", ") + "</span></button>";
+        html += "<button class='mapcell focus-btn btn-pulse' data-lowfocus='1'><b>약한 개념 다시 놀기</b><span>" + wn.join(", ") + "</span></button>";
       }
       if (lw.length) {
-        html += "<button class='mapcell btn-pulse' data-lowwrong='1'><b>👯 틀린 문제 다시 풀기</b><span>쌍둥이 문제 " + lw.length + "개</span></button>";
+        html += "<button class='mapcell btn-pulse' data-lowwrong='1'><b>틀린 문제 다시 풀기</b><span>쌍둥이 문제 " + lw.length + "개</span></button>";
       }
       grid.innerHTML = html;
     }
@@ -552,7 +552,6 @@
       var meta = document.querySelector('meta[name="starforest-grade"]');
       if (meta) meta.setAttribute("content", window.STARFOREST_GRADE);
     } catch (e) {}
-    buildTabs();
     build();
     refreshAvatar();
     if (window.G3UI) { window.G3UI.tabs(); window.G3UI.stars(); }
@@ -644,7 +643,7 @@
       if (e2.target && e2.target.id === "lowBigBtn") {
         var on = document.body.classList.toggle("low-big");
         e2.target.setAttribute("aria-pressed", on ? "true" : "false");
-        e2.target.textContent = on ? "🔍 보통 글자" : "🔍 큰 글자";
+        e2.target.textContent = on ? "보통 글자" : "큰 글자";
       }
     });
     var x = document.getElementById("dlgClose");

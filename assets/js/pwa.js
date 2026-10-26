@@ -10,14 +10,26 @@
     }
   } catch (e) {}
   var deferred = null;
+  window.StarforestPWA = {
+    canInstall: false,
+    install: function () {
+      if (!deferred) return false;
+      try { deferred.prompt(); } catch (e) { return false; }
+      deferred = null;
+      window.StarforestPWA.canInstall = false;
+      return true;
+    }
+  };
   window.addEventListener("beforeinstallprompt", function (e) {
     try { e.preventDefault(); } catch (err) {}
     deferred = e;
-    showBanner();
+    window.StarforestPWA.canInstall = true;
+    if (!document.body.hasAttribute("data-village")) showBanner();
   });
   function showBanner() {
     try {
       if (document.body.classList.contains("landing")) return;
+      if (document.body.hasAttribute("data-village")) return;
       if (document.getElementById("pwaBanner") || localStorage.getItem("starforest-pwa-hide") === "1") return;
       var bar = document.createElement("div");
       bar.id = "pwaBanner";

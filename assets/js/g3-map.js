@@ -74,16 +74,16 @@
     var compass = document.createElement("button");
     compass.id = "todoCompass";
     compass.type = "button";
-    compass.className = "todo-compass btn-pulse";
+    compass.className = "todo-compass";
     wrap.appendChild(compass);
     var tbar = document.createElement("div");
     tbar.id = "mapTimeBar";
     tbar.className = "maptime-bar";
     tbar.setAttribute("role", "group");
     tbar.setAttribute("aria-label", "마을 시간대 바꾸기");
-    tbar.innerHTML = "<button type='button' data-maptime='day'>☀️ 낮</button>"
-      + "<button type='button' data-maptime='sunset'>🌇 노을</button>"
-      + "<button type='button' data-maptime='night'>🌙 밤</button>";
+    tbar.innerHTML = "<button type='button' data-maptime='day'>낮</button>"
+      + "<button type='button' data-maptime='sunset'>노을</button>"
+      + "<button type='button' data-maptime='night'>밤</button>";
     wrap.appendChild(tbar);
     syncDeco();
     syncTodo();
@@ -184,7 +184,7 @@
     if (btn) {
       var t = nextTodoTask();
       btn.setAttribute("data-todo-act", t.act);
-      btn.innerHTML = "<i>🧭 오늘 할 일</i><b>" + t.text + " →</b>";
+      btn.innerHTML = "<i>오늘 할 일</i><b>" + t.text + " →</b>";
     }
     syncBuildingGrowth();
   }

@@ -1,0 +1,968 @@
+/* 마을 광장 셸 — 2026-10-26
+   기존 학습 엔진 위에 표지판·지도 무대·오늘의 길·마을 살림 허브만 얹습니다. */
+
+body[data-village] {
+  --village-ink: var(--ink);
+  --village-paper: #FFFDF6;
+  --village-warm: #F6EFDF;
+  --village-line: var(--line);
+  --village-radius: 22px;
+  --village-bar-h: 64px;
+  --district: #C08A3E;
+  --district-deep: #7A5423;
+}
+body[data-grade="g1"] { --district: #7FA36B; --district-deep: #3F6B45; }
+body[data-grade="g2"] { --district: #6FA3C2; --district-deep: #35617A; }
+body[data-grade="g3"] { --district: #C08A3E; --district-deep: #7A5423; }
+body[data-grade="g4"] { --district: #7A78B8; --district-deep: #434273; }
+body[data-grade="g5"] { --district: #C06A54; --district-deep: #7C382C; }
+body[data-grade="g6"] { --district: #4A8C86; --district-deep: #235450; }
+
+/* ── 표지판 바 ───────────────────────────────────────────── */
+body[data-village] .bar.village-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 0;
+  background: rgba(247, 245, 238, .96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+.village-bar-in {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--village-bar-h);
+  padding-block: 8px;
+}
+.village-bar .logo { font-size: 19px; }
+.village-bar .logo svg { width: 24px; height: 24px; }
+.village-bar-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  min-width: 0;
+}
+.village-grade-menu,
+.village-menu { position: relative; }
+.village-grade-menu summary,
+.village-menu summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--village-paper);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.village-grade-menu summary::-webkit-details-marker,
+.village-menu summary::-webkit-details-marker { display: none; }
+.village-grade-menu summary:hover,
+.village-menu summary:hover { border-color: var(--district); }
+.village-grade-menu[open] summary,
+.village-menu[open] summary { border-color: var(--district); background: var(--village-warm); }
+.village-grade-label { max-width: 11em; overflow: hidden; text-overflow: ellipsis; }
+.village-chev {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--ink-soft);
+}
+.village-grade-panel,
+.village-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 60;
+  width: min(340px, calc(100vw - 40px));
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--village-paper);
+  box-shadow: 0 18px 40px -18px rgba(46, 64, 87, .4);
+}
+.village-grade-panel { left: 0; right: auto; }
+.village-panel-title {
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: .03em;
+}
+.village-grade-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.village-grade-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 14px;
+  text-decoration: none;
+}
+.village-grade-links a:hover { background: var(--village-warm); }
+.village-grade-links a[aria-current="page"] {
+  border-color: var(--district);
+  background: color-mix(in srgb, var(--district) 12%, white);
+  color: var(--district-deep);
+}
+.village-panel-note {
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.village-sem {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+}
+.village-sem-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 5px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.village-sem-choice:hover { color: var(--ink); }
+.village-sem #semSwitchBtn { background: transparent; color: var(--ink-soft); box-shadow: none; border: 0; font-size: 14px; padding: 5px 11px; }
+.village-sem #semSwitchBtn:hover { background: var(--village-warm); color: var(--ink); }
+.village-sem-choice.is-current {
+  background: var(--district-deep);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(46, 64, 87, .16);
+}
+.village-bar .purse {
+  margin-left: 2px;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.village-bar .purse span {
+  padding: 5px 10px;
+  font-size: 14px;
+}
+.village-bar .sfx-btn { display: none; }
+.village-menu summary { padding-inline: 10px; }
+.village-menu-icon {
+  display: block;
+  width: 17px;
+  height: 12px;
+  background:
+    linear-gradient(currentColor, currentColor) 0 0 / 17px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 5px / 17px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 10px / 17px 2px no-repeat;
+  color: var(--ink-soft);
+}
+.village-menu-panel { width: min(300px, calc(100vw - 24px)); }
+.village-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.village-menu-item:hover { background: var(--village-warm); }
+.village-menu-settings {
+  display: grid;
+  gap: 2px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+.village-menu-settings .sfx-btn,
+.village-menu-settings #historyBtn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 38px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 14px;
+  text-align: left;
+  box-shadow: none;
+}
+.village-menu-settings .sfx-btn:hover,
+.village-menu-settings #historyBtn:hover { background: var(--village-warm); }
+
+/* ── 마을 표지판 ─────────────────────────────────────────── */
+body[data-village] .g3head.village-sign {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 14px 0 10px;
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--village-radius);
+  background:
+    radial-gradient(ellipse at 12% 20%, rgba(255, 255, 255, .7), transparent 42%),
+    var(--village-warm);
+  box-shadow: var(--shadow);
+}
+.village-seal {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 76px;
+  height: 76px;
+  border: 2px solid var(--district);
+  border-radius: 50%;
+  background: var(--village-paper);
+  color: var(--district-deep);
+  transform: rotate(-3deg);
+  box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--district) 13%, white);
+}
+.village-seal svg { width: 46px; height: 46px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.village-sign-copy { min-width: 0; }
+.village-sign .eyebrow { display: none; }
+.village-sign h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(28px, 4.2vw, 42px);
+  line-height: 1.12;
+}
+.village-sign .lead {
+  max-width: 58em;
+  margin-top: 5px;
+  color: #6B6254;
+  font-size: 15px;
+}
+.village-sign-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.village-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 253, 246, .8);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-size: 12px;
+}
+.village-chip:first-child {
+  border-color: var(--district);
+  color: var(--district-deep);
+  background: color-mix(in srgb, var(--district) 10%, white);
+}
+
+/* ── 지도 무대 ───────────────────────────────────────────── */
+body[data-village] .village-zonebar,
+body[data-village] #zoneBar { display: none !important; }
+body[data-village] .village-deep { display: none; }
+body[data-village] .village-deep.is-open { display: block; }
+body[data-village] #village,
+body[data-village] #lowVillage {
+  position: relative;
+  margin-block: 10px 14px;
+  padding: 14px;
+  border-radius: 24px;
+  background: var(--village-paper);
+}
+.village-map-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.village-map-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.village-map-head .hint { margin-top: 2px; font-size: 13px; }
+.village-time-chip {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 13px;
+  cursor: pointer;
+}
+.village-time-chip:hover { border-color: var(--district); }
+.village-speak-btn {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--district-deep);
+  cursor: pointer;
+}
+.village-speak-btn:hover { border-color: var(--district); }
+.village-speak-btn svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.village-map-stage { position: relative; }
+.village-map-viewport { position: relative; }
+body[data-village] #mapwrap,
+body[data-village] #lowMapwrap {
+  position: relative;
+  width: min(100%, calc(45vh * 1.339));
+  aspect-ratio: 1200 / 896;
+  margin-inline: auto;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 3px solid var(--village-warm);
+  box-shadow: 0 10px 26px -14px rgba(46, 64, 87, .4), inset 0 0 0 1px rgba(62, 52, 40, .08);
+  background: #F8F2E4;
+}
+body[data-village] #mapimg,
+body[data-village] #lowMapimg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+body[data-village] #mapwrap.map-loading::after,
+body[data-village] #lowMapwrap.map-loading::after {
+  content: "마을을 펼치는 중";
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  background: #F8F2E4;
+  color: #6B6254;
+  font-family: var(--display);
+  font-size: 15px;
+}
+body[data-village] #mapwrap [data-pin],
+body[data-village] #lowMapwrap [data-lowpin] { z-index: 3; }
+body[data-village] #mapwrap .friend,
+body[data-village] #lowMapwrap .friend { z-index: 4; }
+body[data-village] #village #enterBtn,
+body[data-village] #lowVillage #lowEnter { display: none !important; }
+.village-primary-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.village-primary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-height: 56px;
+  padding: 9px 15px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--sun);
+  color: #3A2A12;
+  font-family: var(--display);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #B86A14, 0 8px 18px -8px rgba(62, 52, 40, .45);
+}
+.village-primary:hover { background: #F6A945; }
+.village-primary:active { transform: translateY(2px); box-shadow: 0 4px 0 #B86A14; }
+.village-primary-kicker {
+  flex: 0 0 auto;
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: #2D1F0A;
+  opacity: 1;
+}
+.village-primary-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.3;
+}
+.village-primary-arrow {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.village-near {
+  flex: 0 1 200px;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.village-hud {
+  margin-top: 7px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.village-hud .mini-act { font-size: 12px; padding: 5px 10px; }
+.village-map-card .dpad { display: none; }
+.village-map-card .friend-bar { margin-top: 8px; }
+.village-map-card .friend-bar-title { font-size: 12px; }
+.village-map-card .friend-heart { font-size: 12px; padding: 2px 9px; }
+.village-map-card .maptime-bar {
+  display: none;
+  top: 8px;
+  right: 8px;
+  z-index: 8;
+}
+.village-map-card.time-open .maptime-bar { display: flex; }
+.village-map-card .todo-compass {
+  left: 10px;
+  bottom: 10px;
+  top: auto;
+  max-width: min(76%, 420px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 253, 246, .97);
+  color: var(--ink);
+  text-align: left;
+  box-shadow: 0 8px 20px -10px rgba(62, 52, 40, .45);
+}
+.village-map-card .todo-compass i {
+  font-family: var(--display);
+  font-size: 11px;
+  font-style: normal;
+  color: var(--district-deep);
+  letter-spacing: .03em;
+}
+.village-map-card .todo-compass b {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* 핀 상태 */
+body[data-village] .pin .lv-badge,
+body[data-village] .low-pin .lv-badge {
+  margin-left: 5px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-family: var(--body);
+  font-size: 11px;
+  font-weight: 400;
+}
+body[data-village] .pin.lv-0 .lv-badge,
+body[data-village] .low-pin.lv-0 .lv-badge {
+  display: none;
+}
+body[data-village] .pin.lv-0,
+body[data-village] .low-pin.lv-0 {
+  border-color: color-mix(in srgb, var(--district) 42%, var(--line));
+  background: rgba(255, 253, 246, .94);
+}
+body[data-village] .pin.lv-1,
+body[data-village] .low-pin.lv-1 {
+  border-color: var(--sun);
+}
+body[data-village] .pin.lv-1 .lv-badge,
+body[data-village] .low-pin.lv-1 .lv-badge {
+  background: var(--sun-pale);
+  border-color: var(--sun);
+  color: var(--ink);
+}
+body[data-village] .pin.lv-max,
+body[data-village] .low-pin.lv-max {
+  border-color: #C98A2B;
+  background: linear-gradient(180deg, #FFF8E6, #FFFDF6);
+  box-shadow: 0 0 0 3px rgba(245, 178, 58, .35), var(--shadow);
+}
+body[data-village] .pin.lv-max .lv-badge,
+body[data-village] .low-pin.lv-max .lv-badge {
+  background: #C98A2B;
+  border-color: #C98A2B;
+  color: #fff;
+}
+body[data-village] .pin.is-next,
+body[data-village] .low-pin.is-next { box-shadow: 0 0 0 4px rgba(242, 153, 46, .28), var(--shadow); }
+body[data-village] .pin.is-next::before,
+body[data-village] .low-pin.is-next::before {
+  content: "";
+  position: absolute;
+  right: -7px;
+  top: -15px;
+  width: 12px;
+  height: 10px;
+  background: var(--coral);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+body[data-village] .pin .pin-flag,
+body[data-village] .low-pin .pin-flag { display: none; }
+
+/* ── 마을 살림 허브 ──────────────────────────────────────── */
+.village-hub-title {
+  margin: 14px 0 6px;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 400;
+}
+.village-hub {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 6px;
+}
+.hub-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--village-paper);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -18px rgba(46, 64, 87, .4);
+  transition: transform .16s ease, border-color .16s ease, background .16s ease;
+}
+.hub-tile:hover { transform: translateY(-2px); border-color: var(--district); background: var(--village-warm); }
+.hub-tile.is-active { border-color: var(--district); background: color-mix(in srgb, var(--district) 9%, white); }
+.hub-art {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--district) 12%, white);
+  color: var(--district-deep);
+}
+.hub-art svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hub-copy { display: grid; gap: 1px; min-width: 0; flex: 1 1 auto; }
+.hub-copy b { font-family: var(--display); font-size: 16px; font-weight: 400; }
+.hub-copy small { overflow: hidden; color: var(--ink-soft); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.hub-arrow { flex: 0 0 auto; width: 18px; height: 18px; fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.village-group-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--village-warm);
+}
+.village-group-bar b { font-family: var(--display); font-size: 15px; font-weight: 400; }
+.village-back {
+  min-height: 40px;
+  padding: 5px 12px;
+  border: 1px solid var(--district);
+  border-radius: 999px;
+  background: var(--village-paper);
+  color: var(--district-deep);
+  font-family: var(--display);
+  font-size: 13px;
+  cursor: pointer;
+}
+.village-back:hover { background: var(--district-deep); color: #fff; }
+body[data-village] .village-deep { scroll-margin-top: calc(var(--village-bar-h) + 10px); }
+body[data-village] .village-deep[hidden] { display: none !important; }
+body[data-village] .village-deep .btn-pulse { animation: none; }
+
+/* ── 모바일 하단 독 ──────────────────────────────────────── */
+.village-dock { display: none; }
+
+/* ── 장소 시트 ───────────────────────────────────────────── */
+dialog.village-place-sheet {
+  width: min(420px, calc(100vw - 24px));
+  max-height: min(80svh, 620px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--village-paper);
+  color: var(--ink);
+  box-shadow: 0 24px 60px -20px rgba(46, 64, 87, .5);
+  overflow: auto;
+}
+dialog.village-place-sheet::backdrop { background: rgba(46, 64, 87, .38); }
+.village-sheet-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 18px 18px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.village-sheet-head h3 { margin: 0; font-size: 22px; }
+.village-sheet-head p { margin-top: 3px; color: var(--ink-soft); font-size: 13px; }
+.village-sheet-close {
+  margin-left: auto;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 18px;
+  cursor: pointer;
+}
+.village-sheet-body { display: grid; gap: 10px; padding: 14px 18px 18px; }
+.village-sheet-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.village-sheet-row span:first-child { color: var(--ink-soft); }
+.village-sheet-progress { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.village-sheet-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--district), var(--sun)); }
+.village-sheet-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.village-sheet-actions .go { flex: 1 1 160px; justify-content: center; }
+.village-sheet-actions .mini-act { min-height: 44px; }
+
+/* ── 첫 실행 시트 ────────────────────────────────────────── */
+dialog.village-first-run {
+  width: min(560px, calc(100vw - 24px));
+  max-height: min(88svh, 720px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--village-paper);
+  color: var(--ink);
+  box-shadow: 0 30px 80px -24px rgba(46, 64, 87, .55);
+  overflow: auto;
+}
+dialog.village-first-run::backdrop { background: rgba(46, 64, 87, .42); }
+.village-fr-head { padding: 20px 22px 12px; border-bottom: 1px solid var(--line); }
+.village-fr-head p { color: var(--district-deep); font-family: var(--display); font-size: 13px; }
+.village-fr-head h3 { margin: 2px 0 0; font-size: 28px; }
+.village-fr-body { display: grid; gap: 12px; padding: 16px 22px 20px; }
+.village-fr-step { display: none; gap: 12px; }
+.village-fr-step.is-on { display: grid; }
+.village-fr-field { display: grid; gap: 5px; font-size: 14px; }
+.village-fr-field input {
+  min-height: 48px;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  font: inherit;
+}
+.village-fr-hint { color: var(--ink-soft); font-size: 12px; }
+.village-fr-looks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.fr-look {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 12px;
+  cursor: pointer;
+}
+.fr-look.sel { border-color: var(--district); background: color-mix(in srgb, var(--district) 9%, white); }
+.fr-rig { position: relative; width: 76px; height: 95px; overflow: hidden; border-radius: 12px; background: radial-gradient(circle at 50% 38%, #FFFDF8 0%, #E6F4EC 62%, #EFE5D0 100%); }
+.fr-rig .av-rig { transform: scale(.38); transform-origin: top left; }
+.village-fr-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px; }
+.village-fr-actions .mini-act { margin-left: auto; }
+.village-fr-actions .go, .village-fr-actions .play-btn { min-height: 44px; }
+.village-fr-preview { display: flex; align-items: center; gap: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--village-warm); }
+.village-fr-preview .fr-rig { width: 92px; height: 115px; flex: 0 0 auto; }
+.village-fr-preview .fr-rig .av-rig { transform: scale(.46); }
+.village-fr-preview b { font-family: var(--display); font-size: 20px; font-weight: 400; }
+.village-fr-preview p { color: var(--ink-soft); font-size: 13px; }
+.village-fr-skip { border: 0; background: transparent; color: var(--ink-soft); font-family: var(--display); font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── 작은 화면 ───────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .village-bar-tools { gap: 6px; }
+  .village-grade-menu summary { padding-inline: 9px; }
+  .village-sem-choice { padding-inline: 8px; }
+  body[data-village] .g3head.village-sign { gap: 12px; padding: 15px 16px; }
+  .village-seal { width: 62px; height: 62px; }
+  .village-seal svg { width: 38px; height: 38px; }
+  .village-hub { gap: 8px; }
+  .hub-tile { padding: 10px; min-height: 84px; }
+  .hub-art { width: 38px; height: 38px; }
+  .hub-copy b { font-size: 15px; }
+}
+
+@media (max-width: 860px) {
+  .village-bar-in {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 6px 8px;
+    padding-block: 7px;
+  }
+  .village-bar .logo { grid-column: 1; grid-row: 1; font-size: 17px; }
+  .village-bar .purse { grid-column: 2; grid-row: 1; margin-left: 0; }
+  .village-bar .purse span { padding: 4px 9px; font-size: 13px; }
+  .village-bar-tools {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 0;
+    width: 100%;
+  }
+  .village-grade-menu { flex: 1 1 auto; min-width: 0; }
+  .village-grade-menu summary { width: 100%; justify-content: space-between; min-height: 44px; }
+  .village-grade-panel { left: 0; right: auto; width: min(360px, calc(100vw - 16px)); }
+  .village-sem { flex: 0 0 auto; }
+  .village-sem-choice { min-height: 38px; padding: 4px 8px; font-size: 13px; }
+  .village-sem #semSwitchBtn { font-size: 13px; padding: 4px 8px; }
+  .village-menu { grid-column: 3; grid-row: 1; }
+  .village-menu summary { min-height: 40px; padding: 4px 9px; font-size: 13px; }
+  .village-menu-icon { width: 15px; height: 11px; background-size: 15px 2px, 15px 2px, 15px 2px; }
+  body[data-village] .g3head.village-sign {
+    margin-top: 12px;
+    padding: 14px;
+    gap: 12px;
+  }
+  .village-sign h1 { font-size: clamp(24px, 5.6vw, 34px); }
+  .village-sign .lead {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 13px;
+  }
+  .village-seal { width: 54px; height: 54px; }
+  .village-seal svg { width: 32px; height: 32px; }
+  .village-sign-chips { margin-top: 8px; }
+  .village-chip { min-height: 24px; padding: 2px 8px; font-size: 11px; }
+  body[data-village] #mapwrap,
+  body[data-village] #lowMapwrap {
+    width: 100%;
+    border-width: 2px;
+  }
+  body[data-village] #village,
+  body[data-village] #lowVillage { padding: 12px; border-radius: 20px; }
+  .village-map-head h2 { font-size: 19px; }
+  .village-map-head .hint { display: none; }
+  .village-primary-bar { gap: 8px; align-items: stretch; flex-direction: column; }
+  .village-primary { min-height: 54px; width: 100%; }
+  .village-primary-text { font-size: 16px; }
+  .village-near { flex: none; font-size: 12px; padding-inline: 2px; }
+  .village-map-card .dpad {
+    display: flex;
+    position: static;
+    justify-content: flex-end;
+    gap: 6px;
+    margin: 2px 0 0;
+    opacity: 1;
+  }
+  .village-map-card .dpad button {
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+    padding: 0;
+    border-radius: 12px;
+    background: var(--village-paper);
+    box-shadow: 0 2px 8px rgba(62, 52, 40, .14);
+  }
+  .village-map-card .dpad button small { display: none; }
+  .village-map-card .todo-compass {
+    left: 8px;
+    bottom: 8px;
+    max-width: calc(100% - 76px);
+    padding: 8px 11px;
+  }
+  .village-map-card .todo-compass b { font-size: 13px; }
+  body[data-village] .friend-name { display: none; }
+  body[data-village] .village-deep { scroll-margin-top: calc(var(--village-bar-h, 64px) + 60px); }
+  .village-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .hub-tile { min-height: 78px; padding: 9px; gap: 8px; }
+  .hub-art { width: 34px; height: 34px; border-radius: 11px; }
+  .hub-art svg { width: 23px; height: 23px; }
+  .hub-copy b { font-size: 14px; }
+  .hub-copy small { font-size: 11px; }
+  .hub-arrow { display: none; }
+  .village-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    display: none;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+    background: rgba(255, 253, 246, .97);
+    box-shadow: 0 -8px 20px -14px rgba(46, 64, 87, .4);
+    backdrop-filter: blur(10px);
+  }
+  body.village-hub-mode .village-dock { display: grid; }
+  .village-dock button {
+    display: grid;
+    justify-items: center;
+    gap: 1px;
+    min-height: 46px;
+    padding: 4px 2px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--display);
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .village-dock button.is-active { color: var(--district-deep); background: color-mix(in srgb, var(--district) 11%, white); }
+  .village-dock b { font-family: var(--display); font-size: 14px; font-weight: 400; line-height: 1; }
+  body.village-hub-mode { padding-bottom: 72px; }
+  body.village-hub-mode .village-group-bar { position: sticky; top: var(--village-bar-h, 64px); z-index: 15; }
+  .village-place-sheet { margin: auto auto 0; max-height: min(86svh, 680px); border-radius: 22px 22px 0 0; }
+  dialog.village-place-sheet[open] { transform: translateY(0); }
+  dialog.village-place-sheet { transform: translateY(12px); transition: transform .2s ease; }
+  .village-fr-head { padding: 16px 16px 10px; }
+  .village-fr-head h3 { font-size: 24px; }
+  .village-fr-body { padding: 14px 16px 18px; }
+  .village-fr-looks { gap: 5px; }
+  .fr-look { padding: 6px 2px; font-size: 11px; }
+  .fr-rig { width: 62px; height: 78px; }
+  .fr-rig .av-rig { transform: scale(.31); }
+  .village-fr-preview { gap: 10px; }
+  .village-fr-preview .fr-rig { width: 76px; height: 95px; }
+  .village-fr-preview .fr-rig .av-rig { transform: scale(.38); }
+}
+
+@media (max-width: 520px) {
+  .village-bar .logo { font-size: 15px; }
+  .village-bar .logo svg { width: 20px; height: 20px; }
+  body[data-village] .g3head.village-sign { padding: 12px; gap: 10px; }
+  .village-sign h1 { font-size: 23px; }
+  .village-sign .lead { font-size: 12px; }
+  .village-seal { width: 46px; height: 46px; }
+  .village-seal svg { width: 28px; height: 28px; }
+  .village-chip { font-size: 11px; padding-inline: 7px; }
+  .village-map-card .dpad { width: 100%; }
+  .village-map-card .dpad button { font-size: 14px; }
+  .village-primary-text { font-size: 14px; }
+  .village-primary-kicker { font-size: 11px; }
+  .village-map-card .todo-compass b { font-size: 12px; }
+  .village-hub { gap: 6px; }
+  .hub-tile { min-height: 72px; padding: 8px; gap: 6px; }
+  .hub-art { width: 30px; height: 30px; }
+  .hub-art svg { width: 20px; height: 20px; }
+  .hub-copy b { font-size: 13px; }
+  .hub-copy small { font-size: 11px; }
+  .village-grade-links { grid-template-columns: 1fr; }
+  .village-grade-panel { width: calc(100vw - 40px); }
+}
+
+@media print {
+  body[data-village] .village-deep,
+  body[data-village] .village-deep[hidden] { display: block !important; }
+  .village-hub, .village-hub-title, .village-group-bar, .village-dock, .village-primary-bar,
+  .village-time-chip, .village-menu, .village-bar-tools, .village-sign-chips { display: none !important; }
+}
+
+@media (max-width: 520px) {
+  /* 작은 지도에서는 이름표 대신 점 핀. 다음 집 하나만 이름을 보여 줍니다. */
+  body[data-village] .pin,
+  body[data-village] .low-pin {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 0;
+    border-radius: 50%;
+    background: rgba(255, 253, 246, .96);
+    display: grid;
+    place-items: center;
+  }
+  body[data-village] .low-pin { width: 44px; height: 44px; }
+  body[data-village] .pin.lv-1,
+  body[data-village] .low-pin.lv-1 { background: #FFF7E6; box-shadow: inset 0 0 0 3px var(--sun); }
+  body[data-village] .pin.lv-max,
+  body[data-village] .low-pin.lv-max { background: #FFF3D6; box-shadow: inset 0 0 0 4px #C98A2B; }
+  body[data-village] .pin .lv-badge,
+  body[data-village] .low-pin .lv-badge { display: none; }
+  body[data-village] .pin.is-next,
+  body[data-village] .low-pin.is-next {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    padding: 5px 9px;
+    font-size: 12px;
+    border-radius: 999px;
+    background: #FFFDF6;
+    display: inline-flex;
+    align-items: center;
+    max-width: 46vw;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  body[data-village] .friend { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-tile, .village-primary, .village-time-chip, .village-speak-btn,
+  dialog.village-place-sheet { transition: none !important; }
+  .hub-tile:hover, .village-primary:hover { transform: none; }
+}
+@media (forced-colors: active) {
+  .village-primary { border: 2px solid ButtonText; }
+  .hub-tile, .village-grade-menu summary, .village-menu summary,
+  .village-sem, .village-time-chip, .village-speak-btn { border: 1px solid CanvasText; }
+  .hub-tile.is-active, .village-sem-choice.is-current,
+  .pin.is-next, .low-pin.is-next { outline: 2px solid Highlight; outline-offset: 2px; }
+}

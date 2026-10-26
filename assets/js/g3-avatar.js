@@ -307,5 +307,17 @@
   function toast(m) {
     if (window.G3UI && window.G3UI.toast) window.G3UI.toast(m);
   }
-  window.G3Avatar = { init: init, preview: preview, mountRig: mountRig, refreshPicker: function () { renderPicker(curCat); } };
+  function applyAvatar(a) {
+    var next = norm(a || {});
+    var d = window.G3Store.load();
+    d.avatar = next;
+    window.G3Store.save(d);
+    sel = norm(next);
+    var nm = document.getElementById("avName");
+    if (nm) nm.value = next.name || "";
+    preview();
+    if (document.getElementById("pickGrid")) renderPicker(curCat);
+    if (window.G3TokenRefresh) window.G3TokenRefresh();
+  }
+  window.G3Avatar = { init: init, preview: preview, mountRig: mountRig, apply: applyAvatar, refreshPicker: function () { renderPicker(curCat); } };
 })();
