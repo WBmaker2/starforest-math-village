@@ -66,6 +66,34 @@
   function $$(sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
+  // 교실 도구함 백업/복원 (localStorage 기반)
+  try {
+    var exp = document.getElementById("exportBackup");
+    if (exp) exp.addEventListener("click", function(){
+      try {
+        if (window.G3Store && window.G3Store.exportData) {
+          window.G3Store.exportData();
+          toast("데이터를 JSON으로 내보냈어요");
+        } else {
+          toast("백업 기능을 사용할 수 없어요");
+        }
+      } catch(e){ toast("내보내기 실패"); }
+    });
+    var imp = document.getElementById("importBackup");
+    if (imp) imp.addEventListener("change", function(){
+      var f = imp.files && imp.files[0];
+      if (!f) return;
+      if (window.G3Store && window.G3Store.importData) {
+        window.G3Store.importData(f).then(function(ok){
+          if (ok) { toast("가져오기 완료. 새로고침하면 반영돼요"); } else { toast("가져오기 실패"); }
+          imp.value = "";
+        });
+      } else {
+        toast("가져오기 기능을 사용할 수 없어요");
+        imp.value = "";
+      }
+    });
+  } catch(e){}
 
   var state = { grade: 3, sem: seasonalSem() };
 

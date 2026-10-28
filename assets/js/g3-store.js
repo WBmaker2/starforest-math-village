@@ -206,6 +206,41 @@
       return true;
     } catch (e) { return false; }
   }
+  function exportData() {
+    try {
+      var data = load();
+      var copy = JSON.parse(JSON.stringify(data));
+      var blob = new Blob([JSON.stringify(copy, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      var ts = new Date().toISOString().replace(/[:.]/g, "-");
+      a.href = url;
+      a.download = "starforest-math-village-backup-" + ts + ".json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 1000);
+      return true;
+    } catch (e) { return false; }
+  }
+  function importData(file) {
+    return new Promise(function (resolve) {
+      try {
+        if (!file) { resolve(false); return; }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            var obj = JSON.parse(e.target.result);
+            if (!obj || typeof obj !== "object") { resolve(false); return; }
+            localStorage.setItem(keyFor(slot()), JSON.stringify(obj));
+            resolve(true);
+          } catch (err) { resolve(false); }
+        };
+        reader.onerror = function () { resolve(false); };
+        reader.readAsText(file);
+      } catch (e) { resolve(false); }
+    });
+  }
   window.G3Store = { load: load, save: save, grade: currentGrade, sem: currentSem, seasonal: seasonalSem,
-    slot: slot, slotName: slotName, switchSlot: switchSlot };
+    slot: slot, slotName: slotName, switchSlot: switchSlot, exportData: exportData, importData: importData };
 })();

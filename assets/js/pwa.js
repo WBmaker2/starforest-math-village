@@ -26,6 +26,23 @@
     window.StarforestPWA.canInstall = true;
     if (!document.body.hasAttribute("data-village")) showBanner();
   });
+  function showOfflineNotice() {
+    try {
+      if (navigator.onLine) return;
+      if (document.getElementById("sfOffline")) return;
+      var n = document.createElement("div");
+      n.id = "sfOffline";
+      n.style.cssText = "position:fixed;left:12px;bottom:12px;background:rgba(20,28,24,.9);color:#f1ebdd;padding:8px 12px;border-radius:10px;font-size:14px;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,.25)";
+      n.textContent = "오프라인 모드 · 저장된 내용 위주로 이용 중";
+      document.body.appendChild(n);
+    } catch (e) {}
+  }
+  function hideOfflineNotice() {
+    try {
+      var n = document.getElementById("sfOffline");
+      if (n && n.parentNode) n.parentNode.removeChild(n);
+    } catch (e) {}
+  }
   function showBanner() {
     try {
       if (document.body.classList.contains("landing")) return;
@@ -49,6 +66,9 @@
         hide();
       });
       function hide() { if (bar.parentNode) bar.parentNode.removeChild(bar); }
+      showOfflineNotice();
+      window.addEventListener("online", hideOfflineNotice);
+      window.addEventListener("offline", showOfflineNotice);
     } catch (e) {}
   }
 })();

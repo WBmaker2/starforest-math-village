@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>별숲 관측 일지 — 방향 스케치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#081321; --night-2:#0d1d30; --plate:#11253a;
+    --star:#f0eadc; --muted:#9fb2c4; --brass:#c6a15b; --live:#f2a33a;
+    --line:rgba(198,161,91,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;width:1440px;height:900px;overflow:hidden}
+  body{
+    background:
+      radial-gradient(circle at 73% 46%, rgba(74,116,148,.18), transparent 36%),
+      radial-gradient(circle at 18% 82%, rgba(198,161,91,.08), transparent 34%),
+      linear-gradient(115deg, #060f1b 0%, #0a1727 48%, #0d1d30 100%);
+    color:var(--star); font-family:"IBM Plex Sans KR",sans-serif; position:relative;
+  }
+  body::before{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.7;
+    background-image:
+      radial-gradient(rgba(240,234,220,.9) .7px, transparent .9px),
+      radial-gradient(rgba(198,161,91,.55) .6px, transparent .9px);
+    background-size:83px 71px, 137px 113px; background-position:0 0, 41px 27px;
+  }
+  .frame{position:absolute; inset:22px; border:1px solid rgba(198,161,91,.22); pointer-events:none}
+  .frame::before,.frame::after{content:""; position:absolute; width:26px; height:26px; border:1px solid var(--brass)}
+  .frame::before{left:-1px; top:-1px; border-right:0; border-bottom:0}
+  .frame::after{right:-1px; bottom:-1px; border-left:0; border-top:0}
+  header{position:absolute; left:64px; right:64px; top:48px; display:flex; align-items:center; justify-content:space-between; z-index:3}
+  .brand{display:flex; align-items:center; gap:12px; font-size:20px; letter-spacing:.01em}
+  .brand .mark{width:28px;height:28px;border:1px solid var(--brass);border-radius:50%;display:grid;place-items:center;color:var(--brass);font-size:13px}
+  nav{display:flex; gap:28px; font-size:13px; color:var(--muted); letter-spacing:.06em}
+  nav b{color:var(--brass); font-weight:500}
+  .log-label{font-size:11px; letter-spacing:.22em; color:var(--brass); text-transform:uppercase}
+  .hero{position:absolute; left:64px; top:140px; width:520px; z-index:3}
+  .eyebrow{display:flex; align-items:center; gap:12px; font-size:12px; letter-spacing:.12em; color:var(--brass)}
+  .eyebrow::before{content:""; width:34px; height:1px; background:var(--brass)}
+  h1{font-family:"Hahmlet",serif; font-weight:500; font-size:58px; line-height:1.18; letter-spacing:-.025em; margin:26px 0 0}
+  h1 em{font-style:normal; color:var(--live)}
+  .lead{font-size:16px; line-height:1.8; color:#bccbd8; margin:24px 0 0; max-width:470px; font-weight:300}
+  .facts{display:flex; gap:22px; margin-top:30px; font-size:12px; color:var(--muted); letter-spacing:.03em}
+  .facts b{color:var(--star); font-weight:500; margin-right:5px}
+  .entry{
+    position:absolute; left:64px; bottom:56px; width:492px; z-index:4;
+    background:linear-gradient(180deg, rgba(13,29,48,.88), rgba(7,16,28,.92));
+    border:1px solid var(--line); box-shadow:0 30px 80px -30px #000;
+  }
+  .entry-top{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid rgba(198,161,91,.22)}
+  .entry-top span{font-size:10px; letter-spacing:.2em; color:var(--brass)}
+  .sem{display:flex; border:1px solid rgba(198,161,91,.35)}
+  .sem b,.sem i{font-style:normal; font-size:11px; padding:5px 10px; color:var(--muted); font-weight:400}
+  .sem b{background:var(--brass); color:#0a1727}
+  .entry-body{padding:18px 18px 16px; display:grid; grid-template-columns:1fr auto; gap:10px 18px; align-items:end}
+  .grade{font-family:"Hahmlet",serif; font-size:34px; line-height:1.1}
+  .grade small{display:block; font-family:"IBM Plex Sans KR",sans-serif; font-size:11px; letter-spacing:.16em; color:var(--brass); margin-bottom:6px}
+  .places{font-size:12px; color:var(--muted); line-height:1.7; text-align:right}
+  .actions{display:flex; gap:8px; padding:0 18px 18px}
+  .primary{flex:1; background:var(--live); color:#1b1206; text-decoration:none; font-size:14px; font-weight:600; padding:13px 14px; text-align:center}
+  .secondary{border:1px solid rgba(240,234,220,.28); color:var(--star); text-decoration:none; font-size:12px; padding:13px 14px}
+  .chart{position:absolute; right:-54px; top:70px; width:860px; height:860px; z-index:1}
+  .chart svg{width:100%; height:100%; overflow:visible}
+  .chart-caption{position:absolute; right:64px; bottom:56px; text-align:right; z-index:3}
+  .chart-caption b{display:block; font-family:"Hahmlet",serif; font-size:15px; font-weight:500; color:var(--star)}
+  .chart-caption span{font-size:10px; letter-spacing:.18em; color:var(--brass)}
+  .rules{position:absolute; left:64px; right:64px; bottom:0; height:1px; background:linear-gradient(90deg, transparent, rgba(198,161,91,.4), transparent)}
+  .rail{position:absolute; left:50%; top:132px; bottom:80px; width:1px; background:linear-gradient(180deg, transparent, rgba(198,161,91,.3), transparent); z-index:2}
+  .rail span{position:absolute; top:44%; left:-4px; width:8px; height:8px; border:1px solid var(--brass); transform:rotate(45deg); background:var(--night)}
+</style>
+</head>
+<body>
+<div class="frame"></div><div class="rail"><span></span></div>
+<header>
+  <div class="brand"><span class="mark">✦</span>별숲 수학마을</div>
+  <nav><b>마을 입구</b><span>학습 구조</span><span>교구</span><span>선생님</span></nav>
+</header>
+<section class="hero">
+  <div class="log-label">관측 일지 · 2026학년도 · 2학기</div>
+  <p class="eyebrow">초등 1~6학년 · 1·2학기 마을형 수학</p>
+  <h1>학년을 고르면,<br>오늘의 수학 마을이<br><em>열립니다.</em></h1>
+  <p class="lead">교과서 단원마다 다른 장소에서 문제를 풀고, 받은 별과 씨앗으로 마을을 가꿉니다. 설치도 가입도 없이, 학급 주소 하나로 시작합니다.</p>
+  <div class="facts"><span><b>6</b>개 학년</span><span><b>2</b>개 학기</span><span>기기 내 저장</span><span>교실용 링크</span></div>
+</section>
+
+<section class="entry" aria-label="선택한 학년 관측 기록">
+  <div class="entry-top"><span>관측 대상 · 현재 선택</span><div class="sem"><i>1학기</i><b>2학기</b></div></div>
+  <div class="entry-body">
+    <div class="grade"><small>3학년 · 별숲</small>곱셈 방앗간 마을</div>
+    <div class="places">곱셈 방앗간 · 나눔 과일정거장<br>동그라미 시계소 · 조각 피자부엌<br>되와 무게 실험실 · 그림소식 우체통</div>
+  </div>
+  <div class="actions"><a class="primary" href="#">3학년 2학기 마을 열기 →</a><a class="secondary" href="#">학급 주소 복사</a></div>
+</section>
+
+<div class="chart" aria-hidden="true">
+  <svg viewBox="0 0 860 860">
+    <defs>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f2a33a" stop-opacity=".14"/>
+        <stop offset="100%" stop-color="#f2a33a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="430" cy="430" r="352" fill="none" stroke="rgba(198,161,91,.18)"/>
+    <circle cx="430" cy="430" r="300" fill="none" stroke="rgba(198,161,91,.14)"/>
+    <circle cx="430" cy="430" r="238" fill="none" stroke="rgba(198,161,91,.11)"/>
+    <circle cx="430" cy="430" r="170" fill="none" stroke="rgba(198,161,91,.09)"/>
+    <line x1="78" y1="430" x2="782" y2="430" stroke="rgba(198,161,91,.18)"/>
+    <line x1="430" y1="78" x2="430" y2="782" stroke="rgba(198,161,91,.18)"/>
+    <g stroke="rgba(198,161,91,.35)">
+      <line x1="430" y1="66" x2="430" y2="82"/><line x1="430" y1="778" x2="430" y2="794"/>
+      <line x1="66" y1="430" x2="82" y2="430"/><line x1="778" y1="430" x2="794" y2="430"/>
+    </g>
+    <circle cx="612" cy="292" r="130" fill="url(#glow)"/>
+    <g stroke="#f2a33a" stroke-width="2" fill="none" opacity=".95">
+      <path d="M548 336 L592 296 L612 292 L664 244 L700 268"/>
+      <path d="M592 296 L580 246 L548 226"/>
+      <path d="M612 292 L646 330 L664 244"/>
+    </g>
+    <g fill="#f2a33a">
+      <circle cx="548" cy="336" r="7"/><circle cx="592" cy="296" r="10"/><circle cx="612" cy="292" r="13"/><circle cx="664" cy="244" r="8"/><circle cx="700" cy="268" r="6"/><circle cx="580" cy="246" r="6"/><circle cx="548" cy="226" r="5"/><circle cx="646" cy="330" r="6"/>
+    </g>
+    <text x="612" y="404" text-anchor="middle" fill="#f2a33a" font-family="Hahmlet,serif" font-size="26">3학년</text>
+    <text x="612" y="426" text-anchor="middle" fill="#9fb2c4" font-size="11" letter-spacing="2">별숲 · 6개 장소</text>
+
+    <g stroke="#7fa6b8" stroke-width="1.2" fill="none" opacity=".62">
+      <path d="M180 262 L218 232 L254 250 L288 214"/>
+      <path d="M218 232 L210 190"/>
+      <path d="M254 250 L292 276"/>
+    </g>
+    <g fill="#dbe6ee" opacity=".85">
+      <circle cx="180" cy="262" r="4"/><circle cx="218" cy="232" r="6"/><circle cx="254" cy="250" r="4"/><circle cx="288" cy="214" r="5"/><circle cx="210" cy="190" r="4"/><circle cx="292" cy="276" r="4"/>
+    </g>
+    <text x="228" y="316" text-anchor="middle" fill="#bccbd8" font-family="Hahmlet,serif" font-size="21">1학년</text>
+    <text x="228" y="336" text-anchor="middle" fill="#7f93a6" font-size="10" letter-spacing="2">새싹숲</text>
+
+    <g stroke="#7fa6b8" stroke-width="1.2" fill="none" opacity=".62">
+      <path d="M424 180 L466 154 L506 172 L536 138"/>
+      <path d="M466 154 L482 118"/>
+      <path d="M506 172 L538 198"/>
+    </g>
+    <g fill="#dbe6ee" opacity=".85">
+      <circle cx="424" cy="180" r="4"/><circle cx="466" cy="154" r="6"/><circle cx="506" cy="172" r="4"/><circle cx="536" cy="138" r="5"/><circle cx="482" cy="118" r="4"/><circle cx="538" cy="198" r="4"/>
+    </g>
+    <text x="474" y="228" text-anchor="middle" fill="#bccbd8" font-family="Hahmlet,serif" font-size="21">2학년</text>
+    <text x="474" y="248" text-anchor="middle" fill="#7f93a6" font-size="10" letter-spacing="2">새싹숲</text>
+
+    <g stroke="#7fa6b8" stroke-width="1.2" fill="none" opacity=".62">
+      <path d="M302 572 L342 548 L378 566 L410 532"/>
+      <path d="M342 548 L354 510"/>
+      <path d="M378 566 L410 596"/>
+    </g>
+    <g fill="#dbe6ee" opacity=".85">
+      <circle cx="302" cy="572" r="4"/><circle cx="342" cy="548" r="6"/><circle cx="378" cy="566" r="4"/><circle cx="410" cy="532" r="5"/><circle cx="354" cy="510" r="4"/><circle cx="410" cy="596" r="4"/>
+    </g>
+    <text x="356" y="630" text-anchor="middle" fill="#bccbd8" font-family="Hahmlet,serif" font-size="21">4학년</text>
+    <text x="356" y="650" text-anchor="middle" fill="#7f93a6" font-size="10" letter-spacing="2">별숲</text>
+
+    <g stroke="#7fa6b8" stroke-width="1.2" fill="none" opacity=".62">
+      <path d="M622 604 L660 574 L698 592 L732 556"/>
+      <path d="M660 574 L654 534"/>
+      <path d="M698 592 L730 618"/>
+    </g>
+    <g fill="#dbe6ee" opacity=".85">
+      <circle cx="622" cy="604" r="4"/><circle cx="660" cy="574" r="6"/><circle cx="698" cy="592" r="4"/><circle cx="732" cy="556" r="5"/><circle cx="654" cy="534" r="4"/><circle cx="730" cy="618" r="4"/>
+    </g>
+    <text x="676" y="662" text-anchor="middle" fill="#bccbd8" font-family="Hahmlet,serif" font-size="21">5학년</text>
+    <text x="676" y="682" text-anchor="middle" fill="#7f93a6" font-size="10" letter-spacing="2">별숲</text>
+
+    <g stroke="#7fa6b8" stroke-width="1.2" fill="none" opacity=".62">
+      <path d="M660 448 L700 420 L736 438 L770 402"/>
+      <path d="M700 420 L694 380"/>
+      <path d="M736 438 L768 466"/>
+    </g>
+    <g fill="#dbe6ee" opacity=".85">
+      <circle cx="660" cy="448" r="4"/><circle cx="700" cy="420" r="6"/><circle cx="736" cy="438" r="4"/><circle cx="770" cy="402" r="5"/><circle cx="694" cy="380" r="4"/><circle cx="768" cy="466" r="4"/>
+    </g>
+    <text x="714" y="508" text-anchor="middle" fill="#bccbd8" font-family="Hahmlet,serif" font-size="21">6학년</text>
+    <text x="714" y="528" text-anchor="middle" fill="#7f93a6" font-size="10" letter-spacing="2">별숲</text>
+
+    <circle cx="430" cy="430" r="3" fill="#c6a15b"/>
+    <text x="430" y="456" text-anchor="middle" fill="#c6a15b" font-size="9" letter-spacing="3">별숲 관측점</text>
+  </svg>
+</div>
+<div class="chart-caption"><span>STAR FOREST OBSERVATORY</span><b>관측 기록 03 · 3학년 2학기</b></div>
+<div class="rules"></div>
+</body>
+</html>

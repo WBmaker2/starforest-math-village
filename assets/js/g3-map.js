@@ -375,9 +375,18 @@
       var ov = document.getElementById("dlg");
       if (ov && ov.classList.contains("show")) return;
       var dir = keyDir(e);
-      if (!dir) return;
-      e.preventDefault();
-      if (!held[dir]) { held[dir] = true; step(dir); }
+      if (dir) {
+        e.preventDefault();
+        if (!held[dir]) { held[dir] = true; step(dir); }
+        return;
+      }
+      if (e.key === "Enter") {
+        var btn = document.getElementById("enterBtn");
+        if (btn && !btn.hidden && btn.getAttribute("data-near")) {
+          e.preventDefault();
+          enter(btn.getAttribute("data-near"));
+        }
+      }
     });
     window.addEventListener("keyup", function (e) {
       var dir = keyDir(e);

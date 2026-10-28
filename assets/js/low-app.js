@@ -202,10 +202,10 @@
     var btn = document.getElementById("lowEnter");
     if (best) {
       if (label) label.textContent = best.name + " 앞입니다";
-      if (btn) { btn.hidden = false; btn.textContent = best.name + " 들어가기"; btn.setAttribute("data-near", best.id); }
+      if (btn) { btn.hidden = false; btn.textContent = best.name + " 들어가기"; btn.setAttribute("data-near", best.id); btn.setAttribute("tabindex", "0"); btn.setAttribute("role", "button"); }
     } else {
       if (label) label.textContent = "지도를 눌러 산책하세요";
-      if (btn) btn.hidden = true;
+      if (btn) { btn.hidden = true; btn.removeAttribute("data-near"); }
     }
   }
   function findHouse(id) {
@@ -596,9 +596,18 @@
       var ov = document.getElementById("dlg");
       if (ov && ov.classList.contains("show")) return;
       var dir = keyDir(e);
-      if (!dir) return;
-      e.preventDefault();
-      step(dir);
+      if (dir) {
+        e.preventDefault();
+        step(dir);
+        return;
+      }
+      if (e.key === "Enter") {
+        var btn = document.getElementById("lowEnter");
+        if (btn && !btn.hidden && btn.getAttribute("data-near")) {
+          e.preventDefault();
+          open(btn.getAttribute("data-near"));
+        }
+      }
     });
     document.addEventListener("pointerdown", function (e) {
       var t = e.target.closest ? e.target.closest(".dpad [data-move]") : null;

@@ -277,6 +277,42 @@
     }
     return out;
   }
+  function wrongForestList(limit) {
+    try {
+      var d = window.G3Store ? window.G3Store.load() : { wrong: [] };
+      var arr = d.wrong || [];
+      var map = {};
+      for (var i = 0; i < arr.length; i++) {
+        var w = arr[i] || {};
+        var key = w.tag || w.lid || ("q:" + (w.q || ""));
+        if (!map[key]) map[key] = { key: key, tag: w.tag || "", lid: w.lid || "", q: w.q || "", count: 0, lastAt: w.at || 0, item: w };
+        map[key].count += 1;
+        if ((w.at || 0) > map[key].lastAt) { map[key].lastAt = w.at || 0; map[key].item = w; }
+      }
+      var out = [];
+      for (var k in map) out.push(map[k]);
+      out.sort(function (a, b) { return (b.count - a.count) || (b.lastAt - a.lastAt); });
+      return limit ? out.slice(0, limit) : out;
+    } catch (e) { return []; }
+  }
+  function clearWrongForest(keys) {
+    try {
+      if (!Array.isArray(keys) || !keys.length) return false;
+      var d = window.G3Store ? window.G3Store.load() : { wrong: [] };
+      var set = {};
+      for (var i = 0; i < keys.length; i++) set[keys[i]] = true;
+      var arr = d.wrong || [];
+      var next = [];
+      for (var j = 0; j < arr.length; j++) {
+        var w = arr[j] || {};
+        var key = w.tag || w.lid || ("q:" + (w.q || ""));
+        if (!set[key]) next.push(w);
+      }
+      d.wrong = next;
+      if (window.G3Store) window.G3Store.save(d);
+      return true;
+    } catch (e) { return false; }
+  }
   window.G3Understand = {
     record: record,
     weakTags: weakTags,
@@ -286,6 +322,8 @@
     summary: summary,
     today: function () { return dayStats(0); },
     week: weekStats,
-    focusQuestions: focusQuestions
+    focusQuestions: focusQuestions,
+    wrongForestList: wrongForestList,
+    clearWrongForest: clearWrongForest
   };
 })();

@@ -358,6 +358,11 @@
 <h3 id="teacherTitle">선생님 교실 도구함</h3>
 <p class="dlg-lead">학년별 학급 주소를 복사해 알림장이나 칠판에 붙이세요. 학생 기록은 이 브라우저에만 저장됩니다.</p>
 <div id="teacherLinks" class="tbox-links"></div>
+<div class="tbox-backup" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+  <button id="exportBackup" type="button" class="mini-act">데이터 내보내기(JSON)</button>
+  <label class="mini-act" style="cursor:pointer">데이터 가져오기(JSON)<input id="importBackup" type="file" accept="application/json" style="display:none"></label>
+  <span style="font-size:13px;color:var(--chalk-dim)">기기 간 이어하기용 (가입/설치 없음)</span>
+</div>
 <button class="dlg-close" id="closeTeacher" type="button">닫기</button>
 </dialog>
 

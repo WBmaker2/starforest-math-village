@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>수학 마을 예고편 — 방향 스케치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gothic+A1:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--field:#d95a2b; --ink:#171512; --bone:#f2ead8; --blue:#2f5560; --gold:#e8b24a}
+  *{box-sizing:border-box}
+  html,body{margin:0;width:1440px;height:900px;overflow:hidden}
+  body{background:var(--field); color:var(--bone); font-family:"Gothic A1",sans-serif; position:relative; overflow:hidden}
+  body::after{content:""; position:absolute; inset:0; pointer-events:none; opacity:.16; background-image:radial-gradient(#000 .7px, transparent .8px); background-size:5px 6px; mix-blend-mode:multiply}
+  header{position:absolute; left:56px; right:56px; top:34px; display:flex; align-items:center; justify-content:space-between; z-index:5}
+  .brand{font-family:"IBM Plex Mono",monospace; font-size:15px; letter-spacing:.2em; text-transform:uppercase}
+  .brand span{display:block; font-size:9px; color:rgba(242,234,216,.6); letter-spacing:.28em; margin-top:3px}
+  nav{display:flex; gap:24px; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.14em; color:rgba(242,234,216,.75)}
+  nav b{color:var(--bone); border-bottom:2px solid var(--gold); padding-bottom:3px}
+  .hero{position:absolute; left:56px; top:132px; width:760px; z-index:4}
+  .kicker{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.18em; color:rgba(242,234,216,.7); margin-bottom:18px}
+  h1{font-family:"Black Han Sans",sans-serif; font-weight:400; font-size:106px; line-height:.92; letter-spacing:-.03em; margin:0; color:var(--bone)}
+  h1 em{font-style:normal; color:var(--ink)}
+  .lead{font-size:14px; line-height:1.9; color:rgba(242,234,216,.82); max-width:470px; margin:26px 0 0; font-weight:300}
+  .stamp{position:absolute; right:74px; top:154px; width:220px; height:220px; border:2px solid var(--bone); border-radius:50%; display:grid; place-items:center; transform:rotate(9deg); z-index:3; opacity:.9}
+  .stamp::before{content:""; position:absolute; inset:12px; border:1px dashed rgba(242,234,216,.7); border-radius:50%}
+  .stamp div{text-align:center; font-family:"IBM Plex Mono",monospace; line-height:1.7}
+  .stamp b{display:block; font-size:27px; letter-spacing:.04em; color:var(--bone)}
+  .stamp span{font-size:9px; letter-spacing:.22em; color:rgba(242,234,216,.7)}
+  .tear{position:absolute; right:-90px; top:0; width:680px; height:900px; z-index:1; opacity:.98}
+  .tear svg{width:100%;height:100%}
+  .strip{position:absolute; left:56px; right:56px; bottom:42px; z-index:6; display:grid; grid-template-columns:repeat(6,1fr); gap:10px}
+  .card{position:relative; min-height:184px; background:var(--ink); color:var(--bone); padding:16px 14px 14px; overflow:hidden; border-top:10px solid var(--gold)}
+  .card::after{content:""; position:absolute; inset:0; background:linear-gradient(160deg,rgba(255,255,255,.08),transparent 38%); pointer-events:none}
+  .card small{display:block; font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.16em; color:rgba(242,234,216,.6)}
+  .card b{display:block; font-family:"Black Han Sans",sans-serif; font-weight:400; font-size:46px; line-height:1; margin-top:8px}
+  .card p{font-size:11px; line-height:1.55; color:rgba(242,234,216,.72); margin:8px 0 0}
+  .card.sel{background:var(--bone); color:var(--ink); border-top-color:var(--field); transform:translateY(-14px)}
+  .card.sel small{color:rgba(23,21,18,.55)}
+  .card.sel p{color:rgba(23,21,18,.7)}
+  .card.sel::before{content:"오늘의 예고편"; position:absolute; top:10px; right:10px; font-family:"IBM Plex Mono",monospace; font-size:8px; letter-spacing:.12em; background:var(--field); color:var(--bone); padding:3px 6px}
+  .cta{position:absolute; left:56px; bottom:248px; display:flex; align-items:center; gap:18px; z-index:7}
+  .primary{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.08em; background:var(--ink); color:var(--bone); text-decoration:none; padding:15px 22px; border:2px solid var(--ink)}
+  .secondary{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; color:var(--bone); text-decoration:none; border-bottom:1px solid rgba(242,234,216,.55); padding:4px 0}
+  .caption{position:absolute; right:56px; top:104px; font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.18em; color:rgba(242,234,216,.6); z-index:6}
+  .caption b{color:var(--bone)}
+</style>
+</head>
+<body>
+<header><div class="brand">별숲 수학마을<span>STAR FOREST MATH VILLAGE</span></div><nav><b>예고편</b><span>마을 구조</span><span>교구</span><span>선생님</span></nav></header>
+<div class="caption">A FILM ABOUT SIX VILLAGES · <b>2026</b></div>
+
+<div class="tear" aria-hidden="true">
+  <svg viewBox="0 0 680 900">
+    <path d="M680 0 L410 0 Q460 90 420 170 Q390 230 450 300 Q510 370 460 460 Q420 530 500 600 Q560 660 520 760 Q500 840 560 900 L680 900 Z" fill="#171512"/>
+    <path d="M420 118 L300 84 L336 190 L250 248 L352 286 L314 388 L420 338 L458 430 L508 330 L590 360 L530 260 L604 196 L506 184 L480 96 Z" fill="#171512"/>
+    <path d="M420 118 L300 84 L336 190 L250 248 L352 286 L314 388 L420 338 L458 430 L508 330 L590 360 L530 260 L604 196 L506 184 L480 96 Z" fill="none" stroke="#f2ead8" stroke-width="2" stroke-dasharray="7 9" opacity=".55"/>
+    <circle cx="420" cy="118" r="9" fill="#e8b24a"/><circle cx="300" cy="84" r="6" fill="#f2ead8"/><circle cx="336" cy="190" r="6" fill="#f2ead8"/><circle cx="352" cy="286" r="6" fill="#f2ead8"/><circle cx="420" cy="338" r="8" fill="#e8b24a"/><circle cx="458" cy="430" r="6" fill="#f2ead8"/><circle cx="508" cy="330" r="6" fill="#f2ead8"/><circle cx="590" cy="360" r="6" fill="#f2ead8"/><circle cx="530" cy="260" r="7" fill="#e8b24a"/><circle cx="604" cy="196" r="5" fill="#f2ead8"/><circle cx="506" cy="184" r="5" fill="#f2ead8"/><circle cx="480" cy="96" r="5" fill="#f2ead8"/>
+    <path d="M300 84 Q250 20 192 64 Q150 96 192 142 Q240 190 300 84Z" fill="#2f5560"/>
+    <path d="M560 640 Q640 600 660 680 Q672 750 600 766 Q540 780 560 640Z" fill="#e8b24a"/>
+    <path d="M120 620 Q180 580 216 632 Q250 686 188 718 Q128 748 100 690 Q80 650 120 620Z" fill="#f2ead8"/>
+  </svg>
+</div>
+
+<section class="hero">
+  <div class="kicker">초등 1~6학년 · 1·2학기 · 마을형 수학</div>
+  <h1>수학은,<br><em>마을</em>에서<br>자란다.</h1>
+  <p class="lead">교과서 단원마다 다른 장소에서 문제를 풀고, 받은 별과 씨앗으로 마을을 가꿉니다. 설치도 가입도 없이, 학급 주소 하나로 시작하는 여섯 개의 수학 마을.</p>
+</section>
+
+<div class="stamp"><div><b>6</b><span>VILLAGES / 2 SEMESTERS</span><b>0</b><span>SIGN-UP</span></div></div>
+
+<div class="cta"><a class="primary" href="#">3학년 2학기 마을 열기 →</a><a class="secondary" href="#">학급 주소 복사</a></div>
+
+<div class="strip">
+  <div class="card"><small>ACT 01 · 새싹숲</small><b>1</b><p>숫자 화단<br>100까지의 수</p></div>
+  <div class="card"><small>ACT 02 · 새싹숲</small><b>2</b><p>자리수 텃밭<br>네 자리 수</p></div>
+  <div class="card sel"><small>ACT 03 · 별숲</small><b>3</b><p>곱셈 방앗간<br>단원 장소 6곳</p></div>
+  <div class="card"><small>ACT 04 · 별숲</small><b>4</b><p>꺾은길 전망대<br>그래프와 도형</p></div>
+  <div class="card"><small>ACT 05 · 별숲</small><b>5</b><p>기록 텃밭<br>평균과 가능성</p></div>
+  <div class="card"><small>ACT 06 · 별숲</small><b>6</b><p>물감 배합소<br>비례식과 비율</p></div>
+</div>
+</body>
+</html>

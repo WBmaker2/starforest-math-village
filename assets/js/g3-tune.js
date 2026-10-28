@@ -36,6 +36,11 @@
       { upto: 0.60, seeds: 3, msg: "씨앗 3개!" },
       { upto: 0.75, candies: 2, msg: "별사탕 2개!" },
       { upto: 1.01, rainbow: 1, seeds: 1, msg: "🌈 무지개 씨앗 1개! 텃밭에 심어 보세요!" }
-    ]
+    ],
+    // 적응형 난이도 고도화 기본값
+    adaptWindow: 12,
+    adaptUp: 0.82,
+    adaptDown: 0.38,
+    streakBonus: true
   };
 })();

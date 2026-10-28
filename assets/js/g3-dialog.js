@@ -96,17 +96,19 @@
       return;
     }
     state.mode = "wrong";
-    state.customTitle = "오답 노트 교실 · 쌍둥이 문제";
+    state.customTitle = "오답 숲 · 자동 복습 (쌍둥이 문제)";
     state.customList = [];
-    for (var i = 0; i < d.wrong.length; i++) {
-      var found = findQuestion(d.wrong[i].q);
+    // 최근 오답 우선: at 기준 정렬 후 쌍둥이 생성
+    var list = d.wrong.slice().sort(function(a,b){ return (b.at||0) - (a.at||0); });
+    for (var i = 0; i < list.length; i++) {
+      var found = findQuestion(list[i].q);
       var twin = twinFor(found.house, found.item);
       var use = twin || found.item;
-      state.customList.push({ q: use.q, a: use.a, steps: use.steps, house: found.house, lid: found.lid, wrongIdx: i, origQ: d.wrong[i].q, isTwin: !!twin });
+      state.customList.push({ q: use.q, a: use.a, steps: use.steps, house: found.house, lid: found.lid, origQ: list[i].q, isTwin: !!twin });
     }
     state.qi = 0; state.tries = 0; state.firstOk = 0; state.total = state.customList.length;
     showModal("npc-bunny");
-    npcSay("아까 헷갈렸던 문제를 그림과 함께 천천히 다시 풀어 보자!");
+    npcSay("오답 숲에 모인 문제들을 차근차근 다시 풀어 보자! 틀린 횟수가 많은 문제부터 연습해요.");
     renderQ();
   }
   function openDaily() {
@@ -312,8 +314,17 @@
         }
       });
     }
-    document.getElementById("ans").addEventListener("keydown", function (e) { if (e.key === "Enter") check(); });
-    document.getElementById("ans").focus();
+  var ansInput = document.getElementById("ans");
+  if (ansInput) {
+    ansInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        check();
+      }
+    });
+    try { ansInput.setAttribute("inputmode", "decimal"); } catch (e) {}
+    ansInput.focus();
+  }
     if (state.mode === "star") {
       var tbar = document.querySelector("#dlgBody .hint-row");
       if (tbar) {
@@ -586,10 +597,16 @@
       + "<div class='lessons'>" + recBtn + "<button class='lesson boss-btn btn-pulse' data-boss='1'>⚡ " + boss.emoji + " " + boss.name + "에게 대결 신청!</button><button class='lesson' data-back='1'>차시 목록으로</button></div>";
   }
   document.addEventListener("click", function (e) {
-    var t = e.target.closest ? e.target.closest("[data-lesson],[data-back],[data-open-wrong],[data-open-daily],[data-open-focus],[data-close-dlg],[data-infinite],[data-boss],[data-star],[data-star-retry]") : null;
+    var t = e.target.closest ? e.target.closest("[data-lesson],[data-back],[data-open-wrong],[data-open-daily],[data-open-focus],[data-close-dlg],[data-infinite],[data-boss],[data-star],[data-star-retry],[data-open-wrong-forest]") : null;
     if (!t) return;
     if (t.hasAttribute("data-lesson")) startLesson(parseInt(t.getAttribute("data-lesson"), 10));
-    else if (t.hasAttribute("data-open-wrong")) openWrong();
+    else     if (t.hasAttribute("data-open-wrong")) openWrong();
+    else if (t.hasAttribute("data-open-wrong-forest")) {
+      try {
+        if (window.G3UI) window.G3UI.toast("오답 숲은 '오답 교실'에서 자동 복습으로 이어져요.");
+      } catch(e){}
+      openWrong();
+    }
     else if (t.hasAttribute("data-open-daily")) openDaily();
     else if (t.hasAttribute("data-open-focus")) openFocus();
     else if (t.hasAttribute("data-infinite")) openInfinite();

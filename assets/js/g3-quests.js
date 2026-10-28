@@ -1,7 +1,44 @@
 (function () {
+  function seasonKey(){
+    try {
+      var m = (new Date()).getMonth()+1;
+      if (m>=3 && m<=5) return "spring";
+      if (m>=6 && m<=8) return "summer";
+      if (m>=9 && m<=11) return "autumn";
+      return "winter";
+    } catch(e){ return "spring"; }
+  }
+  var SEASON_QUESTS = {
+    spring: [ { id:"s-spring-1", giver:"햇살이", title:"봄맞이 꽃심기(한정)", desc:"장식 1개 이상 배치해 보자", check:function(d){ return d.deco && d.deco.placed && d.deco.placed.length>=1; }, reward:{stars:3,seeds:2,text:"봄맞이 별 3개 · 씨앗 2개"} } ],
+    summer: [ { id:"s-summer-1", giver:"반짝이", title:"여름 물주기(한정)", desc:"텃밭에 작물을 심어 보자", check:function(d){ return d.farm && d.farm.plots && d.farm.plots.some(function(x){return x;}); }, reward:{stars:3,seeds:2,text:"여름 별 3개 · 씨앗 2개"} } ],
+    autumn: [ { id:"s-autumn-1", giver:"몽실", title:"가을 수확(한정)", desc:"수확을 1회 이상 해 보자", check:function(d){ return (d.harvests||0)>=1; }, reward:{stars:3,seeds:2,text:"가을 별 3개 · 씨앗 2개"} } ],
+    winter: [ { id:"s-winter-1", giver:"반짝이", title:"겨울 별모으기(한정)", desc:"단원 문제를 5문제 이상 풀어 보자", check:function(d){ var s=d.done||{}; var c=0; for(var k in s){ if(s[k]) c++; } return c>=5; }, reward:{stars:4,seeds:2,text:"겨울 별 4개 · 씨앗 2개"} } ]
+  };
   function QUESTS() {
-    if (window.GRADE_QUESTS && window.GRADE_QUESTS.length) return window.GRADE_QUESTS;
-    return BASE_QUESTS;
+    if (window.GRADE_QUESTS && window.GRADE_QUESTS.length) {
+      try {
+        var base = window.GRADE_QUESTS.slice();
+        var sk = seasonKey();
+        var sq = SEASON_QUESTS[sk] || [];
+        for (var si=0; si<sq.length; si++) {
+          var exists = false;
+          for (var bi=0; bi<base.length; bi++) if (base[bi].id === sq[si].id) exists = true;
+          if (!exists) base.push(sq[si]);
+        }
+        return base;
+      } catch(e) { return window.GRADE_QUESTS; }
+    }
+    var b2 = BASE_QUESTS.slice();
+    try {
+      var sk2 = seasonKey();
+      var sq2 = SEASON_QUESTS[sk2] || [];
+      for (var si2=0; si2<sq2.length; si2++) {
+        var exists2 = false;
+        for (var bi2=0; bi2<b2.length; bi2++) if (b2[bi2].id === sq2[si2].id) exists2 = true;
+        if (!exists2) b2.push(sq2[si2]);
+      }
+    } catch(e) {}
+    return b2;
   }
   var BASE_QUESTS = [
     { id: "q-mul1", giver: "몽실", title: "방앗간 첫 도움", desc: "곱셈 방앗간 1차시를 끝내 주세요.",

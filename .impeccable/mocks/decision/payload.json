@@ -1,0 +1,103 @@
+{
+  "title": "새 시각 세계를 고르세요",
+  "question": "세 장의 대안과 한 장의 추천안을 준비했습니다. 선택한 방향으로 랜딩 구조를 설계합니다. 나머지 세 후보는 다시 뽑을 때 이어집니다.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "별숲 관측 일지",
+      "kicker": "THE ROLL",
+      "lineage": "관측 일지 · 천문대 기록",
+      "thesis": "랜딩은 밤에만 열리는 마을의 관측 일지다. 학년은 별자리로 고르고, 선택한 마을의 관측 기록이 바로 열린다.",
+      "palette": ["#081321", "#11253a", "#c6a15b", "#f0a33a", "#f0eadc"],
+      "materials": ["남색 천 표지", "황동 장식", "성도", "유리 건판"],
+      "viewport": "왼쪽 여백에 제목과 관측 카드, 오른쪽에 여섯 학년 별자리 도표. 선택한 3학년 별자리와 '마을 열기'가 첫 화면에 함께 보인다.",
+      "risk": "밤하늘 세계가 판타지로 흐르면 교사용 도구의 또렷함을 잃는다. 실제 단원명과 고정된 입장 버튼으로 막는다.",
+      "raised": [
+        {
+          "from": "exhibition-museum-curation-provenance-ribbon",
+          "raise": "학년 선택과 학습 순환을 하나의 별자리 선으로 이어, 기능 카드가 따로 떠 보이지 않게 한다."
+        }
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html"
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "칠판 수업 보드",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "교실 칠판 · 분필 수업",
+      "thesis": "랜딩은 교사가 오늘 수업을 준비하는 칠판이다. 학년은 수업 목록의 한 칸이고, 고른 칸이 분필로 동그라미쳐진다.",
+      "palette": ["#1b2a24", "#f1ebdd", "#e9b45c", "#e2775f", "#9cba9f"],
+      "materials": ["칠판", "분필", "나무 받침", "자석"],
+      "viewport": "칠판 전체가 화면. 왼쪽에 분필 제목, 오른쪽에 6개 학년 수업 칸, 아래 나무 분필 받침에 '마을 열기'.",
+      "risk": "교사에게 가장 익숙한 표면이라, 세계관이 아니라 분필 테마로 보일 수 있다.",
+      "html": ".impeccable/mocks/decision/pick.html"
+    },
+    {
+      "id": "challenger-split-flap",
+      "kind": "challenger",
+      "catalogId": "signals-instruments-split-flap-concourse",
+      "label": "수업 편성표",
+      "verdict": "competitive",
+      "lineage": "철도 출발 게시판 · 분할 플랩",
+      "thesis": "학년과 학기는 출발 게시판의 행이 되고, 교사는 학생을 맞는 플랫폼으로 보낸다.",
+      "palette": ["#0d1013", "#f0a536", "#f3f1ea", "#3a4047"],
+      "materials": ["분할 플랩", "강철 프레임", "행 램프"],
+      "viewport": "화면 절반은 큰 플랩 제목, 오른쪽은 여섯 학년 출발 행. 선택한 3학년 행이 황색으로 켜지고 아래에 입장 버튼.",
+      "risk": "교통 상품처럼 읽히면 수학 마을의 정체가 사라진다.",
+      "case": "학년·학기 선택이 출발 게시판의 행으로 바로 읽힌다. 다만 수학 마을의 온기와 교과 구체성은 약해진다.",
+      "kept": "고정 열과 행 안에서 선택이 즉시 갱신되는 방식.",
+      "html": ".impeccable/mocks/decision/challenger-split-flap.html"
+    },
+    {
+      "id": "challenger-saul-bass",
+      "kind": "challenger",
+      "catalogId": "posters-covers-sleeves-saul-bass-title",
+      "label": "수학 마을 예고편",
+      "verdict": "competitive",
+      "lineage": "손으로 오린 종이 타이틀 시퀀스",
+      "thesis": "랜딩은 여섯 마을을 예고하는 짧은 타이틀 시퀀스다. 한 밴드에 한 아이디어만 두고, 학년은 다음 장면 카드로 고른다.",
+      "palette": ["#d95a2b", "#171512", "#f2ead8", "#2f5560", "#e8b24a"],
+      "materials": ["오린 종이", "평면 잉크", "떨리는 선"],
+      "viewport": "주황색 평면 위로 검은 종이 별자리가 화면을 가로지르고, 아래에 여섯 장면 카드가 놓인다. 선택한 3학년 카드가 떠오른다.",
+      "risk": "시퀀스가 포스터로 굳으면 학년 선택과 입장이 뒤로 밀린다.",
+      "case": "구성과 기억에는 강하지만, 교사의 첫 행동이 포스터 뒤로 밀릴 위험이 있다.",
+      "kept": "한 밴드에 하나의 아이디어, 강한 비대칭.",
+      "html": ".impeccable/mocks/decision/challenger-saul-bass.html"
+    },
+    {
+      "id": "challenger-provenance",
+      "kind": "challenger",
+      "catalogId": "exhibition-museum-curation-provenance-ribbon",
+      "label": "학습 여정 리본",
+      "verdict": "declined",
+      "lineage": "소장 이력 리본 · 기록 보관",
+      "thesis": "한 줄의 리본이 1학년부터 6학년까지 이어지고, 각 학년의 마을 기록이 그 위에 놓인다.",
+      "palette": ["#e8deca", "#9e2b25", "#2a2420", "#b98a3e"],
+      "materials": ["장부 종이", "붉은 비단", "고무 도장"],
+      "viewport": "왼쪽에 큰 제목과 리본, 오른쪽에 선택한 학년의 장부 카드. 리본이 화면을 가로질러 학년을 잇는다.",
+      "risk": "기록물의 우아함이 학년 선택의 즉시성을 가릴 수 있다.",
+      "case": "학습 여정을 한 줄로 엮는 힘은 있지만, 학년 선택의 즉시성이 약해진다.",
+      "kept": "학년과 성장 순환을 하나의 연속선으로 묶는 태도.",
+      "html": ".impeccable/mocks/decision/challenger-provenance.html"
+    }
+  ],
+  "reroll": {
+    "registers": ["safer", "bolder"]
+  },
+  "buildPath": {
+    "value": "code"
+  },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "업계 표준 랜딩",
+    "thesis": "히어로 카피, 6개 학년 카드 그리드, 익숙한 CTA로 구성한 표준 랜딩.",
+    "palette": ["#ffffff", "#111827", "#1f6e5c", "#f2992e"],
+    "materials": ["깨끗한 그리드", "제품 스크린샷"],
+    "viewport": "왼쪽 카피와 오른쪽 마을 이미지, 아래 6개 학년 카드.",
+    "risk": "경쟁 제품과 구분되지 않는다."
+  },
+  "steer": true
+}

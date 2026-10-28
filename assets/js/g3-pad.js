@@ -29,9 +29,9 @@
   function level() {
     try {
       var t = window.G3TUNE || {};
-      var win = (t.adaptWindow == null) ? 10 : t.adaptWindow;
-      var up = (t.adaptUp == null) ? 0.8 : t.adaptUp;
-      var dn = (t.adaptDown == null) ? 0.4 : t.adaptDown;
+      var win = (t.adaptWindow == null) ? 12 : t.adaptWindow;
+      var up = (t.adaptUp == null) ? 0.82 : t.adaptUp;
+      var dn = (t.adaptDown == null) ? 0.38 : t.adaptDown;
       var d = window.G3Store.load();
       var r = d.recent || [];
       if (r.length < 4) return d.adaptLevel || 2;

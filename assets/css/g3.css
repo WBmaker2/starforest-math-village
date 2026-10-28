@@ -428,6 +428,9 @@ body.low-big .trial-choice { font-size: 22px; padding: 16px 10px; }
   .sfx-btn { font-size: 12px; padding: 4px 10px; }
   .zonebar { position: static; }
 }
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
 @media (max-width: 560px) {
   .rchoices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rchoice { min-width: 0; }

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>수업 편성표 — 방향 스케치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --steel:#171a1d; --steel-2:#20252a; --frame:#3a4047; --flap:#101214;
+    --white:#f3f1ea; --dim:#8e979f; --amber:#f0a536; --red:#d95d4f; --green:#7da58c;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;width:1440px;height:900px;overflow:hidden}
+  body{background:linear-gradient(180deg,#0d1013 0%,#191e22 55%,#111417 100%); color:var(--white); font-family:"IBM Plex Sans KR",sans-serif; position:relative}
+  body::before{content:""; position:absolute; inset:0; background:repeating-linear-gradient(90deg, transparent 0 79px, rgba(255,255,255,.018) 79px 80px); pointer-events:none}
+  .top{position:absolute; left:54px; right:54px; top:34px; height:58px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #353b42}
+  .brand{display:flex; align-items:center; gap:12px; font-size:19px; letter-spacing:.04em}
+  .brand .mark{width:30px;height:30px;border:1px solid var(--amber);display:grid;place-items:center;color:var(--amber);font-size:14px}
+  nav{display:flex; gap:28px; font-size:12px; letter-spacing:.12em; color:var(--dim)}
+  nav b{color:var(--white); font-weight:500}
+  .hero{position:absolute; left:54px; top:120px; width:720px}
+  .kicker{font-size:11px; letter-spacing:.22em; color:var(--amber); margin-bottom:18px}
+  h1{font-family:"Oswald","IBM Plex Sans KR",sans-serif; font-weight:500; font-size:72px; line-height:1.02; letter-spacing:-.02em; margin:0; display:grid; gap:2px}
+  .flaprow{display:flex; gap:3px; flex-wrap:nowrap}
+  .flap{background:linear-gradient(180deg,#1b2025 0%,#111417 49%,#171b1f 50%,#0c0e10 100%); border:1px solid #30363d; padding:8px 10px 10px; min-width:58px; text-align:center; position:relative; box-shadow:inset 0 -6px 12px rgba(0,0,0,.55)}
+  .flap::after{content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:#000; opacity:.85}
+  .flap.amber{color:var(--amber)}
+  .flap.small{font-family:"IBM Plex Sans KR",sans-serif; font-size:18px; letter-spacing:.02em; padding:7px 9px; min-width:auto}
+  .lead{font-size:14px; line-height:1.9; color:#b8c1c8; margin:28px 0 0; max-width:540px; font-weight:300}
+  .facts{display:flex; gap:26px; margin-top:26px; font-size:11px; letter-spacing:.08em; color:var(--dim)}
+  .facts b{color:var(--amber); font-weight:500; margin-right:5px}
+  .board{position:absolute; right:54px; top:118px; width:586px; border:10px solid var(--frame); background:#0e1113; box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .board-head{display:grid; grid-template-columns:74px 1fr 116px 82px; gap:1px; background:#2f353b; border-bottom:1px solid #3b4249}
+  .board-head span{background:#171b1f; color:var(--dim); font-size:9px; letter-spacing:.16em; padding:9px 10px}
+  .row{display:grid; grid-template-columns:74px 1fr 116px 82px; gap:1px; background:#272c31; border-bottom:1px solid #22272c; cursor:pointer}
+  .row > div{background:linear-gradient(180deg,#171b1f,#101315); padding:13px 10px; position:relative}
+  .row > div::after{content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:#08090a; opacity:.9}
+  .row .num{font-family:"Oswald",sans-serif; font-size:22px; color:var(--white); text-align:center; letter-spacing:.04em}
+  .row .dest{font-size:15px; letter-spacing:.02em}
+  .row .sem{font-size:11px; color:var(--dim); letter-spacing:.08em}
+  .row .status{font-size:10px; letter-spacing:.12em; color:var(--dim); display:flex; align-items:center; gap:6px}
+  .row .status i{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+  .row.sel{background:var(--amber)}
+  .row.sel > div{background:linear-gradient(180deg,#f6b44e,#d88d23); color:#1b1307}
+  .row.sel .num,.row.sel .dest{color:#1b1307}
+  .row.sel .sem{color:#5a3c11}
+  .row.sel .status{color:#3d2a0e}
+  .row.sel .status i{background:#1b1307}
+  .board-foot{display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#15191d; border-top:1px solid #30363d}
+  .board-foot span{font-size:10px; letter-spacing:.14em; color:var(--dim)}
+  .actionbar{position:absolute; left:54px; right:54px; bottom:46px; display:flex; align-items:center; gap:16px}
+  .actionbar .line{flex:1; height:1px; background:linear-gradient(90deg,rgba(240,165,54,.5),rgba(255,255,255,.08))}
+  .primary{background:var(--amber); color:#1b1307; text-decoration:none; font-size:15px; font-weight:600; padding:14px 22px; letter-spacing:.02em}
+  .secondary{border:1px solid #4a5158; color:var(--white); text-decoration:none; font-size:12px; padding:14px 18px; letter-spacing:.04em}
+  .note{position:absolute; left:54px; bottom:112px; font-size:10px; letter-spacing:.12em; color:var(--dim)}
+  .note b{color:var(--amber); font-weight:500}
+</style>
+</head>
+<body>
+<div class="top"><div class="brand"><span class="mark">✦</span>별숲 수학마을</div><nav><b>출발 안내</b><span>마을 구조</span><span>교구</span><span>선생님</span></nav></div>
+
+<section class="hero">
+  <div class="kicker">CLASS DEPARTURE BOARD · 2026학년도 2학기</div>
+  <h1>
+    <div class="flaprow"><span class="flap">오</span><span class="flap">늘</span><span class="flap">의</span><span class="flap"> </span><span class="flap amber">수</span><span class="flap amber">학</span><span class="flap amber"> </span><span class="flap">마</span><span class="flap">을</span></div>
+    <div class="flaprow"><span class="flap small">학년과 학기를 고르면</span><span class="flap small">바로 출발합니다</span></div>
+  </h1>
+  <p class="lead">교과서 단원마다 다른 장소에서 문제를 풀고, 받은 별과 씨앗으로 마을을 가꿉니다. 설치도 가입도 없이 학급 주소 하나로 시작하세요.</p>
+  <div class="facts"><span><b>6</b>개 학년</span><span><b>2</b>개 학기</span><span>기기 내 저장</span><span>교실용 링크</span></div>
+</section>
+
+<section class="board" aria-label="학년별 수업 편성표">
+  <div class="board-head"><span>GRADE</span><span>DESTINATION</span><span>SEMESTER</span><span>STATUS</span></div>
+  <div class="row"><div class="num">01</div><div class="dest">새싹숲 · 숫자 화단</div><div class="sem">1·2학기</div><div class="status"><i></i>OPEN</div></div>
+  <div class="row"><div class="num">02</div><div class="dest">새싹숲 · 자리수 텃밭</div><div class="sem">1·2학기</div><div class="status"><i></i>OPEN</div></div>
+  <div class="row sel"><div class="num">03</div><div class="dest">별숲 · 곱셈 방앗간</div><div class="sem">2학기</div><div class="status"><i></i>NOW</div></div>
+  <div class="row"><div class="num">04</div><div class="dest">별숲 · 꺾은길 전망대</div><div class="sem">1·2학기</div><div class="status"><i></i>OPEN</div></div>
+  <div class="row"><div class="num">05</div><div class="dest">별숲 · 기록 텃밭</div><div class="sem">1·2학기</div><div class="status"><i></i>OPEN</div></div>
+  <div class="row"><div class="num">06</div><div class="dest">별숲 · 물감 배합소</div><div class="sem">1·2학기</div><div class="status"><i></i>OPEN</div></div>
+  <div class="board-foot"><span>3학년 2학기 · 단원 장소 6곳</span><span>NEXT DEPARTURE 00:00</span></div>
+</section>
+
+<div class="note">선생님 안내 · <b>3학년 2학기</b>는 곱셈 방앗간에서 시작합니다.</div>
+<div class="actionbar"><div class="line"></div><a class="primary" href="#">3학년 2학기 마을 열기 →</a><a class="secondary" href="#">학급 주소 복사</a></div>
+</body>
+</html>

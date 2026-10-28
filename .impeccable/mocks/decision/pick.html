@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>칠판 수업 보드 — 방향 스케치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Gothic+A1:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#1b2a24; --board-2:#17231e; --chalk:#f1ebdd; --chalk-dim:#b9c4b8;
+    --wood:#a97945; --wood-dark:#6e4a29; --coral:#e2775f; --amber:#e9b45c; --sage:#9cba9f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;width:1440px;height:900px;overflow:hidden}
+  body{
+    background:
+      radial-gradient(ellipse at 22% 24%, rgba(255,255,255,.055), transparent 28%),
+      radial-gradient(ellipse at 78% 72%, rgba(255,255,255,.04), transparent 32%),
+      linear-gradient(160deg, var(--board) 0%, var(--board-2) 100%);
+    color:var(--chalk); font-family:"Gothic A1",sans-serif; position:relative;
+  }
+  body::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(255,255,255,.12) .6px, transparent .8px);
+    background-size:7px 9px;
+  }
+  .frame{position:absolute; inset:18px; border:12px solid var(--wood); border-image:linear-gradient(135deg,#c08d55,#8a5c31 46%,#b57a43) 1; box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+  .frame::after{content:""; position:absolute; inset:10px; border:1px solid rgba(241,235,221,.16); pointer-events:none}
+  header{position:absolute; left:64px; right:64px; top:44px; display:flex; justify-content:space-between; align-items:center; z-index:2}
+  .brand{font-family:"Gaegu",cursive; font-size:28px; letter-spacing:.02em; display:flex; gap:12px; align-items:center}
+  .brand .mark{width:34px;height:34px;border:2px solid var(--chalk);border-radius:50%;display:grid;place-items:center;font-size:18px;transform:rotate(-7deg)}
+  nav{display:flex; gap:26px; font-family:"Gaegu",cursive; font-size:20px; color:var(--chalk-dim)}
+  nav b{color:var(--chalk); font-weight:700; text-decoration:underline; text-decoration-color:var(--amber); text-underline-offset:8px}
+  .date{position:absolute; right:64px; top:96px; font-family:"Gaegu",cursive; font-size:17px; color:var(--chalk-dim); transform:rotate(2deg)}
+  .hero{position:absolute; left:74px; top:150px; width:520px; z-index:2}
+  .eyebrow{font-family:"Gaegu",cursive; font-size:19px; color:var(--amber); letter-spacing:.03em; transform:rotate(-1deg)}
+  h1{font-family:"Gaegu",cursive; font-weight:700; font-size:72px; line-height:1.06; margin:20px 0 0; letter-spacing:-.03em; text-shadow:0 0 1px rgba(255,255,255,.4)}
+  h1 span{display:inline-block; position:relative}
+  h1 span::after{content:""; position:absolute; left:-2%; right:-4%; bottom:8px; height:10px; background:var(--coral); opacity:.55; transform:rotate(-1deg); z-index:-1}
+  .lead{font-family:"Gaegu",cursive; font-size:22px; line-height:1.65; color:var(--chalk-dim); margin:26px 0 0; max-width:470px; transform:rotate(-.4deg)}
+  .facts{display:flex; gap:26px; margin-top:28px; font-family:"Gothic A1",sans-serif; font-size:12px; color:var(--chalk-dim); letter-spacing:.06em}
+  .facts b{font-family:"Gaegu",cursive; font-size:20px; color:var(--chalk); margin-right:6px}
+  .lesson{position:absolute; right:64px; top:150px; width:700px; z-index:2}
+  .lesson-head{display:flex; align-items:baseline; justify-content:space-between; border-bottom:2px solid rgba(241,235,221,.32); padding-bottom:10px; transform:rotate(.3deg)}
+  .lesson-head b{font-family:"Gaegu",cursive; font-size:26px; font-weight:700}
+  .lesson-head span{font-family:"Gaegu",cursive; font-size:17px; color:var(--amber)}
+  .cols{display:grid; grid-template-columns:repeat(3,1fr); gap:12px 14px; margin-top:18px}
+  .col{position:relative; min-height:176px; padding:14px 14px 12px; border:1px dashed rgba(241,235,221,.35); transform:rotate(var(--r,0deg))}
+  .col b{font-family:"Gaegu",cursive; font-size:26px; font-weight:700; display:flex; align-items:baseline; gap:8px}
+  .col b small{font-family:"Gothic A1",sans-serif; font-size:10px; letter-spacing:.14em; color:var(--chalk-dim); font-weight:400}
+  .col p{font-family:"Gaegu",cursive; font-size:16px; line-height:1.45; color:var(--chalk-dim); margin:8px 0 0}
+  .col svg{display:block; width:100%; height:54px; margin-top:10px; opacity:.78}
+  .col.sel{border:3px solid var(--amber); background:rgba(233,180,92,.08); transform:rotate(-1.3deg)}
+  .col.sel::before{content:"오늘의 수업"; position:absolute; top:-18px; right:8px; background:var(--amber); color:#24180a; font-family:"Gaegu",cursive; font-size:16px; padding:1px 10px; transform:rotate(2deg)}
+  .col:nth-child(2){--r:.7deg}.col:nth-child(3){--r:-.5deg}.col:nth-child(4){--r:-.8deg}.col:nth-child(5){--r:.6deg}.col:nth-child(6){--r:-.4deg}
+  .tray{position:absolute; left:64px; right:64px; bottom:54px; display:flex; align-items:center; gap:18px; z-index:2}
+  .chalk-line{flex:1; height:2px; background:rgba(241,235,221,.22)}
+  .action{display:flex; gap:10px; align-items:center}
+  .primary{font-family:"Gaegu",cursive; font-size:25px; font-weight:700; color:#23180a; background:var(--amber); padding:11px 24px; text-decoration:none; transform:rotate(-.6deg); box-shadow:5px 5px 0 rgba(0,0,0,.28)}
+  .secondary{font-family:"Gaegu",cursive; font-size:20px; color:var(--chalk); text-decoration:none; border-bottom:2px solid rgba(241,235,221,.45); padding:4px 2px}
+  .ledge{position:absolute; left:0; right:0; bottom:0; height:26px; background:linear-gradient(180deg,#c08d55,#8a5c31); box-shadow:0 -8px 20px rgba(0,0,0,.25)}
+  .chalk-stick{position:absolute; bottom:12px; width:64px; height:10px; border-radius:6px; background:#f5f0e4; box-shadow:0 2px 2px rgba(0,0,0,.3)}
+  .chalk-stick.one{left:120px; transform:rotate(-4deg)}
+  .chalk-stick.two{left:196px; width:48px; background:var(--coral); transform:rotate(3deg)}
+  .eraser{position:absolute; right:120px; bottom:10px; width:90px; height:24px; background:#3a4b42; border:4px solid #7a5a3c; transform:rotate(-2deg)}
+  .note{position:absolute; left:74px; bottom:148px; font-family:"Gaegu",cursive; font-size:17px; color:var(--chalk-dim); transform:rotate(1deg)}
+  .note b{color:var(--sage)}
+</style>
+</head>
+<body>
+<div class="frame"></div>
+<header>
+  <div class="brand"><span class="mark">✶</span>별숲 수학마을</div>
+  <nav><b>오늘의 수업</b><span>학습 구조</span><span>교구</span><span>선생님</span></nav>
+</header>
+<div class="date">2026. 10. 25. · 2학기</div>
+
+<section class="hero">
+  <div class="eyebrow">초등 1~6학년 · 1·2학기 마을형 수학</div>
+  <h1>오늘의 수학은,<br><span>어느 마을</span>에서?</h1>
+  <p class="lead">학년을 고르면 교과서 단원마다 다른 장소가 열립니다. 학생은 주민이 되어 문제를 풀고, 별과 씨앗으로 마을을 가꿉니다. 설치도 가입도 없이 주소 하나로 시작하세요.</p>
+  <div class="facts"><span><b>6</b>개 학년</span><span><b>2</b>개 학기</span><span>기기 내 저장</span><span>교실용 링크</span></div>
+</section>
+
+<section class="lesson">
+  <div class="lesson-head"><b>오늘의 수업 목록</b><span>학년을 누르면 관측 기록이 바뀝니다</span></div>
+  <div class="cols">
+    <div class="col"><b>1학년 <small>새싹숲</small></b><p>숫자 화단 · 100까지의 수</p><svg viewBox="0 0 160 54"><path d="M8 34 Q34 10 60 30 T112 26 T152 34" fill="none" stroke="#9cba9f" stroke-width="2" stroke-dasharray="4 5"/><circle cx="8" cy="34" r="4" fill="#e9b45c"/><circle cx="60" cy="30" r="4" fill="#f1ebdd"/><circle cx="112" cy="26" r="4" fill="#f1ebdd"/><circle cx="152" cy="34" r="4" fill="#f1ebdd"/></svg></div>
+    <div class="col"><b>2학년 <small>새싹숲</small></b><p>자리수 텃밭 · 네 자리 수</p><svg viewBox="0 0 160 54"><rect x="10" y="12" width="32" height="32" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="52" y="12" width="32" height="32" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="94" y="12" width="32" height="32" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="136" y="20" width="14" height="24" fill="none" stroke="#9cba9f" stroke-width="2"/></svg></div>
+    <div class="col sel"><b>3학년 <small>별숲</small></b><p>곱셈 방앗간 · 6개 장소</p><svg viewBox="0 0 160 54"><path d="M10 42 L44 18 L76 34 L112 14 L150 32" fill="none" stroke="#e9b45c" stroke-width="2.5"/><circle cx="10" cy="42" r="4" fill="#e9b45c"/><circle cx="44" cy="18" r="4" fill="#e9b45c"/><circle cx="76" cy="34" r="4" fill="#e9b45c"/><circle cx="112" cy="14" r="4" fill="#e9b45c"/><circle cx="150" cy="32" r="4" fill="#e9b45c"/></svg></div>
+    <div class="col"><b>4학년 <small>별숲</small></b><p>꺾은길 전망대 · 그래프</p><svg viewBox="0 0 160 54"><path d="M10 40 L42 32 L74 34 L106 16 L138 22 L152 12" fill="none" stroke="#9cba9f" stroke-width="2"/><path d="M10 46 L152 46" stroke="#9cba9f" stroke-width="1" opacity=".4"/></svg></div>
+    <div class="col"><b>5학년 <small>별숲</small></b><p>기록 텃밭 · 평균과 가능성</p><svg viewBox="0 0 160 54"><rect x="12" y="30" width="18" height="14" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="40" y="22" width="18" height="22" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="68" y="14" width="18" height="30" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="96" y="26" width="18" height="18" fill="none" stroke="#9cba9f" stroke-width="2"/><rect x="124" y="10" width="18" height="34" fill="none" stroke="#9cba9f" stroke-width="2"/></svg></div>
+    <div class="col"><b>6학년 <small>별숲</small></b><p>물감 배합소 · 비와 비례</p><svg viewBox="0 0 160 54"><circle cx="42" cy="30" r="18" fill="none" stroke="#9cba9f" stroke-width="2"/><circle cx="82" cy="30" r="18" fill="none" stroke="#9cba9f" stroke-width="2"/><circle cx="122" cy="30" r="18" fill="none" stroke="#9cba9f" stroke-width="2"/><path d="M42 30 L82 30 L122 30" stroke="#9cba9f" stroke-width="1.5" stroke-dasharray="4 4"/></svg></div>
+  </div>
+</section>
+
+<div class="note">선생님 메모 · <b>3학년 2학기</b>는 곱셈 방앗간에서 시작해요.</div>
+<div class="tray">
+  <div class="chalk-line"></div>
+  <div class="action"><a class="primary" href="#">3학년 2학기 마을 열기 →</a><a class="secondary" href="#">학급 주소 복사</a></div>
+</div>
+<div class="ledge"></div>
+<div class="chalk-stick one"></div><div class="chalk-stick two"></div><div class="eraser"></div>
+</body>
+</html>

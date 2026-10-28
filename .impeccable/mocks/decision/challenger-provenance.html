@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>학습 여정 리본 — 방향 스케치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--buff:#e8deca;--ink:#2a2420;--red:#9e2b25;--faint:#b3a58e;--thread:#8d8172;--gold:#b98a3e}
+  *{box-sizing:border-box}
+  html,body{margin:0;width:1440px;height:900px;overflow:hidden}
+  body{background:var(--buff); color:var(--ink); font-family:"Gowun Batang",serif; position:relative}
+  body::after{content:""; position:absolute; inset:0; pointer-events:none; opacity:.22; background-image:radial-gradient(#6f6353 .5px, transparent .7px); background-size:6px 7px}
+  header{position:absolute; left:56px; right:56px; top:34px; display:flex; align-items:flex-start; justify-content:space-between; z-index:4; border-bottom:1px solid rgba(42,36,32,.25); padding-bottom:18px}
+  .brand{font-family:"Song Myung",serif; font-size:21px; letter-spacing:.02em}
+  .brand span{display:block; font-family:"IBM Plex Mono",monospace; font-size:8px; letter-spacing:.24em; color:var(--thread); margin-top:5px}
+  nav{display:flex; gap:26px; font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.14em; color:var(--thread)}
+  nav b{color:var(--ink); border-bottom:2px solid var(--red); padding-bottom:4px}
+  .hero{position:absolute; left:56px; top:112px; width:740px; z-index:3}
+  .kicker{font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.2em; color:var(--red); margin-bottom:18px}
+  h1{font-family:"Song Myung",serif; font-size:74px; line-height:1.16; letter-spacing:-.02em; margin:0}
+  h1 em{font-style:normal; color:var(--red)}
+  .lead{font-size:14px; line-height:1.9; color:#5c5146; max-width:520px; margin:24px 0 0}
+  .ribbon{position:absolute; left:0; right:0; top:336px; height:190px; z-index:1}
+  .ribbon svg{width:100%; height:100%}
+  .journey{position:absolute; left:56px; right:56px; top:360px; display:grid; grid-template-columns:repeat(4,1fr); gap:22px; z-index:3}
+  .step{border-top:1px solid rgba(42,36,32,.25); padding-top:14px}
+  .step small{display:block; font-family:"IBM Plex Mono",monospace; font-size:8px; letter-spacing:.16em; color:var(--red)}
+  .step b{display:block; font-family:"Song Myung",serif; font-size:25px; font-weight:400; margin-top:6px}
+  .step p{font-size:11px; line-height:1.65; color:#6b5f51; margin:7px 0 0}
+  .step.dim{opacity:.45}
+  .step.dim small{color:var(--thread)}
+  .ledger{position:absolute; right:56px; top:122px; width:420px; border:1px solid rgba(42,36,32,.35); background:rgba(244,237,223,.55); padding:22px 22px 20px; z-index:4}
+  .ledger-top{display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid rgba(42,36,32,.25); padding-bottom:10px}
+  .ledger-top span{font-family:"IBM Plex Mono",monospace; font-size:8px; letter-spacing:.18em; color:var(--thread)}
+  .ledger h2{font-family:"Song Myung",serif; font-size:30px; font-weight:400; margin:16px 0 0}
+  .ledger .sub{font-size:12px; color:#6b5f51; margin:6px 0 0}
+  .list{list-style:none; margin:16px 0 0; padding:0; display:grid; gap:9px}
+  .list li{display:flex; gap:10px; align-items:baseline; font-size:12px; color:#4f463c}
+  .list i{font-style:normal; font-family:"IBM Plex Mono",monospace; font-size:9px; color:var(--red); width:18px}
+  .actions{display:flex; gap:10px; margin-top:20px}
+  .primary{background:var(--red); color:#f4eddf; text-decoration:none; font-size:12px; padding:12px 16px; letter-spacing:.02em}
+  .secondary{border:1px solid rgba(42,36,32,.35); color:var(--ink); text-decoration:none; font-size:11px; padding:12px 14px}
+  .stamp{position:absolute; right:78px; bottom:44px; width:150px; height:150px; border:2px solid rgba(158,43,37,.65); border-radius:50%; display:grid; place-items:center; transform:rotate(-8deg); z-index:3; opacity:.8}
+  .stamp::before{content:""; position:absolute; inset:8px; border:1px dashed rgba(158,43,37,.5); border-radius:50%}
+  .stamp div{text-align:center; font-family:"IBM Plex Mono",monospace; color:var(--red); line-height:1.6}
+  .stamp b{display:block; font-size:22px; letter-spacing:.06em}
+  .stamp span{font-size:7px; letter-spacing:.18em}
+  .foot{position:absolute; left:56px; bottom:44px; font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.14em; color:var(--thread)}
+  .foot b{color:var(--red)}
+</style>
+</head>
+<body>
+<header><div class="brand">별숲 수학마을<span>LEARNING JOURNEY LEDGER</span></div><nav><b>여정</b><span>마을 구조</span><span>교구</span><span>선생님</span></nav></header>
+
+<section class="hero">
+  <div class="kicker">초등 1~6학년 · 1·2학기 · 한 아이의 6년</div>
+  <h1>한 아이의 수학은,<br>여섯 마을을 지나<br><em>자랍니다.</em></h1>
+  <p class="lead">교과서 단원마다 다른 장소에서 문제를 풀고, 받은 별과 씨앗으로 마을을 가꿉니다. 학년이 바뀌어도 이어지는 하나의 학습 여정, 설치도 가입도 없이 학급 주소 하나로 시작합니다.</p>
+</section>
+
+<div class="ribbon" aria-hidden="true">
+  <svg viewBox="0 0 1440 190" preserveAspectRatio="none">
+    <path d="M-20 118 C 190 34, 300 168, 460 94 S 760 30, 930 104 S 1200 166, 1460 82" fill="none" stroke="#9e2b25" stroke-width="22" opacity=".9"/>
+    <path d="M-20 118 C 190 34, 300 168, 460 94 S 760 30, 930 104 S 1200 166, 1460 82" fill="none" stroke="#f4eddf" stroke-width="2" stroke-dasharray="7 10" opacity=".5"/>
+    <circle cx="56" cy="100" r="7" fill="#9e2b25"/><circle cx="416" cy="78" r="7" fill="#9e2b25"/><circle cx="760" cy="70" r="7" fill="#9e2b25"/><circle cx="1100" cy="134" r="7" fill="#9e2b25"/><circle cx="1380" cy="98" r="7" fill="#9e2b25"/>
+  </svg>
+</div>
+
+<div class="journey">
+  <div class="step"><small>2026 · 1학년</small><b>새싹숲</b><p>숫자 화단에서 100까지의 수를 만납니다.</p></div>
+  <div class="step"><small>2027 · 2학년</small><b>자리수 텃밭</b><p>네 자리 수와 곱셈구구를 익힙니다.</p></div>
+  <div class="step"><small>2028 · 3학년</small><b>곱셈 방앗간</b><p>단원 장소 6곳을 돌며 곱셈과 분수를 풉니다.</p></div>
+  <div class="step dim"><small>2029–2031 · 4~6학년</small><b>별숲</b><p>그래프, 비례, 입체까지 이어집니다.</p></div>
+</div>
+
+<aside class="ledger">
+  <div class="ledger-top"><span>현재 여정 · 3학년 2학기</span><span>NO. 003</span></div>
+  <h2>곱셈 방앗간 마을</h2>
+  <p class="sub">별숲 · 단원 장소 6곳 · 기기 내 저장</p>
+  <ul class="list">
+    <li><i>01</i>곱셈 방앗간 · 곱셈</li>
+    <li><i>02</i>나눔 과일정거장 · 나눗셈</li>
+    <li><i>03</i>동그라미 시계소 · 원</li>
+    <li><i>04</i>조각 피자부엌 · 분수</li>
+    <li><i>05</i>되와 무게 실험실 · 들이와 무게</li>
+    <li><i>06</i>그림소식 우체통 · 자료의 정리</li>
+  </ul>
+  <div class="actions"><a class="primary" href="#">3학년 2학기 마을 열기 →</a><a class="secondary" href="#">학급 주소 복사</a></div>
+</aside>
+
+<div class="stamp"><div><b>2026</b><span>STAR FOREST</span><b>03</b><span>GRADE THREE</span></div></div>
+<div class="foot">한 학기 · 한 마을 · <b>하나의 여정</b></div>
+</body>
+</html>
